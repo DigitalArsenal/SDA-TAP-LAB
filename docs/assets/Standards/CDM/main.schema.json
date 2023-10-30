@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "referenceFrame" : {
+      "type" : "string",
+      "enum": ["EME2000", "GCRF", "ITRF"]
+    },
+    "objectCenteredReferenceFrame" : {
+      "type" : "string",
+      "enum": ["RTN", "TVN"]
+    },
+    "screeningVolumeShape" : {
+      "type" : "string",
+      "enum": ["ELLIPSOID", "BOX"]
+    },
+    "objectNumber" : {
+      "type" : "string",
+      "enum": ["OBJECT1", "OBJECT2"]
+    },
+    "objectType" : {
+      "type" : "string",
+      "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN", "OTHER"]
+    },
+    "covarianceMethod" : {
+      "type" : "string",
+      "enum": ["CALCULATED", "DEFAULT"]
+    },
+    "maneuverableType" : {
+      "type" : "string",
+      "enum": ["YES", "NO", "NA"]
+    },
+    "CDMObject" : {
+      "type" : "object",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string"
+              },
+        "OBJECT" : {
+                "$ref" : "#/definitions/objectNumber"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string"
+              },
+        "CATALOG_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "INTERNATIONAL_DESIGNATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_TYPE" : {
+                "$ref" : "#/definitions/objectType"
+              },
+        "OPERATOR_CONTACT_POSITION" : {
+                "type" : "string"
+              },
+        "OPERATOR_ORGANIZATION" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_NAME" : {
+                "type" : "string"
+              },
+        "COVARIANCE_METHOD" : {
+                "$ref" : "#/definitions/covarianceMethod"
+              },
+        "MANEUVERABLE" : {
+                "$ref" : "#/definitions/maneuverableType"
+              },
+        "ORBIT_CENTER" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame"
+              },
+        "GRAVITY_MODEL" : {
+                "type" : "string"
+              },
+        "ATMOSPHERIC_MODEL" : {
+                "type" : "string"
+              },
+        "N_BODY_PERTURBATIONS" : {
+                "type" : "string"
+              },
+        "SOLAR_RAD_PRESSURE" : {
+                "type" : "boolean"
+              },
+        "EARTH_TIDES" : {
+                "type" : "boolean"
+              },
+        "INTRACK_THRUST" : {
+                "type" : "boolean"
+              },
+        "TIME_LASTOB_START" : {
+                "type" : "string"
+              },
+        "TIME_LASTOB_END" : {
+                "type" : "string"
+              },
+        "RECOMMENDED_OD_SPAN" : {
+                "type" : "number"
+              },
+        "ACTUAL_OD_SPAN" : {
+                "type" : "number"
+              },
+        "OBS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TRACKS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TRACKS_USED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "RESIDUALS_ACCEPTED" : {
+                "type" : "number"
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number"
+              },
+        "AREA_PC" : {
+                "type" : "number"
+              },
+        "AREA_DRG" : {
+                "type" : "number"
+              },
+        "AREA_SRP" : {
+                "type" : "number"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "CR_AREA_OVER_MASS" : {
+                "type" : "number"
+              },
+        "THRUST_ACCELERATION" : {
+                "type" : "number"
+              },
+        "SEDR" : {
+                "type" : "number"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "X_DOT" : {
+                "type" : "number"
+              },
+        "Y_DOT" : {
+                "type" : "number"
+              },
+        "Z_DOT" : {
+                "type" : "number"
+              },
+        "CR_R" : {
+                "type" : "number"
+              },
+        "CT_R" : {
+                "type" : "number"
+              },
+        "CT_T" : {
+                "type" : "number"
+              },
+        "CN_R" : {
+                "type" : "number"
+              },
+        "CN_T" : {
+                "type" : "number"
+              },
+        "CN_N" : {
+                "type" : "number"
+              },
+        "CRDOT_R" : {
+                "type" : "number"
+              },
+        "CRDOT_T" : {
+                "type" : "number"
+              },
+        "CRDOT_N" : {
+                "type" : "number"
+              },
+        "CRDOT_RDOT" : {
+                "type" : "number"
+              },
+        "CTDOT_R" : {
+                "type" : "number"
+              },
+        "CTDOT_T" : {
+                "type" : "number"
+              },
+        "CTDOT_N" : {
+                "type" : "number"
+              },
+        "CTDOT_RDOT" : {
+                "type" : "number"
+              },
+        "CTDOT_TDOT" : {
+                "type" : "number"
+              },
+        "CNDOT_R" : {
+                "type" : "number"
+              },
+        "CNDOT_T" : {
+                "type" : "number"
+              },
+        "CNDOT_N" : {
+                "type" : "number"
+              },
+        "CNDOT_RDOT" : {
+                "type" : "number"
+              },
+        "CNDOT_TDOT" : {
+                "type" : "number"
+              },
+        "CNDOT_NDOT" : {
+                "type" : "number"
+              },
+        "CDRG_R" : {
+                "type" : "number"
+              },
+        "CDRG_T" : {
+                "type" : "number"
+              },
+        "CDRG_N" : {
+                "type" : "number"
+              },
+        "CDRG_RDOT" : {
+                "type" : "number"
+              },
+        "CDRG_TDOT" : {
+                "type" : "number"
+              },
+        "CDRG_NDOT" : {
+                "type" : "number"
+              },
+        "CDRG_DRG" : {
+                "type" : "number"
+              },
+        "CSRP_R" : {
+                "type" : "number"
+              },
+        "CSRP_T" : {
+                "type" : "number"
+              },
+        "CSRP_N" : {
+                "type" : "number"
+              },
+        "CSRP_RDOT" : {
+                "type" : "number"
+              },
+        "CSRP_TDOT" : {
+                "type" : "number"
+              },
+        "CSRP_NDOT" : {
+                "type" : "number"
+              },
+        "CSRP_DRG" : {
+                "type" : "number"
+              },
+        "CSRP_SRP" : {
+                "type" : "number"
+              },
+        "CTHR_R" : {
+                "type" : "number"
+              },
+        "CTHR_T" : {
+                "type" : "number"
+              },
+        "CTHR_N" : {
+                "type" : "number"
+              },
+        "CTHR_RDOT" : {
+                "type" : "number"
+              },
+        "CTHR_TDOT" : {
+                "type" : "number"
+              },
+        "CTHR_NDOT" : {
+                "type" : "number"
+              },
+        "CTHR_DRG" : {
+                "type" : "number"
+              },
+        "CTHR_SRP" : {
+                "type" : "number"
+              },
+        "CTHR_THR" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CDM" : {
+      "type" : "object",
+      "properties" : {
+        "CCSDS_CDM_VERS" : {
+                "type" : "number"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "MESSAGE_FOR" : {
+                "type" : "string"
+              },
+        "MESSAGE_ID" : {
+                "type" : "string"
+              },
+        "TCA" : {
+                "type" : "string"
+              },
+        "MISS_DISTANCE" : {
+                "type" : "number"
+              },
+        "RELATIVE_SPEED" : {
+                "type" : "number"
+              },
+        "RELATIVE_POSITION_R" : {
+                "type" : "number"
+              },
+        "RELATIVE_POSITION_T" : {
+                "type" : "number"
+              },
+        "RELATIVE_POSITION_N" : {
+                "type" : "number"
+              },
+        "RELATIVE_VELOCITY_R" : {
+                "type" : "number"
+              },
+        "RELATIVE_VELOCITY_T" : {
+                "type" : "number"
+              },
+        "RELATIVE_VELOCITY_N" : {
+                "type" : "number"
+              },
+        "START_SCREEN_PERIOD" : {
+                "type" : "string"
+              },
+        "STOP_SCREEN_PERIOD" : {
+                "type" : "string"
+              },
+        "SCREEN_VOLUME_FRAME" : {
+                "$ref" : "#/definitions/objectCenteredReferenceFrame"
+              },
+        "SCREEN_VOLUME_SHAPE" : {
+                "$ref" : "#/definitions/screeningVolumeShape"
+              },
+        "SCREEN_VOLUME_X" : {
+                "type" : "number"
+              },
+        "SCREEN_VOLUME_Y" : {
+                "type" : "number"
+              },
+        "SCREEN_VOLUME_Z" : {
+                "type" : "number"
+              },
+        "SCREEN_ENTRY_TIME" : {
+                "type" : "string"
+              },
+        "SCREEN_EXIT_TIME" : {
+                "type" : "string"
+              },
+        "COLLISION_PROBABILITY" : {
+                "type" : "number"
+              },
+        "COLLISION_PROBABILITY_METHOD" : {
+                "type" : "string"
+              },
+        "OBJECT1" : {
+                "$ref" : "#/definitions/CDMObject"
+              },
+        "OBJECT2" : {
+                "$ref" : "#/definitions/CDMObject"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CDMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CDM"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CDM"
+}

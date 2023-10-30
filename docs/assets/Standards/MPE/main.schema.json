@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "referenceFrame" : {
+      "type" : "string",
+      "enum": ["EME2000", "GCRF", "GRC", "ICRF", "ITRF2000", "ITRF93", "ITRF97", "MCI", "TDR", "TEME", "TOD"]
+    },
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "meanElementTheory" : {
+      "type" : "string",
+      "enum": ["SGP4", "DSST", "USM"]
+    },
+    "MPE" : {
+      "type" : "object",
+      "properties" : {
+        "ENTITY_ID" : {
+                "type" : "string"
+              },
+        "EPOCH" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number"
+              },
+        "BSTAR" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame"
+              },
+        "REF_FRAME_EPOCH" : {
+                "type" : "number"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementTheory"
+              },
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MPE"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MPE"
+}
