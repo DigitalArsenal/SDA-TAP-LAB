@@ -27,30 +27,9 @@
       orderIndependentTranslucency: false,
       shadows: true,
     });
-    globalThis.viewer = viewer;
+
     viewer.scene.debugShowFramesPerSecond = true;
     $storeViewer = viewer;
-    (async function () {
-      globalThis.spaceCatalog = new Cesium.SpaceCatalogDataSource({
-        name: "celestrak",
-        scene: viewer.scene,
-      });
-
-      const ommBuffer = await (
-        await fetch("https://api.spaceaware.io/data/OMM?format=fbs")
-      ).arrayBuffer();
-      const satcatBuffer = await (
-        await fetch("https://api.spaceaware.io/data/CAT?format=fbs")
-      ).arrayBuffer();
-      await globalThis.spaceCatalog.loadOMM(ommBuffer, satcatBuffer);
-      setTimeout(async () => {
-        console.log("reload");
-        await globalThis.spaceCatalog.loadOMM(ommBuffer, satcatBuffer);
-      }, 5000);
-
-      await viewer.dataSources.add(globalThis.spaceCatalog);
-    })();
-
     /*(async function () {
       try {
         const tileset = await Cesium.createGooglePhotorealistic3DTileset();
@@ -66,7 +45,7 @@
 
 <style>
   #cesiumContainer {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
   }
 </style>
