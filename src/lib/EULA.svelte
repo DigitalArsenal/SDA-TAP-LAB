@@ -8,19 +8,10 @@
     }
   }
 
-  function downloadPdf() {
-    const content = document.getElementById("eulaContent");
-    const pdf = html2pdf().from(content).outputPdf();
-    pdf.save("EULA.pdf");
-  }
-
-  function acceptEULA() {
-    // Implement your logic here after accepting the EULA
-    alert("EULA Accepted!");
-  }
+  export let acceptEULA: any;
 </script>
 
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 bg-black">
   <div
     class="bg-white p-8 rounded-lg shadow-lg w-full overflow-y-auto h-screen"
     on:scroll={onScroll}>
@@ -143,11 +134,6 @@
       disabled={!isScrolledToBottom}
       on:click={acceptEULA}>
       Accept
-    </button>
-    <button
-      class="mt-4 p-2 bg-green-500 text-white rounded ml-4"
-      on:click={downloadPdf}>
-      Download as PDF
     </button>
   </div>
 </div>

@@ -1,10 +1,30 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Viewer from "./lib/Viewer.svelte";
+  import EULA from "./lib/EULA.svelte";
+
+  let showEULA = false;
+
+  onMount(() => {
+    const eulaAccepted = localStorage.getItem("eulaAccepted");
+    if (eulaAccepted === null) {
+      showEULA = true;
+    }
+  });
+
+  function acceptEULA() {
+    localStorage.setItem("eulaAccepted", "true");
+    showEULA = false;
+  }
 </script>
 
-<div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
-  <Viewer />
-</div>
+{#if showEULA}
+  <EULA {acceptEULA} />
+{:else}
+  <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
+    <Viewer />
+  </div>
+{/if}
 
 <!-- svelte-ignore css-unused-selector -->
 <style global lang="postcss">

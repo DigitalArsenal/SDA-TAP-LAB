@@ -46,7 +46,7 @@ export default defineConfig({
     preprocess: sveltePreprocess(),
 
   }),
-  process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
+  //process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
   ],
   build: {
     emptyOutDir: false,
