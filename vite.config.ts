@@ -11,12 +11,33 @@ const __dirname = path.dirname(__filename);
 const app = "index.html";
 // Obfuscator options
 const obfuscatorOptions: RollupPluginObfuscatorOptions["options"] = {
+
   compact: true,
-  controlFlowFlattening: true,
-  controlFlowFlatteningThreshold: 1,
-  deadCodeInjection: true,
-  debugProtection: true,
-  debugProtectionInterval: 1000 * 10
+  controlFlowFlattening: false,
+  deadCodeInjection: false,
+  debugProtection: false,
+  debugProtectionInterval: 0,
+  disableConsoleOutput: true,
+  identifierNamesGenerator: 'hexadecimal',
+  log: false,
+  numbersToExpressions: false,
+  renameGlobals: false,
+  selfDefending: true,
+  simplify: true,
+  splitStrings: false,
+  stringArray: true,
+  stringArrayCallsTransform: false,
+  stringArrayEncoding: [],
+  stringArrayIndexShift: true,
+  stringArrayRotate: true,
+  stringArrayShuffle: true,
+  stringArrayWrappersCount: 1,
+  stringArrayWrappersChainedCalls: true,
+  stringArrayWrappersParametersMaxCount: 2,
+  stringArrayWrappersType: 'variable',
+  stringArrayThreshold: 0.75,
+  unicodeEscapeSequence: false
+
 };
 
 // https://vitejs.dev/config/
