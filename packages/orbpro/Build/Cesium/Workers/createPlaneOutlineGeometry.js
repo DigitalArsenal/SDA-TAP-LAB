@@ -1,7 +1,7 @@
 /**
  * @license
  * Cesium - https://github.com/CesiumGS/cesium
- * Version 1.110
+ * Version 1.110.1
  *
  * Copyright 2011-2022 Cesium Contributors
  *
@@ -23,4 +23,4 @@
  * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-import{a as l}from"./chunk-GIF3NIGD.js";import{a as d,c as y,d as s}from"./chunk-63KGUMEY.js";import{g as c}from"./chunk-LSJMWGCF.js";import"./chunk-VUSOKIQI.js";import"./chunk-UYU5J5LB.js";import{a as f}from"./chunk-U6UBX32K.js";import{a}from"./chunk-MOUG3NVV.js";import"./chunk-GP3QZQKE.js";import"./chunk-XE4KLUZ2.js";import"./chunk-A7WTS53E.js";import"./chunk-DYKDQ7Q5.js";import{b as m}from"./chunk-5QBDH7S2.js";import{f as i}from"./chunk-JZX4OQ6W.js";function o(){this._workerName="createPlaneOutlineGeometry"}o.packedLength=0;o.pack=function(r,e){return m.defined("value",r),m.defined("array",e),e};o.unpack=function(r,e,t){return m.defined("array",r),i(t)?t:new o};var n=new a(-.5,-.5,0),p=new a(.5,.5,0);o.createGeometry=function(){let r=new l,e=new Uint16Array(4*2),t=new Float64Array(4*3);return t[0]=n.x,t[1]=n.y,t[2]=n.z,t[3]=p.x,t[4]=n.y,t[5]=n.z,t[6]=p.x,t[7]=p.y,t[8]=n.z,t[9]=n.x,t[10]=p.y,t[11]=n.z,r.position=new s({componentDatatype:f.DOUBLE,componentsPerAttribute:3,values:t}),e[0]=0,e[1]=1,e[2]=1,e[3]=2,e[4]=2,e[5]=3,e[6]=3,e[7]=0,new y({attributes:r,indices:e,primitiveType:d.LINES,boundingSphere:new c(a.ZERO,Math.sqrt(2))})};var u=o;function w(r,e){return i(e)&&(r=u.unpack(r,e)),u.createGeometry(r)}var D=w;export{D as default};
+import{a as l}from"./chunk-XYZU5ZKW.js";import{a as d,c as y,d as s}from"./chunk-LRRMYFM5.js";import{g as c}from"./chunk-QN4KH7NX.js";import"./chunk-M74QEFMU.js";import"./chunk-6GB2WA4N.js";import{a as f}from"./chunk-QF7RZIXE.js";import{a}from"./chunk-GTKX54AN.js";import"./chunk-Y6GPSIGT.js";import"./chunk-6Y3U6IMI.js";import"./chunk-SXM64WZW.js";import"./chunk-FOJGNIAW.js";import{b as m}from"./chunk-5GTG3HGQ.js";import{f as i}from"./chunk-ET2C4TQN.js";function o(){this._workerName="createPlaneOutlineGeometry"}o.packedLength=0;o.pack=function(r,e){return m.defined("value",r),m.defined("array",e),e};o.unpack=function(r,e,t){return m.defined("array",r),i(t)?t:new o};var n=new a(-.5,-.5,0),p=new a(.5,.5,0);o.createGeometry=function(){let r=new l,e=new Uint16Array(4*2),t=new Float64Array(4*3);return t[0]=n.x,t[1]=n.y,t[2]=n.z,t[3]=p.x,t[4]=n.y,t[5]=n.z,t[6]=p.x,t[7]=p.y,t[8]=n.z,t[9]=n.x,t[10]=p.y,t[11]=n.z,r.position=new s({componentDatatype:f.DOUBLE,componentsPerAttribute:3,values:t}),e[0]=0,e[1]=1,e[2]=1,e[3]=2,e[4]=2,e[5]=3,e[6]=3,e[7]=0,new y({attributes:r,indices:e,primitiveType:d.LINES,boundingSphere:new c(a.ZERO,Math.sqrt(2))})};var u=o;function w(r,e){return i(e)&&(r=u.unpack(r,e)),u.createGeometry(r)}var D=w;export{D as default};

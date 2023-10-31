@@ -19,6 +19,7 @@
     "@types/d3": "^7.4.2",
     "@types/node": "^20.8.9",
     "autoprefixer": "^10.4.16",
+    "devtools-detect": "^4.0.1",
     "postcss": "^8.4.31",
     "rollup-plugin-obfuscator": "^1.0.3",
     "svelte": "^4.0.5",
