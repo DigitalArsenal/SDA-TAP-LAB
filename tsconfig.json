@@ -3,7 +3,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "orbpro": ["../OrbPro/Source/Cesium.js"],
+
     },
     "target": "ESNext",
     "useDefineForClassFields": true,

@@ -4,12 +4,23 @@
   import TimeLine from "./lib/TimeLine.svelte";
   import EULA from "./lib/EULA.svelte";
   import { eulaVersion } from "@/stores/eula.store";
+  import { IP } from "@/stores/user.store";
 
   let showEULA = false;
   const eulaUUID = "7e6d9cc1-5856-4238-90bf-7465b3b3446d:EULA";
   const eulaVersionUUID = "9b3babdc-ee1a-4435-b8a5-14ebf2665bdf:EULA:VERSION";
 
   onMount(() => {
+    fetch("https://celestrak.digitalarsenal.io/get-ip")
+      .then((response) => response.json())
+      .then((data) => {
+        $IP = data.ip;
+        console.log($IP);
+      })
+      .catch((error) => {
+        console.error("Error fetching IP", error);
+      });
+
     const eulaLocalAccepted = localStorage.getItem(eulaUUID);
     const eulaLocalVersion = localStorage.getItem(eulaVersionUUID);
 

@@ -1,20 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import DALogo from "@/assets/da-wide.png";
   import { eulaVersion } from "@/stores/eula.store";
+  import { IP } from "@/stores/user.store";
 
-  let IP: any = "";
-
-  onMount(() => {
-    fetch("https://celestrak.digitalarsenal.io/get-ip")
-      .then((response) => response.json())
-      .then((data) => {
-        IP = data.ip;
-      })
-      .catch((error) => {
-        console.error("Error fetching IP", error);
-      });
-  });
   let isScrolledToBottom = false;
 
   function onScroll(e: Event) {
@@ -163,9 +151,9 @@
     </p>
   </div>
 
-  {#if IP.length}
+  {#if $IP?.length}
     <div class="text-gray-400 text-[.75rem] w-2/3 text-right">
-      User IP: {IP}
+      User IP: {$IP}
     </div>
   {/if}
 
