@@ -19,24 +19,24 @@ const obfuscatorOptions: RollupPluginObfuscatorOptions["options"] = {
   debugProtectionInterval: 0,
   disableConsoleOutput: true,
   identifierNamesGenerator: 'hexadecimal',
-  log: false,
-  numbersToExpressions: false,
-  renameGlobals: false,
-  selfDefending: true,
-  simplify: true,
-  splitStrings: false,
-  stringArray: true,
-  stringArrayCallsTransform: false,
-  stringArrayEncoding: [],
-  stringArrayIndexShift: true,
-  stringArrayRotate: true,
-  stringArrayShuffle: true,
-  stringArrayWrappersCount: 1,
-  stringArrayWrappersChainedCalls: true,
-  stringArrayWrappersParametersMaxCount: 2,
-  stringArrayWrappersType: 'variable',
-  stringArrayThreshold: 0.75,
-  unicodeEscapeSequence: false
+  /*log: false,
+ numbersToExpressions: false,
+ renameGlobals: false,
+ selfDefending: true,
+ simplify: true,
+ splitStrings: false,
+ stringArray: true,
+ stringArrayCallsTransform: false,
+ stringArrayEncoding: [],
+ stringArrayIndexShift: true,
+ stringArrayRotate: true,
+ stringArrayShuffle: true,
+ stringArrayWrappersCount: 1,
+ stringArrayWrappersChainedCalls: true,
+ stringArrayWrappersParametersMaxCount: 2,
+ stringArrayWrappersType: 'variable',
+ stringArrayThreshold: 0.75,
+ unicodeEscapeSequence: false*/
 
 };
 
@@ -46,9 +46,10 @@ export default defineConfig({
     preprocess: sveltePreprocess(),
 
   }),
-  //process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
+    // process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
   ],
   build: {
+    minify: "terser",
     emptyOutDir: false,
     outDir: "docs",
     rollupOptions: {
@@ -62,6 +63,7 @@ export default defineConfig({
     alias: {
       orbpro: path.resolve(__dirname, '../OrbPro/Source/Cesium.js'),
       "orbpro_build": path.resolve(__dirname, '../OrbPro/Build'),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
   define: {

@@ -1,9 +1,26 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import DALogo from "@/assets/da-wide.png";
+  import { eulaVersion } from "@/stores/eula.store";
+
+  let IP: any = "";
+
+  onMount(() => {
+    fetch("https://celestrak.digitalarsenal.io/get-ip")
+      .then((response) => response.json())
+      .then((data) => {
+        IP = data.ip;
+      })
+      .catch((error) => {
+        console.error("Error fetching IP", error);
+      });
+  });
   let isScrolledToBottom = false;
 
   function onScroll(e: Event) {
     const el: any = e.target;
-    if (el.scrollHeight - el.scrollTop === el.clientHeight) {
+
+    if (el.scrollHeight - el.scrollTop < el.clientHeight * 1.25) {
       isScrolledToBottom = true;
     }
   }
@@ -11,70 +28,85 @@
   export let acceptEULA: any;
 </script>
 
-<div class="container mx-auto px-4 bg-black">
+<div
+  id="EULA"
+  class="flex flex-col items-center justify-center h-[100%] text-black">
+  <div class="flex flex-col justify-bottom items-center">
+    <img
+      src={DALogo}
+      alt="DigitalArsenal.io"
+      class="mb-4 h-16"
+      style="filter: invert(1);" />
+  </div>
   <div
-    class="bg-white p-8 rounded-lg shadow-lg w-full overflow-y-auto h-screen"
+    class="text-xs text-gray-400 font-normal flex justify-between text-white w-2/3">
+    <a class="text-xs font-normal text-white" href="https://digitalarsenal.io"
+      >https://digitalarsenal.io</a>
+    <div>{$eulaVersion.toFixed(1)}</div>
+  </div>
+  <div
+    class="bg-white p-8 rounded-sm shadow-lg w-2/3 max-h-[50%] overflow-y-auto"
     on:scroll={onScroll}>
-    <div id="eulaContent">
-      <h1 class="text-2xl font-bold mb-4">End-User License Agreement (EULA)</h1>
-      <p class="mb-4">
-        This End-User License Agreement ("EULA") is a legal agreement between
-        you and DigitalArsenal.io, Inc.
-      </p>
+    <h1 class="text-2xl font-bold mb-4">End-User License Agreement (EULA)</h1>
+    <p class="mb-4">
+      This End-User License Agreement ("EULA") is a legal agreement between you
+      and DigitalArsenal.io, Inc.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">1. Definitions</h2>
-      <p class="mb-4">
-        In this EULA, "Software" refers to SpaceAware.io. "You" refers to the
-        individual or entity that has agreed to this EULA.
-      </p>
+    <h2 class="text-xl font-semibold mb-2">1. Definitions</h2>
+    <p class="mb-4">
+      In this EULA, "Software" refers to SpaceAware.io. "You" refers to the
+      individual or entity that has agreed to this EULA.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">2. License</h2>
-      <p class="mb-4">
-        Subject to the terms and conditions of this EULA, DigitalArsenal.io,
-        Inc. grants you a non-exclusive, non-transferable, non-sublicensable
-        license to use the Software.
-      </p>
+    <h2 class="text-xl font-semibold mb-2">2. License</h2>
+    <p class="mb-4">
+      Subject to the terms and conditions of this EULA, DigitalArsenal.io, Inc.
+      grants you a non-exclusive, non-transferable, non-sublicensable license to
+      use the Software.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">3. Restrictions</h2>
-      <p class="mb-4">
-        You must not reverse engineer, decompile, or disassemble the Software,
-        except as permitted by applicable law.
-      </p>
-      <p class="mb-4">
-        You must not copy, embed, or otherwise use the content on this page
-        without a license from DigitalArsenal.io, Inc.
-      </p>
+    <h2 class="text-xl font-semibold mb-2">3. Restrictions</h2>
+    <p class="mb-4">
+      You must not reverse engineer, decompile, or disassemble the Software,
+      except as permitted by applicable law.
+    </p>
+    <p class="mb-4">
+      You must not copy, embed, or otherwise use the content on this page
+      without a license from DigitalArsenal.io, Inc.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">4. Termination</h2>
-      <p class="mb-4">
-        This EULA will terminate immediately without notice if you breach any
-        term of this EULA.
-      </p>
+    <h2 class="text-xl font-semibold mb-2">4. Termination</h2>
+    <p class="mb-4">
+      This EULA will terminate immediately without notice if you breach any term
+      of this EULA.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">5. Warranty Disclaimer</h2>
-      <p class="mb-4">
-        The Software is provided "as-is" and without warranty of any kind.
-      </p>
+    <h2 class="text-xl font-semibold mb-2">5. Warranty Disclaimer</h2>
+    <p class="mb-4">
+      The Software is provided "as-is" and without warranty of any kind.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">6. Limitation of Liability</h2>
-      <p class="mb-4">
-        In no event will DigitalArsenal.io, Inc. be liable for any
-        consequential, special, incidental, or indirect damages of any kind
-        arising from the use of the Software.
-      </p>
+    <h2 class="text-xl font-semibold mb-2">6. Limitation of Liability</h2>
+    <p class="mb-4">
+      In no event will DigitalArsenal.io, Inc. be liable for any consequential,
+      special, incidental, or indirect damages of any kind arising from the use
+      of the Software.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">7. Governing Law</h2>
-      <p class="mb-4">
-        This EULA is governed by the laws of [Your Jurisdiction].
-      </p>
+    <h2 class="text-xl font-semibold mb-2">7. Governing Law</h2>
+    <p class="mb-4">
+      This EULA is governed by the laws of The Commonwealth of Virginia, United
+      States.
+    </p>
 
-      <h2 class="text-xl font-semibold mb-2">8. Entire Agreement</h2>
-      <p class="mb-4">
-        This EULA constitutes the entire agreement between you and
-        DigitalArsenal.io, Inc. regarding the Software and supersedes all prior
-        or contemporaneous understandings.
-      </p>
-    </div>
+    <h2 class="text-xl font-semibold mb-2">8. Entire Agreement</h2>
+    <p class="mb-4">
+      This EULA constitutes the entire agreement between you and
+      DigitalArsenal.io, Inc. regarding the Software and supersedes all prior or
+      contemporaneous understandings.
+    </p>
+
     <h2 class="text-xl font-semibold mb-2">9. Software Updates</h2>
     <p class="mb-4">
       DigitalArsenal.io, Inc. may provide updates to the Software from time to
@@ -112,8 +144,8 @@
     <p class="mb-4">
       Any dispute arising out of or in connection with this EULA shall be
       resolved through amicable negotiation. If negotiation fails, the dispute
-      shall be settled by arbitration in accordance with the laws of [Your
-      Jurisdiction].
+      shall be settled by arbitration in accordance with the laws of The
+      Commonwealth of Virginia, United States.
     </p>
 
     <h2 class="text-xl font-semibold mb-2">14. Amendments</h2>
@@ -125,15 +157,28 @@
     </p>
 
     <h2 class="text-xl font-semibold mb-2">15. Contact Information</h2>
-    <p class="mb-4">
+    <p id="eula-contact" class="mb-4">
       For any questions about this EULA, you may contact us at
       eula@digitalarsenal.io.
     </p>
-    <button
-      class="mt-4 p-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-      disabled={!isScrolledToBottom}
-      on:click={acceptEULA}>
-      Accept
-    </button>
   </div>
+
+  {#if IP.length}
+    <div class="text-gray-400 text-[.75rem] w-2/3 text-right">
+      User IP: {IP}
+    </div>
+  {/if}
+
+  <button
+    class:bg-gray-300={!isScrolledToBottom}
+    class:bg-gradient-green={isScrolledToBottom}
+    class:text-white={isScrolledToBottom}
+    class="mt-4 p-3 text-white border-[1px] rounded-sm disabled:text-gray-600"
+    disabled={!isScrolledToBottom}
+    on:click={acceptEULA}>
+    I AGREE
+  </button>
 </div>
+
+<style>
+</style>

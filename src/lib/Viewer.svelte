@@ -11,13 +11,14 @@
       //globe: false,
       baseLayerPicker: true,
       homeButton: true,
-      fullscreenButton: true,
+      fullscreenButton: false,
       geocoder: true,
       infoBox: false,
       navigationHelpButton: false,
       projectionPicker: true,
       sceneModePicker: true,
-      animationContainer: true,
+      animationContainer: false,
+      animation: false,
       timeline: false,
       timelineContainer: true,
       selectionIndicator: false,
@@ -29,6 +30,17 @@
     });
 
     viewer.scene.debugShowFramesPerSecond = true;
+    const cameraPosition = viewer.camera.positionWC;
+    const cartographicPosition =
+      Cesium.Cartographic.fromCartesian(cameraPosition);
+    const longitude = Cesium.Math.toDegrees(cartographicPosition.longitude);
+    const latitude = Cesium.Math.toDegrees(cartographicPosition.latitude);
+    const altitude = cartographicPosition.height + 10000000;
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude),
+      duration: 0,
+    });
+
     $storeViewer = viewer;
     /*(async function () {
       try {
