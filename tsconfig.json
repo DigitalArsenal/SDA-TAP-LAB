@@ -4,9 +4,16 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "orbpro": ["../OrbPro/Source/Cesium.js"],
-
+      "orbpro": ["../OrbPro/Source/Cesium.js"]
     },
+    "typeRoots": [
+      "./lib/bitcoinjs/types",
+      "./lib/bitcoinjs-message/",
+      "./node_modules/@types",
+      "./node_modules/vite",
+      "./node_modules/vite/types",
+      "./src/types"
+    ],
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",

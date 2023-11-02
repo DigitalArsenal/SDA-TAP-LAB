@@ -1,10 +1,31 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import DALogo from "@/assets/da-wide.png";
-  import { eulaVersion } from "@/stores/eula.store";
+  import { eulaVersion, showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
 
   let isScrolledToBottom = false;
+  const eulaUUID = "7e6d9cc1-5856-4238-90bf-7465b3b3446d:EULA";
+  const eulaVersionUUID = "9b3babdc-ee1a-4435-b8a5-14ebf2665bdf:EULA:VERSION";
+  function agree() {
+    localStorage.setItem(eulaUUID, "true");
+    localStorage.setItem(eulaVersionUUID, JSON.stringify($eulaVersion));
 
+    $showEULA = false;
+  }
+  onMount(() => {
+    const eulaLocalAccepted = localStorage.getItem(eulaUUID);
+    const eulaLocalVersion = localStorage.getItem(eulaVersionUUID);
+
+    if (
+      eulaLocalAccepted === null ||
+      eulaLocalVersion === null ||
+      parseFloat(eulaLocalVersion) < $eulaVersion
+    ) {
+    } else {
+      $showEULA = false;
+    }
+  });
   function onScroll(e: Event) {
     const el: any = e.target;
 
@@ -12,8 +33,6 @@
       isScrolledToBottom = true;
     }
   }
-
-  export let acceptEULA: any;
 </script>
 
 <div
@@ -163,7 +182,7 @@
     class:text-white={isScrolledToBottom}
     class="mt-4 p-3 text-white border-[1px] rounded-sm disabled:text-gray-600"
     disabled={!isScrolledToBottom}
-    on:click={acceptEULA}>
+    on:click={agree}>
     I AGREE
   </button>
 </div>

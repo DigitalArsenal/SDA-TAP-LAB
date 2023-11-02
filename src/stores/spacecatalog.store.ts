@@ -4,7 +4,7 @@ import { SpaceCatalogDataSource } from 'orbpro';
 
 type SpaceCatalogOptions = {
     name: string;
-    viewer?: Viewer;
+    viewer: Viewer;
     referenceFrame?: number;
     temeToECEF?: boolean;
     entityDefault?: any;
@@ -34,7 +34,7 @@ const addCatalog = async (options: SpaceCatalogOptions, ommUrl: string, satcatUr
 const removeCatalog = (viewer: Viewer, name: string) => {
     update(catalogs => {
         const filteredCatalogs = catalogs.filter(catalog => catalog.name !== name);
-        viewer.dataSources.removeByName(name);
+        viewer.dataSources.remove(viewer.dataSources.getByName(name)[0]);
         return filteredCatalogs;
     });
 };
