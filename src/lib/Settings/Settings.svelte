@@ -1,0 +1,25 @@
+<!-- Settings.svelte -->
+<script lang="ts">
+  import Icon from "svelte-awesome";
+  import { gears } from "svelte-awesome/icons";
+  import { content } from "@/stores/modal.store";
+  import SettingsModal from "./SettingsModal.svelte";
+
+  $content = SettingsModal;
+  
+  const toggleModal = () => {
+    $content = !$content ? SettingsModal : undefined;
+  };
+</script>
+
+<!-- Button to open the modal -->
+<div
+  tabindex="0"
+  role="button"
+  on:keydown={(e) => {
+    if (e.key === "Enter" || e.key === "Space") toggleModal();
+  }}
+  class="text-white flex items-center text-md justify-center cursor-pointer"
+  on:click={toggleModal}>
+  <Icon scale={1.5} data={gears} />
+</div>

@@ -4,7 +4,8 @@
   import * as Cesium from "orbpro";
   import { onMount } from "svelte";
   import { viewer as storeViewer } from "../stores/viewer.store";
-  import MyButton from "./Toolbar/MyButton.svelte";
+  import { addButton } from "./Toolbar/toolbar";
+  import Settings from "./Settings/Settings.svelte";
 
   Cesium.GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
@@ -44,25 +45,7 @@
     });
 
     $storeViewer = viewer;
-    const toolbar: any = document.querySelector(".cesium-viewer-toolbar");
-
-    // Create a new button
-    const buttonContainer = document.createElement("button");
-    buttonContainer.className = "cesium-button cesium-toolbar-button";
-
-    let myButton = new MyButton({ target: buttonContainer });
-    console.log(myButton);
-    // Append the button to the toolbar
-    toolbar.appendChild(myButton.$$.root);
-
-    /*(async function () {
-      try {
-        const tileset = await Cesium.createGooglePhotorealistic3DTileset();
-        viewer.scene.primitives.add(tileset);
-      } catch (error) {
-        console.log(`Failed to load tileset: ${error}`);
-      }
-    })();*/
+    addButton(Settings);
   });
 </script>
 

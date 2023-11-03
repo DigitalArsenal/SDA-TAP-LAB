@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Viewer from "./lib/Viewer.svelte";
-  import TimeLine from "./lib/TimeLine.svelte";
-  import EULA from "./lib/EULA.svelte";
+  import Modal from "./lib/Modal/Modal.svelte";
+  import TimeLine from "./lib/Timeline/TimeLine.svelte";
+  import EULA from "./lib/EULA/EULA.svelte";
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
   import { init as devProtectInit } from "@/utilities/devprotect";
-  import Table from "@/lib/Table.svelte";
 
   onMount(() => {
     devProtectInit();
@@ -27,10 +27,8 @@
   <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
     <Viewer />
   </div>
-  <!--<div class="fixed bottom-0 flex items-center justify-center w-full">
-    <Table />
-  </div>-->
 {/if}
+<Modal />
 
 <!-- svelte-ignore css-unused-selector -->
 <style global lang="postcss">

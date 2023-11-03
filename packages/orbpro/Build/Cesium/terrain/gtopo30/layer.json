@@ -1,0 +1,19 @@
+{
+  "tilejson": "2.1.0",
+  "name": "gtopo30",
+  "description": "",
+  "version": "1.1.0",
+  "format": "quantized-mesh-1.0",
+  "attribution": "",
+  "schema": "tms",
+  "extensions": [ "octvertexnormals" ],
+  "tiles": [ "{z}/{x}/{y}.terrain?v={version}" ],
+  "projection": "EPSG:4326",
+  "bounds": [ -180.00, -90.00, 180.00, 270.00 ],
+  "available": [
+    [ { "startX": 0, "startY": 0, "endX": 1, "endY": 0 } ]
+   ,[ { "startX": 0, "startY": 0, "endX": 3, "endY": 2 } ]
+   ,[ { "startX": 0, "startY": 0, "endX": 7, "endY": 4 } ]
+   ,[ { "startX": 0, "startY": 0, "endX": 15, "endY": 8 } ]
+  ]
+}
