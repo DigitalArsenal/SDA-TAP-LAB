@@ -2,7 +2,7 @@
   import { Icon } from "svelte-awesome";
   import { close } from "svelte-awesome/icons";
   import { content } from "@/stores/modal.store";
-
+  import Globe from "./menus/Globe.svelte";
   const closeModal = () => {
     $content = undefined;
   };
@@ -28,7 +28,9 @@
       </div>
     </div>
     <!-- Modal body -->
-    <div class="flex-grow p-5 overflow-auto" />
+    <div class="flex-grow p-5 overflow-auto">
+      <Globe />
+    </div>
     <!-- Modal footer -->
     <div class="flex-none">
       <div class="flex justify-end p-5 border-t border-gray-600">

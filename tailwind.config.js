@@ -1,10 +1,21 @@
 /** @type {import('tailwindcss').Config} */
+
+import twElements from "./src/lib/external/tw-elements.mjs";
+import opsStatusCode from "./src/lib/theme/ops_status_code.mjs";
+import twcolors from "./src/lib/external/tw-colors.mjs";
+
+const colors = {
+  ...twcolors,
+  ...opsStatusCode,
+};
+
 export default {
-  corePlugins:{
+  corePlugins: {
     preflight: false,
   },
   content: ["./src/**/*.{html,js,svelte}"],
   theme: {
+    colors,
     extend: {
       backgroundImage: (theme) => ({
         "gradient-blue": "linear-gradient(to bottom, #499bea 0%, #207ce5 100%)",
@@ -28,5 +39,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [twElements],
 };

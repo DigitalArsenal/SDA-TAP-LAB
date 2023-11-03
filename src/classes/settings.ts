@@ -1,7 +1,8 @@
-import { ReferenceFrame } from "@/lib/external/orb.mjs";
+import { ReferenceFrame } from "orbpro";
 import { writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { KeyValueDataStructure } from "./KeyValueDataStructure";
+
 class ClockSettings {
     enableRealTimeMode: Writable<boolean> = writable(false);
     shouldAnimate: Writable<boolean> = writable(true);
@@ -44,5 +45,4 @@ export default class Settings {
     X_GRID: Writable<boolean> = writable(false);
     Y_GRID: Writable<boolean> = writable(false);
     Z_GRID: Writable<boolean> = writable(false);
-
 }

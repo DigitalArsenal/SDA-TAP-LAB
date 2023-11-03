@@ -1,6 +1,6 @@
 <script lang="ts">
-  import settings from "@/stores/settings.store";
-  import { viewer } from "@/stores/viewer.store";
+  import { scenario } from "@/stores/settings.store";
+
   let {
     referenceFrame,
     skyAtmosphere,
@@ -13,14 +13,14 @@
     X_GRID,
     Y_GRID,
     Z_GRID,
-  } = settings;
+  } = scenario.settings;
 
   let referenceFrameChecked: any;
   $: referenceFrameChecked = $referenceFrame === 1 ? true : false;
 </script>
 
 <div class="flex flex-col gap-2">
-  <div class="flex flex-col gap-4 p-6 text-xs text-center h-64 overflow-y-auto">
+  <div class="flex flex-col gap-4 p-6 text-xs text-center">
     <div class="grid grid-cols-3 items-center justify-center">
       <div class="text-left">Reference Frame</div>
       <div class="flex form-check form-switch">
@@ -227,3 +227,6 @@
     </div>
   </div>
 </div>
+
+<style>
+</style>
