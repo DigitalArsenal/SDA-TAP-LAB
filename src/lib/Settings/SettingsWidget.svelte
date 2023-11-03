@@ -7,6 +7,7 @@
         link,
         download as downloadIcon,
     } from "svelte-awesome/icons";
+    //@ts-ignore
     import download from "downloadjs";
     import Globe from "./menus/Globe.svelte";
     import Data from "./menus/Data.svelte";
