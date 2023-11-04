@@ -4,7 +4,11 @@ import Settings from "@/classes/settings";
 import { Scenario } from "@/classes/scenario";
 import type { Group } from "@/classes/group";
 import { serializeGroups, deserializeGroups } from "./group/serializegroups";
-
+import { viewer as storeViewer } from "@/stores/viewer.store";
+import {
+    addMatrixModeScreenSpaceEventHandler,
+    removeMatrixModeScreenSpaceEventHandler
+} from "@/behaviors/matrixModeEventHandler";
 const scenario = new Scenario;
 scenario.settings = new Settings;
 
@@ -125,8 +129,6 @@ window.saveState = saveState;
 //@ts-ignore
 window.loadState = loadState;
 
-const settings = new Settings();
-
 const activeComponents = writable([]);
 
 const activeComponentProps = writable({});
@@ -140,4 +142,81 @@ const goBack = () => {
         });
     }
 }
+
+storeViewer.subscribe((viewer) => {
+    if (!viewer) {
+        return;
+    }
+
+    let {
+        referenceFrame,
+        depthTestAgainstTerrain,
+        skyAtmosphere,
+        enableLighting,
+        highDynamicRange,
+        CameraSettings,
+    } = scenario.settings;
+
+    viewer.referenceFrame = get(referenceFrame);
+
+    referenceFrame.subscribe((rF: any) => {
+        console.log(rF);
+        viewer.referenceFrame = rF;
+        viewer.scene.render();
+    });
+
+    viewer.cesiumWidget.scene.skyAtmosphere.show = get(skyAtmosphere);
+    viewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
+    skyAtmosphere.subscribe((sA: any) => {
+        viewer.cesiumWidget.scene.skyAtmosphere.show = sA;
+    });
+    viewer.scene.globe.enableLighting = get(enableLighting);
+    enableLighting.subscribe((eL: any) => {
+        viewer.scene.globe.enableLighting = eL;
+        viewer.scene.render();
+    });
+
+    viewer.scene.globe.depthTestAgainstTerrain = get(depthTestAgainstTerrain);
+    depthTestAgainstTerrain.subscribe((eL: any) => {
+        viewer.scene.globe.depthTestAgainstTerrain = eL;
+        viewer.scene.render();
+    });
+
+    viewer.scene.highDynamicRange = get(highDynamicRange);
+    highDynamicRange.subscribe((hDR: any) => {
+        viewer.scene.highDynamicRange = hDR;
+    });
+    CameraSettings.enableMatrixMode.subscribe(mM => {
+        if (mM) {
+            addMatrixModeScreenSpaceEventHandler(viewer);
+        } else {
+            removeMatrixModeScreenSpaceEventHandler();
+        }
+    });
+
+    CameraSettings.enableMatrixMode.set(true);
+
+    const { settings } = scenario;
+    settings.ClockSettings.shouldAnimate.subscribe(a => {
+        if (a) {
+            viewer.clock.shouldAnimate = true;
+        } else {
+            viewer.clock.shouldAnimate = false;
+        }
+    });
+    settings.ClockSettings.multiplier.subscribe((m: number) => {
+        viewer.clock.multiplier = m;
+    });
+
+    settings.debugFPS.subscribe((d: boolean) => {
+        viewer.scene.debugShowFramesPerSecond = d;
+    });
+    settings.fxaa.subscribe((f: boolean) => {
+        //@ts-ignore
+        viewer.scene.fxaa = f;
+    });
+
+});
+
+
 export { scenario, activeComponents, activeComponentProps, goBack, groups, saveState, loadState };

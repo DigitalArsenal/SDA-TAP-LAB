@@ -6,6 +6,8 @@
   import { viewer as storeViewer } from "../stores/viewer.store";
   import { addButton } from "./Toolbar/toolbar";
   import Settings from "./Settings/Settings.svelte";
+  import { isSafe } from "@/stores/dev.store";
+  import { content } from "@/stores/modal.store";
 
   Cesium.GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
@@ -43,9 +45,27 @@
       destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude),
       duration: 0,
     });
-
+    viewer.extend(Cesium.viewerReferenceFrameMixin);
+    if (isSafe()) {
+      (globalThis as any).viewer = viewer;
+    }
     $storeViewer = viewer;
+
+    //Add Buttons
     addButton(Settings);
+
+    const toolbar: any = document.querySelector(".cesium-viewer-toolbar");
+
+    const children = toolbar.children;
+
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      if (!child.classList.contains("added-button")) {
+        child.addEventListener("click", (event: any) => {
+          $content = undefined;
+        });
+      }
+    }
   });
 </script>
 

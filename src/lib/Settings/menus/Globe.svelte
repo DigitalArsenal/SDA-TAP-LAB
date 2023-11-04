@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-  <div class="flex flex-col gap-4 p-6 text-xs text-center">
+  <div class="flex flex-col gap-4 p-6 pt-4 text-xs text-center">
     <div class="grid grid-cols-3 items-center justify-center">
       <div class="text-left">Reference Frame</div>
       <div class="flex form-check form-switch">
@@ -135,7 +135,7 @@
           for="flexSwitchCheckDefault" />
       </div>
     </div>
-    <div class="grid grid-cols-3 items-center justify-center">
+    <!--<div class="grid grid-cols-3 items-center justify-center">
       <div class="text-left">Show Mouse LNG/LAT</div>
       <div class="flex form-check form-switch">
         <div class="w-full flex items-center justify-center">
@@ -152,9 +152,9 @@
           class="form-check-label inline-block"
           for="flexSwitchCheckDefault" />
       </div>
-    </div>
+    </div>-->
     <div class="grid grid-cols-3 items-center justify-center">
-      <div class="text-left">Depth Test Against Terrain</div>
+      <div class="text-left">Depth Test Terrain</div>
       <div class="flex form-check form-switch">
         <div class="w-full flex items-center justify-center">
           <input
@@ -171,6 +171,7 @@
           for="flexSwitchCheckDefault" />
       </div>
     </div>
+    <!--
     <div class="grid grid-cols-3 items-center justify-center">
       <div class="text-left">X GRID</div>
       <div class="flex form-check form-switch">
@@ -224,7 +225,7 @@
           class="form-check-label inline-block"
           for="flexSwitchCheckDefault" />
       </div>
-    </div>
+    </div>-->
   </div>
 </div>
 

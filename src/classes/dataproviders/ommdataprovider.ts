@@ -7,7 +7,7 @@ import statusTemplate from "@/templates/omm.status.svelte";
 import { CatalogEntityMetadata } from "../entitymetadata";
 import xxhash from "xxhashjs";
 //@ts-ignore
-import * as GlobalOrb from "@/lib/external/orb.mjs";
+import * as GlobalOrb from "orbpro";
 let globalOrb: any = GlobalOrb;
 import type { ExtendedDataSource } from "../extendedDataSource";
 let { Orb, Color } = globalOrb;

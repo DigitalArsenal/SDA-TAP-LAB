@@ -4,9 +4,6 @@
   import { gears } from "svelte-awesome/icons";
   import { content } from "@/stores/modal.store";
   import SettingsModal from "./SettingsModal.svelte";
-  import { isSafe } from "@/stores/dev.store";
-
-  if (isSafe()) $content = SettingsModal;
 
   const toggleModal = () => {
     $content = !$content ? SettingsModal : undefined;

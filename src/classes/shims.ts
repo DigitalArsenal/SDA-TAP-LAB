@@ -1,4 +1,4 @@
-import type { DataSource } from "@/lib/external/orb.mjs";
+import type { DataSource } from "orbpro";
 
 export interface SpaceCatalogDataSourceIntermediateType extends DataSource {
     loadOMM: Function;
