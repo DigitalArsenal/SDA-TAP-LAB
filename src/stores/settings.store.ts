@@ -13,6 +13,8 @@ const scenario = new Scenario;
 scenario.settings = new Settings;
 
 import lzworker from '@/workers/lzWorker.mjs?worker&inline';
+import type { DataProvider, SatelliteCatalogDataProvider } from "@/classes/dataprovider";
+import { SpaceCatalogDataSource } from "orbpro";
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
 interface DeserializeDataHandler {
@@ -22,7 +24,7 @@ interface DeserializeDataHandler {
 const groups: Writable<Array<Group>> = scenario.groups;
 
 const saveState = async (exportJSON: boolean = false): Promise<string> => {
-    let { dataProviderInstances, ...scenarioRest } = scenario;
+    let { ...scenarioRest } = scenario;
     let exportScenario = JSON.stringify(scenarioRest, (key, value) => {
 
         value = value?.subscribe ? get(value) : value;
@@ -71,6 +73,7 @@ const _loadState = (data: string) => {
             return value;
         }
     });
+    console.log(importScenario);
     recurseWrite(importScenario, scenario);
     return 1;
 }
@@ -143,7 +146,15 @@ const goBack = () => {
     }
 }
 
+let subscriptions: any = [];
+
 storeViewer.subscribe((viewer) => {
+
+    while (subscriptions.length) {
+        let s = subscriptions.pop();
+        s();
+    }
+
     if (!viewer) {
         return;
     }
@@ -157,65 +168,94 @@ storeViewer.subscribe((viewer) => {
         CameraSettings,
     } = scenario.settings;
 
+    const { settings, satelliteCatalogDataProviders } = scenario;
+
     viewer.referenceFrame = get(referenceFrame);
-
-    referenceFrame.subscribe((rF: any) => {
-        console.log(rF);
-        viewer.referenceFrame = rF;
-        viewer.scene.render();
-    });
-
     viewer.cesiumWidget.scene.skyAtmosphere.show = get(skyAtmosphere);
     viewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
-    skyAtmosphere.subscribe((sA: any) => {
-        viewer.cesiumWidget.scene.skyAtmosphere.show = sA;
-    });
     viewer.scene.globe.enableLighting = get(enableLighting);
-    enableLighting.subscribe((eL: any) => {
+    viewer.scene.globe.depthTestAgainstTerrain = get(depthTestAgainstTerrain);
+    viewer.scene.highDynamicRange = get(highDynamicRange);
+    CameraSettings.enableMatrixMode.set(true);
+
+    subscriptions.push(referenceFrame.subscribe((rF: any) => {
+        viewer.referenceFrame = rF;
+        viewer.scene.render();
+    }));
+
+    subscriptions.push(skyAtmosphere.subscribe((sA: any) => {
+        viewer.cesiumWidget.scene.skyAtmosphere.show = sA;
+        viewer.scene.render();
+    }));
+
+    subscriptions.push(enableLighting.subscribe((eL: any) => {
         viewer.scene.globe.enableLighting = eL;
         viewer.scene.render();
-    });
+    }));
 
-    viewer.scene.globe.depthTestAgainstTerrain = get(depthTestAgainstTerrain);
-    depthTestAgainstTerrain.subscribe((eL: any) => {
+    subscriptions.push(depthTestAgainstTerrain.subscribe((eL: any) => {
         viewer.scene.globe.depthTestAgainstTerrain = eL;
         viewer.scene.render();
-    });
+    }));
 
-    viewer.scene.highDynamicRange = get(highDynamicRange);
-    highDynamicRange.subscribe((hDR: any) => {
+    subscriptions.push(highDynamicRange.subscribe((hDR: any) => {
         viewer.scene.highDynamicRange = hDR;
-    });
-    CameraSettings.enableMatrixMode.subscribe(mM => {
+        viewer.scene.render();
+    }));
+
+    subscriptions.push(CameraSettings.enableMatrixMode.subscribe(mM => {
         if (mM) {
             addMatrixModeScreenSpaceEventHandler(viewer);
         } else {
             removeMatrixModeScreenSpaceEventHandler();
         }
-    });
+    }));
 
-    CameraSettings.enableMatrixMode.set(true);
-
-    const { settings } = scenario;
-    settings.ClockSettings.shouldAnimate.subscribe(a => {
+    subscriptions.push(settings.ClockSettings.shouldAnimate.subscribe(a => {
         if (a) {
             viewer.clock.shouldAnimate = true;
         } else {
             viewer.clock.shouldAnimate = false;
         }
-    });
-    settings.ClockSettings.multiplier.subscribe((m: number) => {
-        viewer.clock.multiplier = m;
-    });
+        viewer.scene.render();
+    }));
 
-    settings.debugFPS.subscribe((d: boolean) => {
+    subscriptions.push(settings.ClockSettings.multiplier.subscribe((m: number) => {
+        viewer.clock.multiplier = m;
+    }));
+
+    subscriptions.push(settings.debugFPS.subscribe((d: boolean) => {
         viewer.scene.debugShowFramesPerSecond = d;
-    });
-    settings.fxaa.subscribe((f: boolean) => {
+    }));
+
+    subscriptions.push(settings.fxaa.subscribe((f: boolean) => {
         //@ts-ignore
         viewer.scene.fxaa = f;
-    });
+        viewer.scene.render();
+    }));
 
+    subscriptions.push(satelliteCatalogDataProviders.subscribe((dProviders: Array<SatelliteCatalogDataProvider>) => {
+        dProviders.forEach(async (dP) => {
+            if (dP.OMM_URL) {
+                let ommBuffer = new ArrayBuffer(0), catBuffer = new ArrayBuffer(0);
+                if (dP.OMM_URL) {
+                    ommBuffer = await (await fetch(dP.OMM_URL)).arrayBuffer();
+                }
+                if (dP.CAT_URL) {
+                    catBuffer = await (await fetch(dP.CAT_URL)).arrayBuffer();
+                }
+                let hasDataSource = viewer.dataSources.getByName(dP.name)[0] as SpaceCatalogDataSource;
+                let spaceCatalog: SpaceCatalogDataSource = hasDataSource || new SpaceCatalogDataSource({ ...dP, scene: viewer.scene });
+
+                await spaceCatalog.loadOMM(ommBuffer, catBuffer);
+                
+                if (!hasDataSource) {
+                    await viewer.dataSources.add(spaceCatalog);
+                }
+            }
+        })
+
+    }));
 });
 
 

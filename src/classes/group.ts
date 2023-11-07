@@ -1,4 +1,4 @@
-import { GraphicsDefault } from "@/stores/defaults";
+import { GraphicsDefault } from "@/stores/defaults.store";
 import { Filter } from "./filter";
 
 class Point {
@@ -9,7 +9,7 @@ class Point {
 }
 
 class PathPartial {
-    color: string;
+    color: string | undefined;
 }
 
 class Path {
@@ -20,9 +20,9 @@ class Path {
 }
 
 export class Group extends Filter {
-    id: string
-    name: string
-    description: string
+    id: string | undefined
+    name: string | undefined
+    description: string | undefined
     point: Point = new Point()
     path: Path = new Path()
     enabled: boolean = true

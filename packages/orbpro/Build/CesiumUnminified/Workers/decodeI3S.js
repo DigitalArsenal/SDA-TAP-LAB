@@ -1,7 +1,7 @@
 /**
  * @license
  * Cesium - https://github.com/CesiumGS/cesium
- * Version 1.110.1
+ * Version 1.111
  *
  * Copyright 2011-2022 Cesium Contributors
  *
@@ -25,28 +25,28 @@
 
 import {
   require_draco_decoder_nodejs
-} from "./chunk-JIWJNE43.js";
+} from "./chunk-NVAQITH6.js";
 import {
   WebMercatorProjection_default
-} from "./chunk-X7FLLQWQ.js";
+} from "./chunk-I5KYC5QY.js";
 import {
   createTaskProcessorWorker_default
-} from "./chunk-PLLSOOH7.js";
+} from "./chunk-XG2O5V7X.js";
 import {
   Cartesian3_default,
   Cartographic_default,
   Ellipsoid_default,
   Matrix3_default
-} from "./chunk-W5M72RHG.js";
+} from "./chunk-M35EWU24.js";
 import {
   Math_default
-} from "./chunk-PNM36UFO.js";
-import "./chunk-CGHLEZ43.js";
-import "./chunk-5C77OAR2.js";
+} from "./chunk-DM2LKTVS.js";
+import "./chunk-N73NY3KY.js";
+import "./chunk-TU2FA5CD.js";
 import {
   __toESM,
   defined_default
-} from "./chunk-XT7SRL3S.js";
+} from "./chunk-37JEF5H2.js";
 
 // packages/engine/Source/Workers/decodeI3S.js
 var import_draco_decoder_nodejs = __toESM(require_draco_decoder_nodejs(), 1);

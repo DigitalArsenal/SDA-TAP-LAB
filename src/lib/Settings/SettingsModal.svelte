@@ -13,7 +13,7 @@
   class="fixed inset-0 mt-12 mr-2 flex justify-center items-center z-50 h-[43%] md:h-1/2 w-full md:w-1/2 max-h-[400px] right-0 left-auto">
   <!-- Modal content -->
   <div
-    style="background:rgba(48, 51, 54, .6)"
+    style="background:rgba(48, 51, 54, .7)"
     class="bg-opacity-75 text-white rounded-lg shadow-xl w-full h-full overflow-auto flex flex-col border border-gray-600">
     <!-- Modal header -->
     <div class="flex-none">

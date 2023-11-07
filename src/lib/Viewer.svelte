@@ -20,7 +20,7 @@
       geocoder: true,
       infoBox: false,
       navigationHelpButton: false,
-      projectionPicker: true,
+      //projectionPicker: true,
       sceneModePicker: true,
       animationContainer: false,
       animation: false,
@@ -46,6 +46,7 @@
       duration: 0,
     });
     viewer.extend(Cesium.viewerReferenceFrameMixin);
+    
     if (isSafe()) {
       (globalThis as any).viewer = viewer;
     }
