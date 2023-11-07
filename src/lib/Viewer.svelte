@@ -8,7 +8,7 @@
   import Settings from "./Settings/Settings.svelte";
   import { isSafe } from "@/stores/dev.store";
   import { content } from "@/stores/modal.store";
-
+  import Timeline from "@/lib/Timeline/TimeLine.svelte";
   Cesium.GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
   onMount(() => {
@@ -23,7 +23,7 @@
       //projectionPicker: true,
       sceneModePicker: true,
       animationContainer: false,
-      animation: false,
+      animation: true,
       timeline: false,
       timelineContainer: true,
       selectionIndicator: false,
@@ -32,6 +32,11 @@
       bottomContainer: document.createElement("p"),
       orderIndependentTranslucency: false,
       shadows: true,
+    });
+
+    new Timeline({
+      props: { viewer },
+      target: viewer.timeline.container,
     });
 
     viewer.scene.debugShowFramesPerSecond = true;
@@ -46,7 +51,7 @@
       duration: 0,
     });
     viewer.extend(Cesium.viewerReferenceFrameMixin);
-    
+
     if (isSafe()) {
       (globalThis as any).viewer = viewer;
     }
