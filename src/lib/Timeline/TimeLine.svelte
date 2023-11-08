@@ -1,6 +1,17 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { JulianDate, Viewer } from "orbpro";
+  import { showRows } from "@/stores/timeline.store";
+  //styles
+  const setTimeLineStyle = (value: string = "27px") => {
+    document.documentElement.style.setProperty(
+      "--timeline-container-height",
+      value
+    );
+  };
+
+  //init
+  setTimeLineStyle();
 
   // @ts-ignore
   Number.prototype.map = function (in_min, in_max, out_min, out_max) {
@@ -9,6 +20,42 @@
       ((this - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min
     );
   };
+
+  /**
+   * Events API
+   */
+
+  interface Event {
+    id: string;
+    title: string;
+    description?: string;
+    startTime: JulianDate;
+    endTime: JulianDate;
+    // Include any additional properties relevant to your events
+  }
+
+  interface TimelineRow {
+    id: String;
+    events: Event[];
+    // You can add additional properties to each row if needed, like a label or unique identifier
+  }
+
+  // This would be the type for an array of timeline rows
+  export const TimelineRows: Array<TimelineRow> = [{ id: "test", events: [] }];
+
+  //$showRows = true;
+
+  const animationContainer: any = document.getElementsByClassName(
+    "cesium-viewer-animationContainer"
+  )[0];
+  $: {
+    if (showRows) {
+      setTimeLineStyle("auto");
+      // animationContainer.style.display = "none";
+    } else {
+      setTimeLineStyle();
+    }
+  }
 
   /**
    * The `viewer` to add the timeline.
@@ -79,6 +126,7 @@
   let cEVT: any;
   let currentTime;
   let debounceT: any;
+
   onMount(() => {
     document.addEventListener("mouseup", endDrag, false);
     document.addEventListener("mousemove", drag, false);
@@ -224,63 +272,74 @@
 </script>
 
 <div id="timelineviewer">
-  <div
-    style="
-  position: absolute;
-  top: -10;
-  height:110%;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  background-color: #fffa;
-" />
-  <div id="timelineContainer" style="z-index:40;" on:wheel={mouseWheel}>
+  <div id="centerLine" />
+  <div id="timelineContainer" on:wheel={mouseWheel}>
     <!--todo pointer events, once iOS works-->
-
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div
-      id="shuttleBay"
-      class="bottomRow thinOutline"
-      on:contextmenu={endDrag}
-      on:mousedown={startDrag}
-      on:mousemove={drag}
-      on:mouseup={endDrag}
-      on:touchstart={startDrag}
-      on:touchmove={drag}
-      on:touchend={endDrag}
-      on:touchcancel={endDrag}>
-      <svg
-        id="ticks"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="100%"
-        height="100%"
-        style="position:relative; top:2px">
-        {#each displayTicks as iPos, i}
-          {#if !(i % quarterTick(numTicks))}
-            <text
-              textLength="100px"
-              lengthAdjust="spacingAndGlyphs"
-              x={iPos}
-              dx="-57px"
-              y="20"
-              class:tickSkip={!(i % (quarterTick(numTicks) * 2))}>
-              {tickTime(i, iPos)}
-            </text>
-          {/if}
-          <line
-            x1={iPos}
-            y1="0%"
-            x2={iPos}
-            y2={i % 5 ? "7%" : !(i % quarterTick(numTicks)) ? "30%" : "14%"} />
-        {/each}
-      </svg>
+    <div>
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <div
+        id="shuttleBay"
+        class="timelineRow thinOutline"
+        on:contextmenu={endDrag}
+        on:mousedown={startDrag}
+        on:mousemove={drag}
+        on:mouseup={endDrag}
+        on:touchstart={startDrag}
+        on:touchmove={drag}
+        on:touchend={endDrag}
+        on:touchcancel={endDrag}>
+        <svg
+          id="ticks"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="100%"
+          height="100%"
+          style="position:relative; top:2px">
+          {#each displayTicks as iPos, i}
+            {#if !(i % quarterTick(numTicks))}
+              <text
+                textLength="100px"
+                lengthAdjust="spacingAndGlyphs"
+                x={iPos}
+                dx="-57px"
+                y="20"
+                class:tickSkip={!(i % (quarterTick(numTicks) * 2))}>
+                {tickTime(i, iPos)}
+              </text>
+            {/if}
+            <line
+              x1={iPos}
+              y1="0%"
+              x2={iPos}
+              y2={i % 5
+                ? "7%"
+                : !(i % quarterTick(numTicks))
+                ? "30%"
+                : "14%"} />
+          {/each}
+        </svg>
+      </div>
+      {#each TimelineRows as tLR, t}
+        <div class="dataRow">{tLR.id}</div>
+      {/each}
     </div>
   </div>
 </div>
 
 <style>
+  :global(.cesium-viewer-timelineContainer) {
+    height: var(--timeline-container-height);
+  }
+  #centerLine {
+    position: absolute;
+    top: -10;
+    height: 110%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    background-color: #fffa;
+  }
   #ticks line {
     stroke: rgb(207, 207, 207);
     stroke-width: 1;
@@ -298,12 +357,20 @@
     width: 100%;
     border-top: 1px solid gray;
   }
-  .bottomRow {
+  .timelineRow {
     height: 30px;
+  }
+  .dataRow {
+    color: white;
+    height: 30px;
+    border-top: 1px #999 solid;
+    padding: 5px;
   }
   /*flex row 2*/
   #timelineContainer {
+    z-index: 40;
     display: flex;
+    flex-direction: column;
     align-items: stretch;
     -webkit-user-select: none;
     -khtml-user-select: none;

@@ -22,7 +22,7 @@
       navigationHelpButton: false,
       //projectionPicker: true,
       sceneModePicker: true,
-      animationContainer: false,
+      //animationContainer: false,
       animation: true,
       timeline: false,
       timelineContainer: true,
