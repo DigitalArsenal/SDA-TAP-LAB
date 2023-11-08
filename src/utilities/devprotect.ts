@@ -16,6 +16,6 @@ const prevent = async (event: any) => {
     }
 }
 export const init = async () => {
-    await prevent({ detail: devtools });
-    window.addEventListener("devtoolschange", prevent);
+  //  await prevent({ detail: devtools });
+   // window.addEventListener("devtoolschange", prevent);
 };
