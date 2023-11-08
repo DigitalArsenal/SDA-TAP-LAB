@@ -28,7 +28,7 @@
       timelineContainer: true,
       selectionIndicator: false,
       requestRenderMode: true,
-      showRenderLoopErrors: true,
+      showRenderLoopErrors: isSafe() ? true : false,
       bottomContainer: document.createElement("p"),
       orderIndependentTranslucency: false,
       shadows: true,
