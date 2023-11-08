@@ -50,6 +50,12 @@ export default defineConfig({
   ],
   build: {
     minify: "terser",
+    terserOptions: {
+      // Terser options to prevent stripping of debugger
+      compress: {
+        drop_debugger: false // Do not remove debugger statements
+      }
+    },
     emptyOutDir: false,
     outDir: "docs",
     rollupOptions: {

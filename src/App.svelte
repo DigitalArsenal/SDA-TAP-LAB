@@ -8,6 +8,7 @@
   import { IP } from "@/stores/user.store";
   import { init as devProtectInit } from "@/utilities/devprotect";
   import { cesiumEvents } from "@/stores/cesium.sync";
+  import type { Entity } from "orbpro";
   const { selectedEntity, trackedEntity } = cesiumEvents;
   onMount(() => {
     devProtectInit();
@@ -20,6 +21,11 @@
         console.error("Error fetching IP", error);
       });
   });
+
+  /*let activeObject: Entity;
+  $: {
+    
+  }*/
 </script>
 
 {#if $showEULA && globalThis.location.hostname !== "12localhost"}
@@ -27,7 +33,9 @@
 {:else}
   <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
     <Viewer />
-    <div class="fixed top-0 left-0 text-white">{$selectedEntity?.id || $trackedEntity?.id}</div>
+    <div class="fixed top-0 left-0 text-white">
+      {$selectedEntity?.id || $trackedEntity?.id}
+    </div>
   </div>
 {/if}
 <Modal />
