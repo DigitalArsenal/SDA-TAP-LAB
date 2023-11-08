@@ -320,12 +320,7 @@
   .timelineRow {
     height: 30px;
   }
-  .dataRow {
-    color: white;
-    height: 30px;
-    border-top: 1px #999 solid;
-    padding: 5px;
-  }
+
   /*flex row 2*/
   #timelineContainer {
     z-index: 40;

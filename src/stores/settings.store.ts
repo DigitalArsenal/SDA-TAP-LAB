@@ -5,15 +5,17 @@ import { Scenario } from "@/classes/scenario";
 import type { Group } from "@/classes/group";
 import { serializeGroups, deserializeGroups } from "./group/serializegroups";
 import { viewer as storeViewer } from "@/stores/viewer.store";
+import { initEvents, removeEvents } from "./cesium.sync";
 import {
     addMatrixModeScreenSpaceEventHandler,
     removeMatrixModeScreenSpaceEventHandler
 } from "@/behaviors/matrixModeEventHandler";
+
 const scenario = new Scenario;
 scenario.settings = new Settings;
 
 import lzworker from '@/workers/lzWorker.mjs?worker&inline';
-import type { DataProvider, SatelliteCatalogDataProvider } from "@/classes/dataprovider";
+import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
 import { SpaceCatalogDataSource } from "orbpro";
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
@@ -158,6 +160,9 @@ storeViewer.subscribe((viewer) => {
     if (!viewer) {
         return;
     }
+
+    removeEvents();
+    initEvents(viewer);
 
     let {
         referenceFrame,

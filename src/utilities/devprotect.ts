@@ -5,6 +5,7 @@ let intervalId: any;
 
 const prevent = async (event: any) => {
     const safe = isSafe();
+    console.log(safe);
     if (!safe) {
         if (event.detail.isOpen) {
             intervalId = setInterval(() => {

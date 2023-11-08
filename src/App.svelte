@@ -7,7 +7,8 @@
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
   import { init as devProtectInit } from "@/utilities/devprotect";
-
+  import { cesiumEvents } from "@/stores/cesium.sync";
+  const { selectedEntity, trackedEntity } = cesiumEvents;
   onMount(() => {
     devProtectInit();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -26,6 +27,7 @@
 {:else}
   <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
     <Viewer />
+    <div class="fixed top-0 left-0 text-white">{$selectedEntity?.id || $trackedEntity?.id}</div>
   </div>
 {/if}
 <Modal />
