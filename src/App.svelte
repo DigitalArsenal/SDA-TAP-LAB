@@ -42,7 +42,7 @@
   </div>
 {/if}
 <Modal />
-<div class="fixed bottom-[30px] left-[135px]"><Logos/></div>
+<div class="fixed bottom-[30px] right-2"><Logos/></div>
 <!-- svelte-ignore css-unused-selector -->
 <style global lang="postcss">
   @tailwind utilities;
