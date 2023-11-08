@@ -6,7 +6,7 @@
   import EULA from "./lib/EULA/EULA.svelte";
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
-  import { init as devProtectInit } from "@/utilities/devprotect";
+  //import { init as devProtectInit } from "@/utilities/devprotect";
   import { cesiumEvents } from "@/stores/cesium.sync";
   import type { Entity } from "orbpro";
   import { isSafe } from "./stores/dev.store";
@@ -14,7 +14,7 @@
 
   const { selectedEntity, trackedEntity } = cesiumEvents;
   onMount(() => {
-    devProtectInit();
+    //devProtectInit();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
       .then((response) => response.json())
       .then((data) => {
@@ -31,7 +31,7 @@
   }*/
 </script>
 
-{#if $showEULA && isSafe()}
+{#if $showEULA}
   <EULA />
 {:else}
   <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
