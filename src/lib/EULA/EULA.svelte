@@ -36,22 +36,25 @@
   }
 </script>
 
+<div class="text-gray-500 text-xs fixed top-1 right-2">
+  {$eulaVersion.toFixed(1)}
+</div>
 <div
   id="EULA"
   class="flex flex-col items-center justify-center h-[100%] text-black">
-  <div class="flex flex-col justify-bottom items-center">
+  <div
+    class="flex flex-col gap-2 justify-bottom items-center justify-center border rounded border-gray-500 mb-[10%]">
     <img
       src={DALogo}
       alt="DigitalArsenal.io"
-      class="mb-16 h-16"
+      class="h-16"
       style="filter: invert(1);" />
+    <a
+      class="text-xs font-normal text-gray-500"
+      href="https://digitalarsenal.io">https://digitalarsenal.io</a>
   </div>
   <div
-    class="text-xs text-gray-400 font-normal flex justify-between text-white w-2/3">
-    <a class="text-xs font-normal text-white" href="https://digitalarsenal.io"
-      >https://digitalarsenal.io</a>
-    <div>{$eulaVersion.toFixed(1)}</div>
-  </div>
+    class="text-xs text-gray-400 font-normal flex justify-between text-white w-2/3" />
   <div
     class="bg-white p-8 rounded-sm shadow-lg w-2/3 max-h-[50%] overflow-y-auto"
     on:scroll={onScroll}>
@@ -172,8 +175,8 @@
   </div>
 
   {#if $IP?.length}
-    <div class="text-gray-400 text-[.75rem] w-2/3 text-right">
-      User IP: {$IP}
+    <div class="text-gray-400 text-[.75rem] fixed bottom-2 left-2">
+      IP: {$IP}
     </div>
   {/if}
 
@@ -189,11 +192,8 @@
 </div>
 <div class="fixed bottom-0 right-0">
   <div class="text-gray-400 text-xs mb-1 ml-2">IN SUPPORT OF:</div>
-<img
-src={sda}
-alt="SDA"
-class="mb-4 h-8"
-style="filter: invert(1);" />
+  <img src={sda} alt="SDA" class="mb-4 h-8" style="filter: invert(1);" />
 </div>
+
 <style>
 </style>
