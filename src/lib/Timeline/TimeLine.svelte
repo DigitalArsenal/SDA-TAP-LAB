@@ -49,7 +49,7 @@
     "cesium-viewer-animationContainer"
   )[0];
   $: {
-    if (showRows) {
+    if ($showRows) {
       setTimeLineStyle("auto");
       // animationContainer.style.display = "none";
     } else {
