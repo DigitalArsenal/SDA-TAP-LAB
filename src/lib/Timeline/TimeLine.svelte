@@ -1,17 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { JulianDate, Viewer } from "orbpro";
-  import { showRows } from "@/stores/timeline.store";
-  //styles
-  const setTimeLineStyle = (value: string = "27px") => {
-    document.documentElement.style.setProperty(
-      "--timeline-container-height",
-      value
-    );
-  };
-
-  //init
-  setTimeLineStyle();
 
   // @ts-ignore
   Number.prototype.map = function (in_min, in_max, out_min, out_max) {
@@ -32,29 +21,6 @@
     startTime: JulianDate;
     endTime: JulianDate;
     // Include any additional properties relevant to your events
-  }
-
-  interface TimelineRow {
-    id: String;
-    events: Event[];
-    // You can add additional properties to each row if needed, like a label or unique identifier
-  }
-
-  // This would be the type for an array of timeline rows
-  export const TimelineRows: Array<TimelineRow> = [{ id: "test", events: [] }];
-
-  //$showRows = true;
-
-  const animationContainer: any = document.getElementsByClassName(
-    "cesium-viewer-animationContainer"
-  )[0];
-  $: {
-    if ($showRows) {
-      setTimeLineStyle("auto");
-      // animationContainer.style.display = "none";
-    } else {
-      setTimeLineStyle();
-    }
   }
 
   /**
@@ -319,17 +285,11 @@
           {/each}
         </svg>
       </div>
-      {#each TimelineRows as tLR, t}
-        <div class="dataRow">{tLR.id}</div>
-      {/each}
     </div>
   </div>
 </div>
 
 <style>
-  :global(.cesium-viewer-timelineContainer) {
-    height: var(--timeline-container-height);
-  }
   #centerLine {
     position: absolute;
     top: -10;

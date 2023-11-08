@@ -248,7 +248,7 @@ storeViewer.subscribe((viewer) => {
                 let spaceCatalog: SpaceCatalogDataSource = hasDataSource || new SpaceCatalogDataSource({ ...dP, scene: viewer.scene });
 
                 await spaceCatalog.loadOMM(ommBuffer, catBuffer);
-                
+
                 if (!hasDataSource) {
                     await viewer.dataSources.add(spaceCatalog);
                 }
