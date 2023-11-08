@@ -4,7 +4,7 @@ import type { Writable } from "svelte/store";
 import type { KeyValueDataStructure } from "./KeyValueDataStructure";
 
 class ClockSettings {
-    enableRealTimeMode: Writable<boolean> = writable(false);
+    clockStep: Writable<number> = writable(1);
     shouldAnimate: Writable<boolean> = writable(true);
     multiplier: Writable<number> = writable(1);
 

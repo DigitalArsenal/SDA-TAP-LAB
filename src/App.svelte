@@ -9,6 +9,9 @@
   import { init as devProtectInit } from "@/utilities/devprotect";
   import { cesiumEvents } from "@/stores/cesium.sync";
   import type { Entity } from "orbpro";
+  import { isSafe } from "./stores/dev.store";
+  import Logos from "@/lib/Logos.svelte";
+
   const { selectedEntity, trackedEntity } = cesiumEvents;
   onMount(() => {
     devProtectInit();
@@ -28,7 +31,7 @@
   }*/
 </script>
 
-{#if $showEULA && globalThis.location.hostname !== "12localhost"}
+{#if $showEULA && isSafe()}
   <EULA />
 {:else}
   <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
@@ -39,7 +42,7 @@
   </div>
 {/if}
 <Modal />
-
+<div class="fixed bottom-[30px] left-[135px]"><Logos/></div>
 <!-- svelte-ignore css-unused-selector -->
 <style global lang="postcss">
   @tailwind utilities;

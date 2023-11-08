@@ -2,8 +2,9 @@
   import "orbpro_build/Cesium/Widgets/widgets.css";
   //@ts-ignore
   import * as Cesium from "orbpro";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { viewer as storeViewer } from "../stores/viewer.store";
+  import { scenario } from "@/stores/settings.store";
   import { addButton } from "./Toolbar/toolbar";
   import Settings from "./Settings/Settings.svelte";
   import { isSafe } from "@/stores/dev.store";
@@ -72,6 +73,39 @@
         });
       }
     }
+
+    //Clock sync
+    const clock = viewer.clock;
+
+    const originalShouldAnimatePropertyDescriptor: any =
+      Object.getOwnPropertyDescriptor(Cesium.Clock.prototype, "shouldAnimate");
+
+    // Define a new property 'shouldAnimate' with a getter and setter
+    Object.defineProperty(clock, "shouldAnimate", {
+      get: function () {
+        return originalShouldAnimatePropertyDescriptor.get.call(this);
+      },
+      set: function (value) {
+        originalShouldAnimatePropertyDescriptor.set.call(this, value);
+        scenario.settings.ClockSettings.shouldAnimate.set(value);
+      },
+    });
+
+    // Store the original property descriptor
+    const originalClockStepPropertyDescriptor: any =
+      Object.getOwnPropertyDescriptor(Cesium.Clock.prototype, "clockStep");
+
+    // Re-define the property with a getter/setter
+    Object.defineProperty(clock, "clockStep", {
+      get: function () {
+        return originalClockStepPropertyDescriptor.get.call(this);
+      },
+      set: function (value) {
+        originalClockStepPropertyDescriptor.set.call(this, value);
+        scenario.settings.ClockSettings.clockStep.set(value);
+      },
+      configurable: true, // Ensure that the property can be redefined later
+    });
   });
 </script>
 
