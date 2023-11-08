@@ -40,9 +40,10 @@
       {$selectedEntity?.id || $trackedEntity?.id}
     </div>
   </div>
+  <Modal />
+  <div class="fixed bottom-[30px] right-2 -z-100"><Logos /></div>
 {/if}
-<Modal />
-<div class="fixed bottom-[30px] right-2 -z-100"><Logos/></div>
+
 <!-- svelte-ignore css-unused-selector -->
 <style global lang="postcss">
   @tailwind utilities;

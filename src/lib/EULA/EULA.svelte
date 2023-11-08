@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import DALogo from "@/assets/da-wide.png";
+  import sda from "@/assets/sda-credit.png";
   import { eulaVersion, showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
 
@@ -42,7 +43,7 @@
     <img
       src={DALogo}
       alt="DigitalArsenal.io"
-      class="mb-4 h-16"
+      class="mb-16 h-16"
       style="filter: invert(1);" />
   </div>
   <div
@@ -186,6 +187,13 @@
     I AGREE
   </button>
 </div>
-
+<div class="fixed bottom-0 right-0">
+  <div class="text-gray-400 text-xs mb-1 ml-2">IN SUPPORT OF:</div>
+<img
+src={sda}
+alt="SDA"
+class="mb-4 h-8"
+style="filter: invert(1);" />
+</div>
 <style>
 </style>
