@@ -42,6 +42,7 @@ export default class Settings {
     latLonGrid: Writable<boolean> = writable(false);
     showNonGroupedObjects: Writable<boolean> = writable(true);
     lastLoad: Writable<number> = writable(0);
+    showLatLonGrid: Writable<boolean> = writable(false);
     X_GRID: Writable<boolean> = writable(false);
     Y_GRID: Writable<boolean> = writable(false);
     Z_GRID: Writable<boolean> = writable(false);

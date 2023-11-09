@@ -16,7 +16,7 @@ scenario.settings = new Settings;
 
 import lzworker from '@/workers/lzWorker.mjs?worker&inline';
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { SpaceCatalogDataSource } from "orbpro";
+import { LatLonGrid, SpaceCatalogDataSource } from "orbpro";
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
 interface DeserializeDataHandler {
@@ -171,6 +171,7 @@ storeViewer.subscribe((viewer) => {
         enableLighting,
         highDynamicRange,
         CameraSettings,
+        showLatLonGrid
     } = scenario.settings;
 
     const { settings, satelliteCatalogDataProviders } = scenario;
@@ -261,6 +262,16 @@ storeViewer.subscribe((viewer) => {
         })
 
     }));
+
+    let latLonGridInstance: LatLonGrid;
+    subscriptions.push(showLatLonGrid.subscribe((showLLG: boolean) => {
+        if (!latLonGridInstance && showLLG) {
+            latLonGridInstance = new LatLonGrid(viewer);
+        } else if (latLonGridInstance && !showLLG) {
+            latLonGridInstance.destroy();
+        }
+        viewer.scene.render();
+    }))
 });
 
 
