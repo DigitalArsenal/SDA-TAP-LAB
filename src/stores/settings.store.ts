@@ -263,12 +263,13 @@ storeViewer.subscribe((viewer) => {
 
     }));
 
-    let latLonGridInstance: LatLonGrid;
+    let latLonGridInstance: LatLonGrid | undefined = undefined;
     subscriptions.push(showLatLonGrid.subscribe((showLLG: boolean) => {
         if (!latLonGridInstance && showLLG) {
             latLonGridInstance = new LatLonGrid(viewer);
         } else if (latLonGridInstance && !showLLG) {
             latLonGridInstance.destroy();
+            latLonGridInstance = undefined;
         }
         viewer.scene.render();
     }))
