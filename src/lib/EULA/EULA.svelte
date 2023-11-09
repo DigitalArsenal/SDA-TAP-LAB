@@ -4,20 +4,33 @@
   import sda from "@/assets/sda-credit.png";
   import { eulaVersion, showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
+  import { Icon } from "svelte-awesome";
+  import { angleDoubleDown } from "svelte-awesome/icons";
 
   let isScrolledToBottom = false;
   const eulaUUID = "7e6d9cc1-5856-4238-90bf-7465b3b3446d:EULA";
   const eulaVersionUUID = "9b3babdc-ee1a-4435-b8a5-14ebf2665bdf:EULA:VERSION";
-  function agree() {
-    localStorage.setItem(eulaUUID, "true");
-    localStorage.setItem(eulaVersionUUID, JSON.stringify($eulaVersion));
+  let eulaElement: HTMLElement | null;
 
-    $showEULA = false;
+  function agree() {
+    if (!eulaElement) {
+      return;
+    }
+    if (!isScrolledToBottom) {
+      eulaElement.scrollTo({
+        top: eulaElement.scrollHeight,
+        behavior: "smooth",
+      });
+    } else {
+      localStorage.setItem(eulaUUID, "true");
+      localStorage.setItem(eulaVersionUUID, JSON.stringify($eulaVersion));
+      $showEULA = false;
+    }
   }
   onMount(() => {
+    eulaElement = document.getElementById("EULA");
     const eulaLocalAccepted = localStorage.getItem(eulaUUID);
     const eulaLocalVersion = localStorage.getItem(eulaVersionUUID);
-
     if (
       eulaLocalAccepted === null ||
       eulaLocalVersion === null ||
@@ -39,11 +52,9 @@
 <div class="text-gray-500 text-xs fixed top-1 right-2">
   {$eulaVersion.toFixed(1)}
 </div>
-<div
-  id="EULA"
-  class="flex flex-col items-center justify-center h-[100%] text-black">
+<div class="flex flex-col items-center justify-center h-[100%] text-black">
   <div
-    class="flex flex-col gap-2 justify-bottom items-center justify-center border rounded border-gray-500 mb-[10%]">
+    class="flex flex-col gap-2 justify-bottom items-center justify-center rounded border-gray-500 h-1/3">
     <img
       src={DALogo}
       alt="DigitalArsenal.io"
@@ -56,6 +67,7 @@
   <div
     class="text-xs text-gray-400 font-normal flex justify-between text-white w-2/3" />
   <div
+    id="EULA"
     class="bg-white p-8 rounded-sm shadow-lg w-2/3 max-h-[50%] overflow-y-auto"
     on:scroll={onScroll}>
     <h1 class="text-2xl font-bold mb-4">End-User License Agreement (EULA)</h1>
@@ -174,26 +186,28 @@
     </p>
   </div>
 
-  {#if $IP?.length}
-    <div class="text-gray-400 text-[.75rem] fixed bottom-2 left-2">
-      IP: {$IP}
-    </div>
-  {/if}
-
-  <button
-    class:bg-gray-300={!isScrolledToBottom}
-    class:bg-gradient-green={isScrolledToBottom}
-    class:text-white={isScrolledToBottom}
-    class="mt-4 p-3 text-white border-[1px] rounded-sm disabled:text-gray-600"
-    disabled={!isScrolledToBottom}
-    on:click={agree}>
-    I AGREE
-  </button>
+  <div class="h-1/3 flex items-center justify-center">
+    {#if !isScrolledToBottom}
+      <button
+        class="bg-gray-500 mt-4 p-3 text-white border-[1px] rounded-sm disabled:text-gray-600"
+        on:click={agree}>
+        Scroll Down <Icon data={angleDoubleDown} />
+      </button>
+    {:else}
+      <button
+        class="bg-gradient-green text-white mt-4 p-3 text-white border-[1px] rounded-sm disabled:text-gray-600"
+        on:click={agree}>
+        I AGREE
+      </button>
+    {/if}
+  </div>
 </div>
+{#if $IP?.length}
+  <div class="text-gray-400 text-[.75rem] fixed bottom-2 left-2">
+    IP: {$IP}
+  </div>
+{/if}
 <div class="fixed bottom-0 right-0">
   <div class="text-gray-400 text-xs mb-1 ml-2">IN SUPPORT OF:</div>
   <img src={sda} alt="SDA" class="mb-4 h-8" style="filter: invert(1);" />
 </div>
-
-<style>
-</style>
