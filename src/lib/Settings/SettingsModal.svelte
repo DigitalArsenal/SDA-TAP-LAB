@@ -1,13 +1,11 @@
 <script lang="ts">
   import { Icon } from "svelte-awesome";
-  import { close } from "svelte-awesome/icons";
   import { content } from "@/stores/modal.store";
   import Globe from "./menus/Globe.svelte";
   import { scenario } from "@/stores/settings.store";
   import { onMount } from "svelte";
-  import { get } from "svelte/store";
   import { viewer } from "@/stores/viewer.store";
-
+  import CloseButton from "@/lib/elements/CloseButton.svelte";
   let _shouldAnimate = true;
 
   onMount(() => {
@@ -36,12 +34,7 @@
         <div
           class="flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-4 md:pb-4 border-b border-gray-600">
           <p class="text-white font-[300]">Settings</p>
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
-            class="cursor-pointer modal-close-button text-lg text-gray-100 hover:bg-gray-500 active:bg-gray-400 w-6 h-6 md:w-7 md:h-7 flex items-center justify-center bg-gray-700 rounded-full border border-gray-500"
-            on:click={closeModal}>
-            <Icon data={close} />
-          </div>
+          <CloseButton onclick={closeModal} />
         </div>
       </div>
       <!-- Modal body -->

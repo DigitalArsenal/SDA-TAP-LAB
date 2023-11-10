@@ -1,21 +1,37 @@
 <script lang="ts">
   import "orbpro_build/Cesium/Widgets/widgets.css";
   //@ts-ignore
-  import * as Cesium from "orbpro";
+  import {
+    Viewer,
+    GoogleMaps,
+    Math as CesiumMath,
+    Cartographic,
+    Cartesian3,
+    viewerReferenceFrameMixin,
+    SpaceEntity,
+    Entity,
+  } from "orbpro";
   import { onMount, onDestroy } from "svelte";
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
   import { addButton } from "../Toolbar/toolbar";
   import Settings from "../Settings/Settings.svelte";
   import { isSafe } from "@/stores/dev.store";
-  import { content } from "@/stores/modal.store";
+  import { content, template } from "@/stores/modal.store";
   import Timeline from "@/lib/Timeline/TimeLine.svelte";
   import syncTwoWay from "./lib/SyncTwoWay";
+  import { cesiumEvents } from "@/stores/cesium.sync";
+  import { activeEntity } from "@/stores/entity.store";
 
-  Cesium.GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
+  import StatusBox from "@/lib/StatusBox/StatusBox.svelte";
+  import SpaceObjectTemplate from "../StatusBox/templates/SpaceObject.svelte";
+
+  const { selectedEntity, trackedEntity } = cesiumEvents;
+
+  GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
   onMount(() => {
-    const viewer: Cesium.Viewer = new Cesium.Viewer("cesiumContainer", {
+    const viewer: Viewer = new Viewer("cesiumContainer", {
       //globe: false,
       baseLayerPicker: true,
       homeButton: true,
@@ -44,16 +60,15 @@
 
     viewer.scene.debugShowFramesPerSecond = true;
     const cameraPosition = viewer.camera.positionWC;
-    const cartographicPosition =
-      Cesium.Cartographic.fromCartesian(cameraPosition);
-    const longitude = Cesium.Math.toDegrees(cartographicPosition.longitude);
-    const latitude = Cesium.Math.toDegrees(cartographicPosition.latitude);
+    const cartographicPosition = Cartographic.fromCartesian(cameraPosition);
+    const longitude = CesiumMath.toDegrees(cartographicPosition.longitude);
+    const latitude = CesiumMath.toDegrees(cartographicPosition.latitude);
     const altitude = cartographicPosition.height + 10000000;
     viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude),
+      destination: Cartesian3.fromDegrees(longitude, latitude, altitude),
       duration: 0,
     });
-    viewer.extend(Cesium.viewerReferenceFrameMixin);
+    viewer.extend(viewerReferenceFrameMixin);
 
     if (isSafe()) {
       (globalThis as any).viewer = viewer;
@@ -86,6 +101,19 @@
     );
     syncTwoWay(clock, "clockStep", scenario.settings.ClockSettings.clockStep);
     syncTwoWay(clock, "multiplier", scenario.settings.ClockSettings.multiplier);
+  });
+
+  // Active Entity
+  $: {
+    $activeEntity = $selectedEntity || $trackedEntity;
+  }
+  activeEntity.subscribe((aEntity: Entity | null) => {
+    if (aEntity) {
+      $content = StatusBox;
+      $template = SpaceObjectTemplate;
+    } else {
+      $content = undefined;
+    }
   });
 </script>
 

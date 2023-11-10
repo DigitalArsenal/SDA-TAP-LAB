@@ -61,9 +61,9 @@
         _timesIndex = 0;
       } else if (multiplier >= 0.01 && multiplier < 0.25) {
         _timesIndex = 1;
-      } else if (multiplier >= 0.25 && multiplier < 10) {
+      } else if (multiplier >= 0.25 && multiplier < 1) {
         _timesIndex = 2;
-      } else if (multiplier >= 10 && multiplier < 500) {
+      } else if (multiplier >= 1 && multiplier < 500) {
         _timesIndex = 3;
       } else if (multiplier >= 500 && multiplier < 1000) {
         _timesIndex = 4;
@@ -245,17 +245,11 @@
       dWidth;
     return retVal || 0;
   };
+
   export function endDrag(evt: any) {
     evt.preventDefault();
     dragging = false;
     return false;
-  }
-
-  $: {
-    console.log(new Array(50).join("-"));
-    console.log(_timesIndex);
-    console.log(_times[_timesIndex]);
-    console.log(numTicks);
   }
 
   let mouseWheel = (evt: any) => {

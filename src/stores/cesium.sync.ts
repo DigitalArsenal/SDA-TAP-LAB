@@ -12,10 +12,6 @@ const dataSourceEvents = {
     dataSourceRemoved: writable<DataSource | null>(null)
 };
 
-const metaEvents = {
-    orbitSelect: writable(null)
-}
-
 let registeredEvents: any = {};
 const initEvents = (viewer: Viewer) => {
     for (let ev in cesiumEvents) {

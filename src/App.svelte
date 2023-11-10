@@ -6,10 +6,8 @@
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
   //import { init as devProtectInit } from "@/utilities/devprotect";
-  import { cesiumEvents } from "@/stores/cesium.sync";
   import Logos from "@/lib/Logos.svelte";
 
-  const { selectedEntity, trackedEntity } = cesiumEvents;
   onMount(() => {
     //devProtectInit();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -21,24 +19,14 @@
         console.error("Error fetching IP", error);
       });
   });
-
-  /*let activeObject: Entity;
-  $: {
-    
-  }*/
 </script>
 
 {#if $showEULA}
   <EULA />
 {:else}
-  <div class="flex flex-col fixed top-0 z-0 w-full h-full bg-black">
-    <Viewer />
-    <div class="fixed top-0 left-0 text-white">
-      {$selectedEntity?.id || $trackedEntity?.id}
-    </div>
-  </div>
-  <Modal />
+  <Viewer />
   <div class="fixed bottom-[30px] right-2 -z-100"><Logos /></div>
+  <Modal />
 {/if}
 
 <!-- svelte-ignore css-unused-selector -->
