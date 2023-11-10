@@ -1,15 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Viewer from "./lib/Viewer.svelte";
+  import Viewer from "./lib/Viewer/Viewer.svelte";
   import Modal from "./lib/Modal/Modal.svelte";
-  import TimeLine from "./lib/Timeline/TimeLine.svelte";
   import EULA from "./lib/EULA/EULA.svelte";
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
   //import { init as devProtectInit } from "@/utilities/devprotect";
   import { cesiumEvents } from "@/stores/cesium.sync";
-  import type { Entity } from "orbpro";
-  import { isSafe } from "./stores/dev.store";
   import Logos from "@/lib/Logos.svelte";
 
   const { selectedEntity, trackedEntity } = cesiumEvents;

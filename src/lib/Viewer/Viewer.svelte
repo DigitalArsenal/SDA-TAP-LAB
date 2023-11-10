@@ -1,0 +1,99 @@
+<script lang="ts">
+  import "orbpro_build/Cesium/Widgets/widgets.css";
+  //@ts-ignore
+  import * as Cesium from "orbpro";
+  import { onMount, onDestroy } from "svelte";
+  import { viewer as storeViewer } from "../../stores/viewer.store";
+  import { scenario } from "@/stores/settings.store";
+  import { addButton } from "../Toolbar/toolbar";
+  import Settings from "../Settings/Settings.svelte";
+  import { isSafe } from "@/stores/dev.store";
+  import { content } from "@/stores/modal.store";
+  import Timeline from "@/lib/Timeline/TimeLine.svelte";
+  import syncTwoWay from "./lib/SyncTwoWay";
+
+  Cesium.GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
+
+  onMount(() => {
+    const viewer: Cesium.Viewer = new Cesium.Viewer("cesiumContainer", {
+      //globe: false,
+      baseLayerPicker: true,
+      homeButton: true,
+      fullscreenButton: false,
+      geocoder: true,
+      infoBox: false,
+      navigationHelpButton: false,
+      //projectionPicker: true,
+      sceneModePicker: true,
+      //animationContainer: false,
+      animation: true,
+      timeline: false,
+      timelineContainer: true,
+      selectionIndicator: false,
+      requestRenderMode: true,
+      showRenderLoopErrors: isSafe() ? true : false,
+      bottomContainer: document.createElement("p"),
+      orderIndependentTranslucency: false,
+      shadows: true,
+    });
+
+    new Timeline({
+      props: { viewer },
+      target: viewer.timeline.container,
+    });
+
+    viewer.scene.debugShowFramesPerSecond = true;
+    const cameraPosition = viewer.camera.positionWC;
+    const cartographicPosition =
+      Cesium.Cartographic.fromCartesian(cameraPosition);
+    const longitude = Cesium.Math.toDegrees(cartographicPosition.longitude);
+    const latitude = Cesium.Math.toDegrees(cartographicPosition.latitude);
+    const altitude = cartographicPosition.height + 10000000;
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude),
+      duration: 0,
+    });
+    viewer.extend(Cesium.viewerReferenceFrameMixin);
+
+    if (isSafe()) {
+      (globalThis as any).viewer = viewer;
+    }
+    $storeViewer = viewer;
+
+    //Add Buttons
+    addButton(Settings);
+
+    const toolbar: any = document.querySelector(".cesium-viewer-toolbar");
+
+    const children = toolbar.children;
+
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      if (!child.classList.contains("added-button")) {
+        child.addEventListener("click", (event: any) => {
+          $content = undefined;
+        });
+      }
+    }
+
+    const clock = viewer.clock;
+
+    // Usage
+    syncTwoWay(
+      clock,
+      "shouldAnimate",
+      scenario.settings.ClockSettings.shouldAnimate
+    );
+    syncTwoWay(clock, "clockStep", scenario.settings.ClockSettings.clockStep);
+    syncTwoWay(clock, "multiplier", scenario.settings.ClockSettings.multiplier);
+  });
+</script>
+
+<div id="cesiumContainer" />
+
+<style global lang="postcss">
+  #cesiumContainer {
+    height: 100%;
+    width: 100%;
+  }
+</style>
