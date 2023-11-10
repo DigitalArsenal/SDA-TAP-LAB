@@ -6,7 +6,11 @@
   import SettingsModal from "./SettingsModal.svelte";
 
   const toggleModal = () => {
-    $content = !$content ? SettingsModal : undefined;
+    if ($content === SettingsModal) {
+      $content = undefined;
+    } else {
+      $content = SettingsModal;
+    }
   };
 </script>
 

@@ -1,12 +1,11 @@
 <script lang="ts">
   import { Icon } from "svelte-awesome";
-  import { content, template } from "@/stores/modal.store";
-  import SpaceObject from "./templates/SpaceObject.svelte";
+  import { content, template, title } from "@/stores/modal.store";
   import { scenario } from "@/stores/settings.store";
-  import { onMount } from "svelte";
+  import { activeEntity } from "@/stores/entity.store";
   import { viewer } from "@/stores/viewer.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
-
+  import { onMount } from "svelte";
   let _shouldAnimate = true;
 
   onMount(() => {
@@ -33,7 +32,15 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-4 md:pb-4 border-b border-gray-600">
-          <p class="text-white font-[300]">Space Object</p>
+          <p class="text-white font-[300]">
+            {#if $title}
+              {$title}
+            {:else if $activeEntity}
+              {$activeEntity.id}
+            {:else}
+              Entity
+            {/if}
+          </p>
           <CloseButton onclick={closeModal} />
         </div>
       </div>

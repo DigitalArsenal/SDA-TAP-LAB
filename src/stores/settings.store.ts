@@ -275,5 +275,5 @@ storeViewer.subscribe((viewer) => {
     }))
 });
 
-
-export { scenario, activeComponents, activeComponentProps, goBack, groups, saveState, loadState };
+const appVersion = "a6e8f29c-b66a-11ec-8dfe-5b9767cbddd1";
+export { appVersion, scenario, activeComponents, activeComponentProps, goBack, groups, saveState, loadState };
