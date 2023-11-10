@@ -65,7 +65,8 @@ export default defineConfig({
       // Terser options to prevent stripping of debugger
       compress: {
         drop_debugger: false // Do not remove debugger statements
-      }
+      },
+      mangle: false
     },
     emptyOutDir: false,
     outDir: "docs",
