@@ -3,7 +3,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import sveltePreprocess from 'svelte-preprocess'
-import Obfuscator, { RollupPluginObfuscatorOptions } from 'rollup-plugin-obfuscator';
+import { RollupPluginObfuscatorOptions } from 'rollup-plugin-obfuscator';
+import viteCompression from 'vite-plugin-compression';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +58,7 @@ export default defineConfig({
     preprocess: sveltePreprocess(),
 
   }),
+  viteCompression({ algorithm: "brotliCompress" })
     // process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
   ],
   build: {

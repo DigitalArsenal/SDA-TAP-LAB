@@ -9,7 +9,6 @@
   import Logos from "@/lib/Logos.svelte";
 
   onMount(() => {
-    //devProtectInit();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
       .then((response) => response.json())
       .then((data) => {

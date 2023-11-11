@@ -1,7 +1,7 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1699718371839",
+    "version": "0.0.0+1699724651463",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
@@ -32,7 +32,8 @@
         "tslib": "^2.6.0",
         "tw-elements": "^1.0.0",
         "typescript": "^5.0.2",
-        "vite": "^4.4.5"
+        "vite": "^4.4.5",
+        "vite-plugin-compression": "^0.5.1"
     },
     "dependencies": {
         "@fortawesome/free-solid-svg-icons": "^6.4.2",
