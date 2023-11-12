@@ -1,14 +1,14 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1699724651463",
+    "version": "0.0.0+1699796981067",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
         "deploy": "npm run build && git add -A && git commit -m 'deploy' && git push",
         "dev": "npm run copy:orbpro && vite",
         "start": "npm run copy:orbpro && vite",
-        "build": "rm -Rf docs/assets/* && npm run copy:orbpro && vite build && cp -R ./packages/orbpro/Build/Cesium/* docs/assets && rm ./docs/assets/index.*js && node ./scripts/version.js",
+        "build": "rm -Rf docs/assets/* && npm run copy:orbpro && vite build && cp -R ./packages/orbpro/Build/Cesium/* docs/assets && rm ./docs/assets/index.*js && node ./scripts/version.js && node ./node_modules/terser/dist/bundle.min.js -m -c ./docs/assets/*.js",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "copy:orbpro": "rm -R packages/orbpro/Build/* && cp -R ../OrbPro/Build/* packages/orbpro/Build && cp -R packages/externaldata/* packages/orbpro/Build/Cesium/"

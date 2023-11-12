@@ -58,7 +58,7 @@ export default defineConfig({
     preprocess: sveltePreprocess(),
 
   }),
-  viteCompression({ algorithm: "brotliCompress" })
+    // viteCompression({ algorithm: "brotliCompress" })
     // process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
   ],
   build: {
@@ -68,7 +68,11 @@ export default defineConfig({
       compress: {
         drop_debugger: false // Do not remove debugger statements
       },
-      mangle: false
+      mangle: {
+        toplevel: true,
+        keep_classnames: true,
+        keep_fnames: true
+      }
     },
     emptyOutDir: false,
     outDir: "docs",

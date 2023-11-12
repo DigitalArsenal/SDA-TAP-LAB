@@ -1,15 +1,19 @@
-<script>
+<script lang="ts">
   import { groups, activeGroup } from "@/stores/group.store";
   import { get } from "svelte/store";
   import { activeEntity } from "@/stores/entity.store";
   import { ClassifyOrbit } from "orbpro";
 
-  let activeObjectId = $activeEntity.id; // The ID of the active object
-
-  $: activeObjectState = get(groups)[$activeGroup]?.objects[activeObjectId] || {
-    orbit: false,
-    coverage: false,
-  };
+  let defaultObjectValue = { orbit: false, coverage: false };
+  let activeObjectState: any = { ...defaultObjectValue };
+  // Reactive statement to update activeObjectState whenever groups or activeGroup changes
+  $: {
+    activeObjectState =
+      $groups[$activeGroup]?.objects[$activeEntity.id] || { ...defaultObjectValue };
+    console.log($activeGroup);
+    console.log($activeEntity.id);
+    console.log(activeObjectState);
+  }
 
   function ensureObjectExists() {
     groups.update((g) => {
@@ -17,8 +21,8 @@
       if (!g[$activeGroup]) {
         g[$activeGroup] = { objects: {} };
       }
-      if (!g[$activeGroup].objects[activeObjectId]) {
-        g[$activeGroup].objects[activeObjectId] = {
+      if (!g[$activeGroup].objects[$activeEntity.id]) {
+        g[$activeGroup].objects[$activeEntity.id] = {
           orbit: false,
           coverage: false,
         };
@@ -30,8 +34,8 @@
   function toggleOrbit() {
     ensureObjectExists();
     groups.update((g) => {
-      const currentState = !g[$activeGroup].objects[activeObjectId].orbit;
-      g[$activeGroup].objects[activeObjectId].orbit = currentState;
+      const currentState = !g[$activeGroup].objects[$activeEntity.id].orbit;
+      g[$activeGroup].objects[$activeEntity.id].orbit = currentState;
 
       // Update the actual activeEntity if it exists
       if ($activeEntity) {
@@ -45,8 +49,8 @@
   function toggleCoverage() {
     ensureObjectExists();
     groups.update((g) => {
-      const currentState = !g[$activeGroup].objects[activeObjectId].coverage;
-      g[$activeGroup].objects[activeObjectId].coverage = currentState;
+      const currentState = !g[$activeGroup].objects[$activeEntity.id].coverage;
+      g[$activeGroup].objects[$activeEntity.id].coverage = currentState;
 
       // Update the actual activeEntity if it exists
       if ($activeEntity) {
@@ -65,22 +69,35 @@
       {~ClassifyOrbit($activeEntity).indexOf("Geostationary Orbit")}
     </div>
     <!-- ... other elements ... -->
-    <div class="flex gap-2">
-      <div class="flex items-center justify-center gap-2">
-        <label>
-          <input
-            type="checkbox"
-            bind:checked={activeObjectState.orbit}
-            on:change={toggleOrbit} />
-          Show Orbit
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            bind:checked={activeObjectState.coverage}
-            on:change={toggleCoverage} />
-          Show Coverage
-        </label>
+    <div
+      class="w-full flex gap-3 cursor-pointer items-start justify-items-start p-4 pt-1">
+      <div class="flex flex-col gap-2">
+        <div class="flex gap-2">
+          <div class="flex items-center justify-center gap-2">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div class="border rounded p-1 bg-black" on:click={toggleOrbit}>
+              <div
+                class:bg-white={activeObjectState.orbit}
+                class:bg-black={!activeObjectState.orbit}
+                class="w-2 h-2" />
+            </div>
+            Show Orbit
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <div class="flex items-center justify-center gap-2">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div class="border rounded p-1 bg-black" on:click={toggleCoverage}>
+              <div
+                class:bg-white={activeObjectState.coverage}
+                class:bg-black={!activeObjectState.coverage}
+                class="w-2 h-2" />
+            </div>
+            Show Coverage
+          </div>
+        </div>
       </div>
     </div>
   {/if}

@@ -32,7 +32,7 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-4 md:pb-4 border-b border-gray-600">
-          <p class="text-white font-[300]">
+          <p class="text-white font-[300] mt-1">
             {#if $title}
               {$title}
             {:else if $activeEntity}
