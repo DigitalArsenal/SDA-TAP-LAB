@@ -130,7 +130,8 @@
 </script>
 
 <!-- Your existing HTML structure -->
-<div class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
+<div
+  class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity}
     <div class="flex flex-col gap-2">
       <div class="flex justify-between">
@@ -182,9 +183,9 @@
     </div>
 
     <div
-      class="h-1/3 text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-10 pr-10 p-3 border-t-[1px] border-gray-400">
+      class="text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-10 pr-10 p-3 border-t-[1px] border-gray-400">
       <div class="flex flex-col gap-2">
-        <div class="flex gap-2">
+        <div class="flex flex-col gap-2 items-start justify-start">
           <div class="flex items-center justify-center gap-2">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -203,7 +204,27 @@
                 class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
                 class="w-2 h-2" />
             </div>
-            TRACK
+            CAMERA TRACK
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div
+              class="border rounded p-1 bg-gray-800"
+              on:click={(e) => {
+                if (!$viewer) return;
+                if ($trackedEntity?.id !== $activeEntity.id) {
+                  $trackedEntity = $activeEntity;
+                } else {
+                  $trackedEntity = null;
+                }
+              }}>
+              <div
+                class:bg-white={$trackedEntity?.id === $activeEntity?.id}
+                class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
+                class="w-2 h-2" />
+            </div>
+            LABEL
           </div>
         </div>
       </div>
@@ -218,7 +239,7 @@
                 class:bg-gray-800={!activeObjectState.orbit}
                 class="w-2 h-2" />
             </div>
-             ORBIT
+            ORBIT
           </div>
         </div>
         <div class="flex gap-2">
@@ -248,7 +269,7 @@
   }
 
   .row-header {
-    @apply text-[.65rem] bg-gray-900 rounded p-1 flex items-center border-l;
+    @apply text-[.65rem] bg-gray-700 bg-opacity-50 rounded p-1 flex items-center border-l;
   }
   *::-webkit-scrollbar-thumb {
     background-color: #ddd;
