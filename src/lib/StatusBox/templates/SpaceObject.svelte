@@ -130,7 +130,7 @@
 </script>
 
 <!-- Your existing HTML structure -->
-<div class="flex flex-col p-3 w-full whitespace-nowrap font-mono h-full justify-between">
+<div class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity}
     <div class="flex flex-col gap-2">
       <div class="flex justify-between">
@@ -182,7 +182,7 @@
     </div>
 
     <div
-      class="text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-10 pr-10 pt-3 border-t-[1px] border-gray-400">
+      class="h-1/3 text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-10 pr-10 p-3 border-t-[1px] border-gray-400">
       <div class="flex flex-col gap-2">
         <div class="flex gap-2">
           <div class="flex items-center justify-center gap-2">
@@ -203,7 +203,7 @@
                 class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
                 class="w-2 h-2" />
             </div>
-            Track
+            TRACK
           </div>
         </div>
       </div>
@@ -218,7 +218,7 @@
                 class:bg-gray-800={!activeObjectState.orbit}
                 class="w-2 h-2" />
             </div>
-            Show Orbit
+             ORBIT
           </div>
         </div>
         <div class="flex gap-2">
@@ -233,7 +233,7 @@
                 class:bg-gray-800={!activeObjectState.coverage}
                 class="w-2 h-2" />
             </div>
-            Show Coverage
+            COVERAGE
           </div>
         </div>
       </div>
