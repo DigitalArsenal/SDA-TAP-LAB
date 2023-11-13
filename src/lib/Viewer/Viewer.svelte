@@ -20,13 +20,12 @@
   import { content, template } from "@/stores/modal.store";
   import Timeline from "@/lib/Timeline/TimeLine.svelte";
   import syncTwoWay from "./lib/SyncTwoWay";
-  import { cesiumEvents } from "@/stores/cesium.sync";
   import { activeEntity } from "@/stores/entity.store";
 
   import StatusBox from "@/lib/StatusBox/StatusBox.svelte";
   import SpaceObjectTemplate from "../StatusBox/templates/SpaceObject.svelte";
 
-  const { selectedEntity, trackedEntity } = cesiumEvents;
+  const { selectedEntity, trackedEntity } = scenario;
 
   GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
@@ -110,7 +109,9 @@
   activeEntity.subscribe((aEntity: Entity | null) => {
     if (aEntity) {
       $content = StatusBox;
-      $template = SpaceObjectTemplate;
+      if (aEntity instanceof SpaceEntity) {
+        $template = SpaceObjectTemplate;
+      }
     } else {
       $content = undefined;
     }

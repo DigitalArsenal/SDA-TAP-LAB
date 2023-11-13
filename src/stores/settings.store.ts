@@ -4,6 +4,8 @@ import Settings from "@/classes/settings";
 import { Scenario } from "@/classes/scenario";
 import type { Group } from "@/classes/group";
 import { serializeGroups, deserializeGroups } from "./group/serializegroups";
+import { serializeEntity, deserializeEntity } from "./entities/entities";
+
 import { viewer as storeViewer } from "@/stores/viewer.store";
 import { initEvents, removeEvents } from "./cesium.sync";
 import {
@@ -22,16 +24,22 @@ const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 interface DeserializeDataHandler {
     [key: string]: (input: any) => any;
 }
+interface serializeDataHandler {
+    [key: string]: (input: any) => any;
+}
+let deserializeDataHandlers: DeserializeDataHandler = { groups: deserializeGroups, trackedEntity: deserializeEntity, selectedEntity: deserializeEntity };
+let serializeDataHandlers: serializeDataHandler = { groups: serializeGroups, trackedEntity: serializeEntity, selectedEntity: serializeEntity };
 
 const groups: Writable<Array<Group>> = scenario.groups;
 
 const saveState = async (exportJSON: boolean = false): Promise<string> => {
     let { ...scenarioRest } = scenario;
+    console.log(scenarioRest);
     let exportScenario = JSON.stringify(scenarioRest, (key, value) => {
-
+        console.log(key);
         value = value?.subscribe ? get(value) : value;
-        if (key === "groups") {
-            value = serializeGroups(value);
+        if (serializeDataHandlers[key]) {
+            value = serializeDataHandlers[key](value);
         }
         return value;
     });
@@ -49,7 +57,6 @@ const saveState = async (exportJSON: boolean = false): Promise<string> => {
     }
 };
 
-let deserializeDataHandlers: DeserializeDataHandler = { groups: deserializeGroups }
 
 let recurseWrite = (input: any, scenario: any, key?: any) => {
     let inputProp = key ? input[key] : input;
