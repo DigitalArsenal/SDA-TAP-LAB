@@ -3,13 +3,19 @@
   import Icon from "svelte-awesome";
   import { gears } from "svelte-awesome/icons";
   import { content } from "@/stores/modal.store";
+  import { scenario } from "@/stores/settings.store";
   import SettingsModal from "./SettingsModal.svelte";
+  import { activeEntity } from "@/stores/entity.store";
 
+  const { selectedEntity } = scenario;
   const toggleModal = () => {
+    console.log($content);
     if ($content === SettingsModal) {
       $content = undefined;
     } else {
+      $activeEntity = null;
       $content = SettingsModal;
+      console.log($content);
     }
   };
 </script>

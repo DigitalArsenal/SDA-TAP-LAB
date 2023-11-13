@@ -25,13 +25,13 @@
   <div class="flex justify-center items-center z-50 w-full h-full">
     <!-- Modal content -->
     <div
-      style="background:rgba(48, 51, 54, .7)"
+      style="background:rgba(48, 51, 54, .9)"
       class="bg-opacity-75 text-white rounded-lg shadow-xl w-full h-full overflow-auto flex flex-col border border-gray-600">
       <!-- Modal header -->
       <div class="flex-none text-md md:text-xl">
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
-          class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-4 md:pb-4 border-b border-gray-600">
+          class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
           <p class="text-white font-[300] mt-1">
             {#if $title}
               {$title}

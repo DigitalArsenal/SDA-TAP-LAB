@@ -22,8 +22,6 @@
   import syncTwoWay from "./lib/SyncTwoWay";
   import { activeEntity } from "@/stores/entity.store";
 
-  import StatusBox from "@/lib/StatusBox/StatusBox.svelte";
-  import SpaceObjectTemplate from "../StatusBox/templates/SpaceObject.svelte";
 
   const { selectedEntity, trackedEntity } = scenario;
 
@@ -106,16 +104,7 @@
   $: {
     $activeEntity = $selectedEntity || $trackedEntity;
   }
-  activeEntity.subscribe((aEntity: Entity | null) => {
-    if (aEntity) {
-      $content = StatusBox;
-      if (aEntity instanceof SpaceEntity) {
-        $template = SpaceObjectTemplate;
-      }
-    } else {
-      $content = undefined;
-    }
-  });
+ 
 </script>
 
 <div id="cesiumContainer" />

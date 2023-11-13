@@ -1,6 +1,22 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
+import { activeEntity } from './entity.store';
+import { SpaceEntity, type Entity } from 'orbpro';
+import { scenario } from "@/stores/settings.store";
+import StatusBox from "@/lib/StatusBox/StatusBox.svelte";
+import SpaceObjectTemplate from "@/lib/StatusBox/templates/SpaceObject.svelte";
 
 export const content: Writable<any | undefined> = writable(undefined);
 export const template: Writable<any | undefined> = writable(undefined);
 export const title: Writable<any | undefined> = writable(undefined);
+
+activeEntity.subscribe((aEntity: Entity | null) => {
+    if (aEntity && get(scenario.selectedEntity)) {
+        content.set(StatusBox);
+        if (aEntity instanceof SpaceEntity) {
+            template.set(SpaceObjectTemplate);
+        }
+    } else {
+        content.set(undefined);
+    }
+});
