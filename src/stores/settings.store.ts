@@ -278,7 +278,8 @@ storeViewer.subscribe((viewer) => {
             latLonGridInstance.destroy();
             latLonGridInstance = undefined;
         }
-        viewer.scene.render();
+        setTimeout(() => { viewer.scene.render(); }, 100);
+
     }))
 });
 

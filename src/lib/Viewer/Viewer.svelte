@@ -21,14 +21,15 @@
   import Timeline from "@/lib/Timeline/TimeLine.svelte";
   import syncTwoWay from "./lib/SyncTwoWay";
   import { activeEntity } from "@/stores/entity.store";
-
+  import SelectionWidget from "@/lib/SelectionWidget/SelectionWidget.svelte";
 
   const { selectedEntity, trackedEntity } = scenario;
 
+  let viewer: Viewer;
   GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
   onMount(() => {
-    const viewer: Viewer = new Viewer("cesiumContainer", {
+    viewer = new Viewer("cesiumContainer", {
       //globe: false,
       baseLayerPicker: true,
       homeButton: true,
@@ -104,10 +105,12 @@
   $: {
     $activeEntity = $selectedEntity || $trackedEntity;
   }
- 
 </script>
 
 <div id="cesiumContainer" />
+{#if $selectedEntity}
+  <SelectionWidget {viewer} />
+{/if}
 
 <style global lang="postcss">
   #cesiumContainer {

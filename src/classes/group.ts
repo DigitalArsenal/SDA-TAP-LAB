@@ -2,6 +2,7 @@
 interface GroupSpaceObject {
     orbit: boolean;
     coverage: boolean;
+    label: boolean;
 }
 
 // Define the structure of a group containing space objects

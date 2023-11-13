@@ -16,7 +16,12 @@
   } from "@/classes/SDS-2-Orbit-Mean-Elements-Message-(OMM)-TypeScript/OMM";
   import { onDestroy, onMount } from "svelte";
   import type { Cartesian3, SpaceEntity } from "orbpro";
-  import { Cartographic, Math as CesiumMath } from "orbpro";
+  import {
+    Cartographic,
+    Math as CesiumMath,
+    MakeBillboardLabel,
+    NearFarScalar,
+  } from "orbpro";
 
   let pOMM: any,
     pCAT: any,
@@ -74,7 +79,7 @@
       unsub();
     }
   });
-  let defaultObjectValue = { orbit: false, coverage: false };
+  let defaultObjectValue = { orbit: false, coverage: false, label: false };
   let activeObjectState: any = { ...defaultObjectValue };
   // Reactive statement to update activeObjectState whenever groups or activeGroup changes
   $: {
@@ -93,6 +98,7 @@
         g[$activeGroup].objects[$activeEntity.id] = {
           orbit: false,
           coverage: false,
+          label: false,
         };
       }
       return g;
@@ -123,6 +129,30 @@
       // Update the actual activeEntity if it exists
       if ($activeEntity) {
         $activeEntity.showCoverage({ show: currentState });
+      }
+      return g;
+    });
+  }
+
+  function toggleLabel() {
+    ensureObjectExists();
+    groups.update((g) => {
+      const currentState = !g[$activeGroup].objects[$activeEntity.id].label;
+      g[$activeGroup].objects[$activeEntity.id].label = currentState;
+
+      // Update the actual activeEntity if it exists
+      if ($activeEntity) {
+        if (!$activeEntity.billboard) {
+          MakeBillboardLabel({
+            entity: $activeEntity,
+            text: CAT.OBJECT_NAME,
+            fontSize: 26,
+            corderRadius: 2,
+            scaleByDistance: new NearFarScalar(0, 1, 1000, .5),
+          });
+        } else {
+          $activeEntity.billboard.show = currentState;
+        }
       }
       return g;
     });
@@ -209,19 +239,10 @@
           <div class="flex items-center justify-center gap-2">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <div
-              class="border rounded p-1 bg-gray-800"
-              on:click={(e) => {
-                if (!$viewer) return;
-                if ($trackedEntity?.id !== $activeEntity.id) {
-                  $trackedEntity = $activeEntity;
-                } else {
-                  $trackedEntity = null;
-                }
-              }}>
+            <div class="border rounded p-1 bg-gray-800" on:click={toggleLabel}>
               <div
-                class:bg-white={$trackedEntity?.id === $activeEntity?.id}
-                class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
+                class:bg-white={activeObjectState.label}
+                class:bg-gray-800={!activeObjectState.label}
                 class="w-2 h-2" />
             </div>
             LABEL
