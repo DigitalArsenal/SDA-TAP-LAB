@@ -130,61 +130,59 @@
 </script>
 
 <!-- Your existing HTML structure -->
-<div class="flex flex-col p-3 w-full">
+<div class="flex flex-col p-3 w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity}
     <div class="flex flex-col gap-2">
       <div class="flex justify-between">
         <!-- Row for Intl Des. and NORAD ID -->
-        <div class="p-4 flex flex-col gap-1">
-          <div class="text-xs">Intl Des.</div>
-          <div class="text-sm">{OMM.OBJECT_ID}</div>
+        <div class="p-4 flex flex-col gap-1 w-1/3">
+          <div class="row-header">Intl Des.</div>
+          <div class="text-sm pl-1">{OMM.OBJECT_ID}</div>
         </div>
-        <div class="p-4 flex flex-col gap-1">
-          <div class="text-xs">NORAD ID</div>
-          <div class="text-sm">{OMM.NORAD_CAT_ID}</div>
+        <div class="p-4 flex flex-col gap-1 w-1/3">
+          <div class="row-header">NORAD ID</div>
+          <div class="text-sm pl-1">{OMM.NORAD_CAT_ID}</div>
         </div>
-        <div class="p-4 flex flex-col gap-1">
-          <div class="text-xs">PERIOD</div>
-          <div class="text-sm">{CAT.PERIOD.toFixed(2)} min</div>
+        <div class="p-4 flex flex-col gap-1 w-1/3">
+          <div class="row-header">VELOCITY</div>
+          <div class="text-xs pl-1 pt-1">{velocityKmh} km/h</div>
         </div>
       </div>
       <div class="flex justify-between">
         <!-- Row for Velocity and Lat / Lon -->
-        <div class="p-4 flex flex-col gap-1">
-          <div class="text-xs">VELOCITY</div>
-          <div class="text-sm">{velocityKmh} km/h</div>
-        </div>
-        <div class="p-4 flex flex-col gap-1">
-          <div class="text-xs">LAT / LON</div>
-          <div class="text-[.7rem] flex flex-col -ml-2 mt-1">
-            <div class="flex">
-              <div class="w-12 text-right">
-                {latitude?.toFixed(3)}°
-              </div>
-              <div class="w-3 text-center">
-                {latitude >= 0 ? "N" : "S"}
-              </div>
-              <div class="w-12 text-right">
-                {longitude?.toFixed(3)}°
-              </div>
-              <div class="w-3 text-center">
-                {longitude >= 0 ? "E" : "W"}
-              </div>
+        <div class="p-4 flex flex-col gap-1 w-1/3">
+          <div class="row-header">LAT</div>
+          <div class="flex w-full text-xs">
+            <div class=" w-2/3 text-left pl-1">
+              {latitude?.toFixed(1)}°
+            </div>
+            <div class="w-1/3 text-right">
+              {latitude >= 0 ? "N" : "S"}
             </div>
           </div>
         </div>
-
-        <div class="p-4 flex flex-col gap-1">
-          <div class="text-xs">ALT</div>
-          <div class="text-sm flex flex-col">
-            <div>{altitude} km</div>
+        <div class="p-4 flex flex-col gap-1 w-1/3">
+          <div class="row-header">LON</div>
+          <div class="flex w-full text-xs">
+            <div class="w-2/3 text-left pl-1">
+              {longitude?.toFixed(1)}°
+            </div>
+            <div class="w-1/3 text-right">
+              {longitude >= 0 ? "E" : "W"}
+            </div>
+          </div>
+        </div>
+        <div class="p-4 flex flex-col gap-1 w-1/3">
+          <div class="row-header">ALT</div>
+          <div class="flex flex-col">
+            <div class="text-xs pl-1 pt-1">{altitude} km</div>
           </div>
         </div>
       </div>
     </div>
 
     <div
-      class="w-full flex gap-6 cursor-pointer items-start justify-start p-4 pt-3 border-t-[1px] border-gray-400">
+      class="text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-10 pr-10 pt-3 border-t-[1px] border-gray-400">
       <div class="flex flex-col gap-2">
         <div class="flex gap-2">
           <div class="flex items-center justify-center gap-2">
@@ -249,6 +247,9 @@
     width: 4px;
   }
 
+  .row-header {
+    @apply text-[.65rem] bg-gray-900 rounded p-1 flex items-center border-l;
+  }
   *::-webkit-scrollbar-thumb {
     background-color: #ddd;
   }
