@@ -121,7 +121,7 @@
               }
             }
           );
-          segments[1].color = (statusColors[($selectedEntity as any).properties.CAT.getValue().OPS_STATUS_CODE] || [
+          segments[1].color = (statusColors[($selectedEntity as any)?.properties.CAT.getValue().OPS_STATUS_CODE] || [
             null,
             "#aaaaaa",
           ])[1];

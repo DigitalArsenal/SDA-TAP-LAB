@@ -163,7 +163,7 @@
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity}
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-[10px]">
       <div class="flex justify-between">
         <!-- Row for Intl Des. and NORAD ID -->
         <div class="p-4 flex flex-col gap-1 w-1/3">
