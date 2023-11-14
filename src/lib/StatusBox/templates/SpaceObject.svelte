@@ -19,6 +19,7 @@
   import {
     Cartographic,
     Math as CesiumMath,
+    JulianDate,
     MakeBillboardLabel,
     NearFarScalar,
   } from "orbpro";
@@ -39,7 +40,7 @@
       OMM = pOMM.getValue();
       CAT = pCAT.getValue();
 
-      $title = `${CAT.OBJECT_NAME} (${
+      $title = `${CAT.OBJECT_NAME} (${CAT.OBJECT_TYPE} ${
         CAT_OBJECT_TYPE[CAT.OBJECT_TYPE as any]
       })`;
     }
@@ -50,6 +51,37 @@
   let velocityKmh: string = "";
   let unsub: Function | null = null;
 
+  //launch
+  let launchDate: any;
+  let lifespan = 7; // lifespan of the satellite in years, as a constant
+  let remainingFuelPercentage: number | string = 100; // Start with 100% fuel at launch
+
+  $: launchDate = CAT?.LAUNCH_DATE
+    ? new Date(CAT.LAUNCH_DATE as string)
+    : new Date();
+  // Adding a small random factor (e.g., within ±2%)
+  const randomFactor = Math.random() * 0.04 - 0.02; // Random value between -0.02 and +0.02
+
+  // Function to calculate lifespan based on perigee
+  function calculateLifespan(perigee: number) {
+    const LEO_PERIGEE = 500; // LEO reference perigee in km (now set to 500 km)
+    const GEO_PERIGEE = 35786; // GEO reference perigee in km
+    const LEO_LIFESPAN = 5; // LEO lifespan in years
+    const GEO_LIFESPAN = 15; // GEO lifespan in years
+
+    // Adjust these factors to control the curve
+    const factor = 0.0000000004;
+
+    if (perigee <= LEO_PERIGEE) return LEO_LIFESPAN;
+    if (perigee >= GEO_PERIGEE) return GEO_LIFESPAN;
+
+    // Linear mapping for lifespan (can be adjusted for more complexity)
+    return (
+      LEO_LIFESPAN +
+      ((GEO_LIFESPAN - LEO_LIFESPAN) * (perigee - LEO_PERIGEE)) /
+        (GEO_PERIGEE - LEO_PERIGEE)
+    );
+  }
   onMount(() => {
     if ($viewer) {
       unsub = $viewer.clock.onTick.addEventListener((clock) => {
@@ -61,6 +93,43 @@
         );
         // Convert m/s to km/h
         velocityKmh = (velocityMs * 3.6).toFixed(2);
+
+        // Determine lifespan based on perigee altitude
+        const perigee = CAT?.PERIGEE / 1000;
+        lifespan = calculateLifespan(perigee);
+
+        // Launch and End of Life calculations
+        const endOfLifeDate = new Date(launchDate);
+        endOfLifeDate.setFullYear(launchDate?.getFullYear() + lifespan);
+        const launchTime = JulianDate.fromDate(launchDate);
+        const eolTime = JulianDate.fromDate(endOfLifeDate);
+        const totalLifeSpan = JulianDate.secondsDifference(eolTime, launchTime);
+        const elapsedLife = JulianDate.secondsDifference(
+          currentTime,
+          launchTime
+        );
+
+        // Exponential decay fuel calculation
+        const lifeRatio = elapsedLife / totalLifeSpan;
+        const decayFactor = 3.5; // Controls initial decay rate
+        remainingFuelPercentage = 100 * Math.exp(-decayFactor * lifeRatio);
+
+        // Asymptotic behavior near low fuel level
+        const lowFuelThreshold = 5; // Threshold for slower decay, e.g., 5%
+        if (remainingFuelPercentage < lowFuelThreshold) {
+          const asymptoticFactor = 0.5; // Adjust this to control the asymptotic behavior
+          remainingFuelPercentage =
+            lowFuelThreshold *
+            Math.exp(
+              -asymptoticFactor * (lowFuelThreshold - remainingFuelPercentage)
+            );
+        }
+
+        // Ensure that the remaining fuel is within valid bounds
+        remainingFuelPercentage = Math.max(remainingFuelPercentage, 0);
+        remainingFuelPercentage = Math.min(remainingFuelPercentage, 100);
+
+        remainingFuelPercentage = remainingFuelPercentage.toFixed(2);
       });
     }
   });
@@ -118,6 +187,7 @@
 
       return g;
     });
+    $viewer!.scene.render();
   }
 
   function toggleCoverage() {
@@ -132,6 +202,7 @@
       }
       return g;
     });
+    $viewer!.scene.render();
   }
 
   function toggleLabel() {
@@ -143,12 +214,13 @@
       // Update the actual activeEntity if it exists
       if ($activeEntity) {
         if (!$activeEntity.billboard) {
+          //@ts-ignore
           MakeBillboardLabel({
             entity: $activeEntity,
             text: CAT.OBJECT_NAME,
             fontSize: 26,
             corderRadius: 2,
-            scaleByDistance: new NearFarScalar(0, 1, 1000, .5),
+            scaleByDistance: new NearFarScalar(0, 1, 1000, 0.5),
           });
         } else {
           $activeEntity.billboard.show = currentState;
@@ -156,6 +228,7 @@
       }
       return g;
     });
+    $viewer!.scene.render();
   }
 </script>
 
@@ -163,27 +236,27 @@
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity}
-    <div class="flex flex-col gap-[10px]">
+    <div class="flex flex-col gap-1">
       <div class="flex justify-between">
         <!-- Row for Intl Des. and NORAD ID -->
-        <div class="p-4 flex flex-col gap-1 w-1/3">
+        <div class="p-2 flex flex-col gap-1 w-1/3">
           <div class="row-header">Intl Des.</div>
-          <div class="text-sm pl-1">{OMM.OBJECT_ID}</div>
+          <div class="text-sm pl-1 row-data">{OMM.OBJECT_ID}</div>
         </div>
-        <div class="p-4 flex flex-col gap-1 w-1/3">
+        <div class="p-2 flex flex-col gap-1 w-1/3">
           <div class="row-header">NORAD ID</div>
-          <div class="text-sm pl-1">{OMM.NORAD_CAT_ID}</div>
+          <div class="text-sm pl-1 row-data">{OMM.NORAD_CAT_ID}</div>
         </div>
-        <div class="p-4 flex flex-col gap-1 w-1/3">
+        <div class="p-2 flex flex-col gap-1 w-1/3">
           <div class="row-header">VELOCITY</div>
-          <div class="text-xs pl-1 pt-1">{velocityKmh} km/h</div>
+          <div class="text-xs pl-1 pt-1 row-data">{velocityKmh} km/h</div>
         </div>
       </div>
       <div class="flex justify-between">
         <!-- Row for Velocity and Lat / Lon -->
-        <div class="p-4 flex flex-col gap-1 w-1/3">
+        <div class="p-2 flex flex-col gap-1 w-1/3">
           <div class="row-header">LAT</div>
-          <div class="flex w-full text-xs">
+          <div class="flex w-full text-xs row-data">
             <div class=" w-2/3 text-left pl-1">
               {latitude?.toFixed(1)}°
             </div>
@@ -192,9 +265,9 @@
             </div>
           </div>
         </div>
-        <div class="p-4 flex flex-col gap-1 w-1/3">
+        <div class="p-2 flex flex-col gap-1 w-1/3">
           <div class="row-header">LON</div>
-          <div class="flex w-full text-xs">
+          <div class="flex w-full text-xs row-data">
             <div class="w-2/3 text-left pl-1">
               {longitude?.toFixed(1)}°
             </div>
@@ -203,12 +276,30 @@
             </div>
           </div>
         </div>
-        <div class="p-4 flex flex-col gap-1 w-1/3">
+        <div class="p-2 flex flex-col gap-1 w-1/3">
           <div class="row-header">ALT</div>
           <div class="flex flex-col">
-            <div class="text-xs pl-1 pt-1">{altitude} km</div>
+            <div class="row-data">{altitude} km</div>
           </div>
         </div>
+      </div>
+      <div class="flex justify-between">
+        {#if !CAT.OBJECT_TYPE}
+          <div
+            class="text-[.65rem] bg-opacity-50 rounded-br-[3px] rounded-tr-[3px] ml-2 h-6 flex items-center border-l w-52 bg-gray-500 relative">
+            <div
+              style="width:{remainingFuelPercentage}%"
+              class="bg-green-700 border border-gray-400 rounded-br-[3px] rounded-tr-[3px]">
+              &nbsp;
+            </div>
+
+            <div
+              class="text-black absolute text-white pl-2 text-[.6rem] justify-start gap-2 flex w-full pr-1">
+              <div>FUEL (EST):</div>
+              <div>{remainingFuelPercentage}%</div>
+            </div>
+          </div>
+        {/if}
       </div>
     </div>
 
@@ -289,8 +380,11 @@
     width: 4px;
   }
 
-  .row-header {
+  .row-data {
     @apply text-[.65rem] bg-gray-700 bg-opacity-50 rounded p-1 flex items-center border-l;
+  }
+  .row-header {
+    @apply text-xs pl-1 pt-1;
   }
   *::-webkit-scrollbar-thumb {
     background-color: #ddd;
