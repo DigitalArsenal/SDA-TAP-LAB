@@ -88,6 +88,9 @@
         const { currentTime } = clock;
         velocity = $activeEntity.velocity?.getValue(currentTime);
         position = $activeEntity.position?.getValue(currentTime);
+        
+        if (!velocity || !position) return;
+
         const velocityMs = Math.sqrt(
           velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2
         );
@@ -235,7 +238,7 @@
 <!-- Your existing HTML structure -->
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
-  {#if $activeEntity}
+  {#if $activeEntity && OMM && CAT}
     <div class="flex flex-col gap-1">
       <div class="flex justify-between">
         <!-- Row for Intl Des. and NORAD ID -->
