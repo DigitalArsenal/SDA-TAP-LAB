@@ -2,20 +2,18 @@
 <script lang="ts">
   import Icon from "svelte-awesome";
   import { gears } from "svelte-awesome/icons";
-  import { content } from "@/stores/modal.store";
+  import { content, lastcontent } from "@/stores/modal.store";
   import { scenario } from "@/stores/settings.store";
   import SettingsModal from "./SettingsModal.svelte";
   import { activeEntity } from "@/stores/entity.store";
 
-  const { selectedEntity } = scenario;
   const toggleModal = () => {
-    console.log($content);
     if ($content === SettingsModal) {
-      $content = undefined;
+      $content = $lastcontent || undefined;
+      $lastcontent = undefined;
     } else {
-      $activeEntity = null;
+      $lastcontent = $content;
       $content = SettingsModal;
-      console.log($content);
     }
   };
 </script>

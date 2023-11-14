@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from "svelte-awesome";
-  import { content } from "@/stores/modal.store";
+  import { content, lastcontent } from "@/stores/modal.store";
   import Globe from "./menus/Globe.svelte";
   import { scenario } from "@/stores/settings.store";
   import { onMount } from "svelte";
@@ -14,7 +14,8 @@
   });
 
   const closeModal = () => {
-    $content = undefined;
+    $content = $lastcontent || undefined;
+    $lastcontent = undefined;
     scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
   };
 </script>
@@ -32,7 +33,7 @@
       <div class="flex-none text-md md:text-xl">
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
-          class="flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-4 md:pb-4 border-b border-gray-600">
+          class="flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
           <p class="text-white font-[300]">Settings</p>
           <CloseButton onclick={closeModal} />
         </div>

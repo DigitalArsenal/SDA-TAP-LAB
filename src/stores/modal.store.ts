@@ -9,6 +9,7 @@ import SpaceObjectTemplate from "@/lib/StatusBox/templates/SpaceObject.svelte";
 export const content: Writable<any | undefined> = writable(undefined);
 export const template: Writable<any | undefined> = writable(undefined);
 export const title: Writable<any | undefined> = writable(undefined);
+export const lastcontent: Writable<any | undefined> = writable(undefined);
 
 activeEntity.subscribe((aEntity: Entity | null) => {
     if (aEntity && get(scenario.selectedEntity)) {

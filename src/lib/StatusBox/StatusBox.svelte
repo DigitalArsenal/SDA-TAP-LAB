@@ -8,6 +8,7 @@
   import { onMount } from "svelte";
   let _shouldAnimate = true;
 
+  const { selectedEntity } = scenario;
   onMount(() => {
     _shouldAnimate = $viewer!.clock.shouldAnimate;
     scenario.settings.ClockSettings.shouldAnimate.set(false);
@@ -15,6 +16,7 @@
 
   const closeModal = () => {
     $content = undefined;
+    $selectedEntity = null;
     scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
   };
 </script>
@@ -32,7 +34,7 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
-          <p class="text-white font-[300] mt-1">
+          <p class="text-white font-[300]">
             {#if $title}
               {$title}
             {:else if $activeEntity}
