@@ -111,7 +111,7 @@
 
         // Exponential decay fuel calculation
         const lifeRatio = elapsedLife / totalLifeSpan;
-        const decayFactor = 3.5; // Controls initial decay rate
+        const decayFactor = 2; // Controls initial decay rate
         remainingFuelPercentage = 100 * Math.exp(-decayFactor * lifeRatio);
 
         // Asymptotic behavior near low fuel level
