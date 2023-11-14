@@ -40,7 +40,7 @@
       OMM = pOMM.getValue();
       CAT = pCAT.getValue();
 
-      $title = `${CAT.OBJECT_NAME} (${CAT.OBJECT_TYPE} ${
+      $title = `${CAT.OBJECT_NAME} (${
         CAT_OBJECT_TYPE[CAT.OBJECT_TYPE as any]
       })`;
     }
