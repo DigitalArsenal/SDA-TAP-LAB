@@ -85,7 +85,7 @@
               let { selectedEntity, scene } = viewer;
               if (selectedEntity && selectedEntity?.position?.getValue) {
                 ePosition = selectedEntity.position.getValue(clock.currentTime);
-         
+
                 if (ePosition && !ePosition.equals(Cartesian3.ZERO)) {
                   c2 = SceneTransforms.wgs84ToWindowCoordinates(
                     viewer.scene,
@@ -102,7 +102,7 @@
                   true,
                   boundingSphereScratch
                 );
-        
+
                 if (state !== BoundingSphereState.FAILED) {
                   ePosition = viewer.selectedEntity.position =
                     boundingSphereScratch.center;
@@ -121,10 +121,9 @@
               }
             }
           );
-          segments[1].color = (statusColors[($selectedEntity as any)?.properties.CAT.getValue().OPS_STATUS_CODE] || [
-            null,
-            "#aaaaaa",
-          ])[1];
+          segments[1].color = (statusColors[
+            ($selectedEntity as any)?.properties.CAT?.getValue().OPS_STATUS_CODE
+          ] || [null, "#aaaaaa"])[1];
           updateSegments(0);
         }
         if (viewer) viewer.scene.render();
@@ -133,8 +132,9 @@
   });
 </script>
 
+{#if c2.x && c2.y}
   <div
-   id="selected"
+    id="selected"
     class="fixed flex text-white pointer-events-none"
     style="width:{widgetSize.width}px; height:{widgetSize.width}px; top:{c2.y -
       widgetSize.height / 2}px;left:{c2.x - widgetSize.height / 2}px;">
@@ -146,6 +146,7 @@
       </g>
     </svg>
   </div>
+{/if}
 
 <style>
   /* svg {
