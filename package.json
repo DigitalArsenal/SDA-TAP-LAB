@@ -1,7 +1,7 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1700085809104",
+    "version": "0.0.0+1700086082046",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
@@ -23,6 +23,7 @@
         "autoprefixer": "^10.4.16",
         "devtools-detect": "^4.0.1",
         "postcss": "^8.4.31",
+        "rollup-plugin-copy": "^3.5.0",
         "rollup-plugin-obfuscator": "^1.0.3",
         "svelte": "^4.0.5",
         "svelte-check": "^3.4.6",

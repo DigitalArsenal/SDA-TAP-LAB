@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import sveltePreprocess from 'svelte-preprocess'
 import { RollupPluginObfuscatorOptions } from 'rollup-plugin-obfuscator';
 import viteCompression from 'vite-plugin-compression';
+import copy from 'rollup-plugin-copy';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,7 +58,14 @@ export default defineConfig({
   plugins: [svelte({
     preprocess: sveltePreprocess(),
 
+
   }),
+  copy({
+    targets: [
+      { src: './coi-serviceworker.js', dest: 'docs' }
+    ],
+    hook: 'writeBundle' // Determines at which stage in the build the files should be copied
+  })
     // viteCompression({ algorithm: "brotliCompress" })
     // process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
   ],
