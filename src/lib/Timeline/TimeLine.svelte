@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import { JulianDate, Viewer } from "orbpro";
   import { scenario } from "@/stores/settings.store";
+  import Logos from "../Logos.svelte";
 
   /**
    * The `viewer` to add the timeline.
@@ -264,6 +265,7 @@
 </script>
 
 <div id="timelineviewer">
+  <div class="absolute bottom-[30px] right-2 -z-100"><Logos /></div>
   <div id="centerLine" />
   <div id="timelineContainer" on:wheel={mouseWheel}>
     <!--todo pointer events, once iOS works-->

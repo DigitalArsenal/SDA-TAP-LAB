@@ -7,6 +7,7 @@
   import { IP } from "@/stores/user.store";
   import { appVersion } from "@/stores/settings.store";
   import Logos from "@/lib/Logos.svelte";
+  import DataTable from "@/lib/DataTable/DataTable.svelte";
 
   onMount(() => {
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -24,8 +25,8 @@
   <EULA />
 {:else}
   <Viewer />
-  <div class="fixed bottom-[30px] right-2 -z-100"><Logos /></div>
   <Modal />
+  <!--<DataTable />-->
 {/if}
 <div class="fixed text-gray-300 top-0 left-0 text-[.5rem]">
   Build: {appVersion}

@@ -1,23 +1,14 @@
 <script lang="ts">
-  import { Icon } from "svelte-awesome";
   import { content, template, title } from "@/stores/modal.store";
   import { scenario } from "@/stores/settings.store";
   import { activeEntity } from "@/stores/entity.store";
-  import { viewer } from "@/stores/viewer.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
-  import { onMount } from "svelte";
-  let _shouldAnimate = true;
 
   const { selectedEntity } = scenario;
-  onMount(() => {
-    _shouldAnimate = $viewer!.clock.shouldAnimate;
-    scenario.settings.ClockSettings.shouldAnimate.set(false);
-  });
 
   const closeModal = () => {
     $content = undefined;
     $selectedEntity = null;
-    scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
   };
 </script>
 
