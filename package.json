@@ -1,14 +1,14 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1700086082046",
+    "version": "0.0.0+1700261129884",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
         "deploy": "npm run build && git add -A && git commit -m 'deploy' && git push",
         "dev": "npm run copy:orbpro && vite",
         "start": "npm run copy:orbpro && vite",
-        "build": "rm -Rf docs/assets/* && npm run copy:orbpro && vite build && cp -R ./packages/orbpro/Build/Cesium/* docs/assets && rm ./docs/assets/index.*js && node ./scripts/version.js && node ./node_modules/terser/dist/bundle.min.js -m -c ./docs/assets/*.js && cp coi-serviceworker.js docs/",
+        "build": "rm -Rf docs/assets/* && npm run copy:orbpro && vite build && cp -R ./packages/orbpro/Build/Cesium/* docs/assets && rm ./docs/assets/index.*js && node ./scripts/version.js && node ./node_modules/terser/dist/bundle.min.js -m -c ./docs/assets/*.js",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "copy:orbpro": "rm -R packages/orbpro/Build/* && cp -R ../OrbPro/Build/* packages/orbpro/Build && cp -R packages/externaldata/* packages/orbpro/Build/Cesium/"
@@ -27,6 +27,7 @@
         "rollup-plugin-obfuscator": "^1.0.3",
         "svelte": "^4.0.5",
         "svelte-check": "^3.4.6",
+        "svelte-fa": "^3.0.4",
         "svelte-preprocess": "^5.0.4",
         "tailwindcss": "^3.3.5",
         "terser": "^5.23.0",
@@ -37,6 +38,7 @@
         "vite-plugin-compression": "^0.5.1"
     },
     "dependencies": {
+        "@fortawesome/free-brands-svg-icons": "^6.4.2",
         "@fortawesome/free-solid-svg-icons": "^6.4.2",
         "ag-grid-community": "^30.2.1",
         "coi-serviceworker": "^0.1.7",

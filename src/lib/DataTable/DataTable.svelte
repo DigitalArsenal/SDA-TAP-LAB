@@ -4,6 +4,7 @@
   import type { GridOptions, ColDef } from "ag-grid-community";
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
+  import { show } from "@/stores/datatable.store";
 
   // Test data
   let data = [
@@ -36,6 +37,7 @@
     },
   };
 
+  let grid: Grid;
   let gridElement: HTMLElement;
   let gridApi: any;
 
@@ -46,7 +48,7 @@
   };
 
   onMount(() => {
-    new Grid(gridElement, gridOptions);
+    grid = new Grid(gridElement, gridOptions);
     gridApi = gridOptions.api;
     window.addEventListener("resize", resizeGrid);
   });
@@ -56,5 +58,4 @@
   });
 </script>
 
-<div bind:this={gridElement} class="ag-theme-balham-dark w-full h-[300px]" />
-
+<div bind:this={gridElement} class="ag-theme-balham-dark w-full h-[30vh]" />

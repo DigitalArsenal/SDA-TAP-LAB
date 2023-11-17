@@ -15,7 +15,8 @@
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
   import { addButton } from "../Toolbar/toolbar";
-  import Settings from "../Settings/Settings.svelte";
+  import DataTableButton from "../DataTable/Button.svelte";
+  import SettingsButton from "../Settings/Button.svelte";
   import { isSafe } from "@/stores/dev.store";
   import { content, template } from "@/stores/modal.store";
   import Timeline from "@/lib/Timeline/TimeLine.svelte";
@@ -74,7 +75,8 @@
     $storeViewer = viewer;
 
     //Add Buttons
-    addButton(Settings);
+    addButton(DataTableButton);
+    addButton(SettingsButton);
 
     const toolbar: any = document.querySelector(".cesium-viewer-toolbar");
 

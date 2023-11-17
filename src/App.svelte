@@ -6,10 +6,12 @@
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
   import { appVersion } from "@/stores/settings.store";
-  import Logos from "@/lib/Logos.svelte";
+  import COIServiceWorker from "./lib/COIServiceWorker/COIServiceWorker";
   import DataTable from "@/lib/DataTable/DataTable.svelte";
+  import { show as datatableShow } from "@/stores/datatable.store";
 
   onMount(() => {
+    COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
       .then((response) => response.json())
       .then((data) => {
@@ -24,10 +26,17 @@
 {#if $showEULA}
   <EULA />
 {:else}
-  <Viewer />
-  <Modal />
-  <!--<DataTable />-->
+  <div id="container" class="flex flex-col h-full">
+    <div style="height:{!$datatableShow ? '100vh' : '70vh'}">
+      <Viewer />
+    </div>
+    <div
+      style="{$datatableShow ? 'height30vh' : 'height:0px'};overflow-y:hidden">
+      <DataTable />
+    </div>
+  </div>
 {/if}
+<Modal />
 <div class="fixed text-gray-300 top-0 left-0 text-[.5rem]">
   Build: {appVersion}
 </div>

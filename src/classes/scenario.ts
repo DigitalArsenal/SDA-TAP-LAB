@@ -19,11 +19,3 @@ export class Scenario {
             CAT_URL: "https://api.spaceaware.io/data/CAT?format=fbs"
         }]);
 }
-
-/**
- *  const ommBuffer = await(await fetch('https://api.spaceaware.io/data/OMM?format=fbs')).arrayBuffer();
-    const satcatBuffer = await(await fetch('https://api.spaceaware.io/data/CAT?format=fbs')).arrayBuffer();
-    await globalThis.spaceCatalog.loadOMM(ommBuffer, satcatBuffer);
-    await viewer.dataSources.add(globalThis.spaceCatalog);
- * 
- */
