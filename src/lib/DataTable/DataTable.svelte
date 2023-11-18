@@ -16,6 +16,7 @@
       field: "OBJECT_NAME",
       sortable: true,
       filter: true,
+      pinned:true
     },
     {
       headerName: "Object ID",
@@ -42,7 +43,7 @@
       filter: true,
     },
     { headerName: "Owner", field: "OWNER", sortable: true, filter: true },
-    /*{
+    {
       headerName: "Launch Date",
       field: "LAUNCH_DATE",
       sortable: true,
@@ -107,7 +108,7 @@
       field: "MASS_TYPE",
       sortable: true,
       filter: true,
-    },*/
+    }
   ];
 
   let gridOptions: GridOptions = {
@@ -115,15 +116,7 @@
     rowData: data,
     pagination: true,
     onGridReady: (event) => {
-      event.api.sizeColumnsToFit();
-
-      // Apply saved filter and sort models
-      if ($filterModelStore) {
-        event.api.setFilterModel($filterModelStore);
-      }
-      if ($sortModelStore) {
-        (event.api as any).setSortModel($sortModelStore);
-      }
+      event.api.sizeColumnsToFit();     
     },
     onFilterChanged: (event) => {
       filterModelStore.set(event.api.getFilterModel());

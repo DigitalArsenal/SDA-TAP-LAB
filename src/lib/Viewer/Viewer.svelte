@@ -15,7 +15,7 @@
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
   import { addButton } from "../Toolbar/toolbar";
-  import DataTableButton from "../DataTable/Button.svelte";
+  import DataTableButton from "../SpaceObjects/Button.svelte";
   import SettingsButton from "../Settings/Button.svelte";
   import { isSafe } from "@/stores/dev.store";
   import { content, template } from "@/stores/modal.store";
