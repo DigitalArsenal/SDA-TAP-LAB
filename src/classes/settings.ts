@@ -3,33 +3,14 @@ import { writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { KeyValueDataStructure } from "./KeyValueDataStructure";
 
-// Define a TypeScript type for the filter and sort models
-type FilterModel = {[key: string]: any}; // Replace 'any' with a more specific type if known
-type SortModel = {[key: string]: any}; // Replace 'any' with a more specific type if known
-
-// Define the DataTableState class
-export class DataTableState {
-    id: Writable<string>;
-    filterModel: Writable<FilterModel>;
-    sortModel: Writable<SortModel>;
-    // Add additional fields as needed
-
-    constructor() {
-        this.id = writable('');
-        this.filterModel = writable({});
-        this.sortModel = writable({});
-        // Initialize additional fields here
-    }
-}
-
-export class ClockSettings {
+class ClockSettings {
     clockStep: Writable<number> = writable(1);
     shouldAnimate: Writable<boolean> = writable(true);
     multiplier: Writable<number> = writable(1);
 
 }
 
-export class CameraSettings {
+class CameraSettings {
     enableCollisionDetection: Writable<boolean> = writable(true);
     enableLook: Writable<boolean> = writable(true);
     enableRotate: Writable<boolean> = writable(true);
@@ -42,7 +23,7 @@ export class CameraSettings {
 
 }
 
-export class EntityState {
+class EntityState {
     orbit: Writable<KeyValueDataStructure> = writable({});
 }
 
@@ -65,5 +46,4 @@ export default class Settings {
     X_GRID: Writable<boolean> = writable(false);
     Y_GRID: Writable<boolean> = writable(false);
     Z_GRID: Writable<boolean> = writable(false);
-    dataTableStates: Writable<DataTableState[]> = writable([]);
 }

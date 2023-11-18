@@ -8,7 +8,7 @@
   import { appVersion } from "@/stores/settings.store";
   import COIServiceWorker from "./lib/COIServiceWorker/COIServiceWorker";
   import DataTable from "@/lib/DataTable/DataTable.svelte";
-  import { show as datatableShow } from "@/stores/datatable.store";
+  import { mode as datatableShow } from "@/stores/datatable.store";
 
   onMount(() => {
     COIServiceWorker();
