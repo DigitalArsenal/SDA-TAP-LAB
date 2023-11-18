@@ -20,6 +20,7 @@ export default [
     field: "NORAD_CAT_ID",
     sortable: true,
     filter: true,
+    valueFormatter: ({ value }) => value?.toString().padStart(7, "0"),
   },
   {
     headerName: "Object Type",
