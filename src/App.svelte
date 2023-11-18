@@ -27,11 +27,13 @@
   <EULA />
 {:else}
   <div id="container" class="flex flex-col h-full">
-    <div style="height:{!$datatableShow ? '100%' : '70%'}">
+    <div class="viewer">
       <Viewer />
     </div>
     <div
-      style="{$datatableShow ? 'height:30%' : 'height:0px'};overflow-y:hidden">
+      class="datatable"
+      style={$datatableShow ? "flex-grow: 1;" : "display: none;"}
+    >
       <DataTable />
     </div>
   </div>
@@ -47,6 +49,17 @@
   @tailwind components;
   @tailwind base;
 
+  /* Viewer */
+  .viewer {
+    flex-grow: 2; /* Adjust this value as needed */
+    overflow-y: auto; /* Or as per your requirement */
+  }
+
+  /* DataTable */
+  .datatable {
+    flex-grow: 1; /* Adjust this value based on how much space you want to allocate */
+    overflow-y: auto; /* Or as per your requirement */
+  }
   :global(html, body) {
     width: 100vw;
     height: 100vh;
