@@ -40,6 +40,11 @@
   $: if (gridApi) {
     gridApi.setColumnDefs($columnDefs);
     gridApi.setRowData($data);
+
+    const storedFilterModel = get(filterModelStore);
+    if (storedFilterModel) {
+      gridApi.setFilterModel(storedFilterModel);
+    }
   }
 
   function executeFilterAction(api: GridApi) {
