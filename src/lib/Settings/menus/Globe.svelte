@@ -8,6 +8,8 @@
     highDynamicRange,
     debugFPS,
     fxaa,
+    resolutionScale,
+    useBrowserRecommendedResolution,
     showMousePosition,
     depthTestAgainstTerrain,
     showLatLonGrid,
@@ -18,6 +20,9 @@
 
   let referenceFrameChecked: any;
   $: referenceFrameChecked = $referenceFrame === 1 ? true : false;
+  function handleResolutionScaleChange(e: any) {
+    resolutionScale.set(parseFloat(e.target.value));
+  }
 </script>
 
 <div class="flex flex-col gap-2">
@@ -35,14 +40,16 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
           for="flexSwitchCheckDefault"
-          >{$referenceFrame ? "INERTIAL (ECI)" : "FIXED (ECEF)"}</label>
+          >{$referenceFrame ? "INERTIAL (ECI)" : "FIXED (ECEF)"}</label
+        >
       </div>
     </div>
     <div class="grid grid-cols-3 items-center justify-center">
@@ -54,13 +61,15 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
       </div>
     </div>
     <div class="grid grid-cols-3 items-center justify-center">
@@ -72,13 +81,15 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
       </div>
     </div>
     <div class="grid grid-cols-3 items-center justify-center">
@@ -90,13 +101,15 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
       </div>
     </div>
 
@@ -109,13 +122,15 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
       </div>
     </div>
     <div class="grid grid-cols-3 items-center justify-center">
@@ -127,13 +142,15 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
       </div>
     </div>
     <div class="grid grid-cols-3 items-center justify-center">
@@ -145,13 +162,46 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
+      </div>
+    </div>
+    <!-- Toggle for Use Browser Recommended Resolution -->
+    <div class="grid grid-cols-3 items-center justify-center">
+      <div class="text-left">Use Browser Resolution</div>
+      <div class="flex form-check form-switch">
+        <div class="w-full flex items-center justify-center">
+          <input
+            bind:checked={$useBrowserRecommendedResolution}
+            class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
+            type="checkbox"
+            role="switch"
+            id="useBrowserResolutionSwitch"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 items-center justify-center">
+      <div class="{$useBrowserRecommendedResolution?"text-gray-400":""} text-left">Resolution Scale: {$resolutionScale}</div>
+      <div class="flex items-center justify-center">
+        <input
+          bind:value={$resolutionScale}
+          on:change={handleResolutionScaleChange}
+          class="slider w-24"
+          type="range"
+          min=".1"
+          max="2"
+          step="0.1"
+          disabled={$useBrowserRecommendedResolution}
+          id="resolutionScaleSlider"
+        />
       </div>
     </div>
     <!--<div class="grid grid-cols-3 items-center justify-center">
@@ -181,13 +231,15 @@
             class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-gray-800 bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
             type="checkbox"
             role="switch"
-            id="flexSwitchCheckDefault" />
+            id="flexSwitchCheckDefault"
+          />
         </div>
       </div>
       <div class="whitespace-nowrap">
         <label
           class="form-check-label inline-block"
-          for="flexSwitchCheckDefault" />
+          for="flexSwitchCheckDefault"
+        />
       </div>
     </div>
     <!--
