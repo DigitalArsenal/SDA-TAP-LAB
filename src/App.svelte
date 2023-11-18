@@ -27,11 +27,11 @@
   <EULA />
 {:else}
   <div id="container" class="flex flex-col h-full">
-    <div style="height:{!$datatableShow ? '100vh' : '70vh'}">
+    <div style="height:{!$datatableShow ? '100%' : '70%'}">
       <Viewer />
     </div>
     <div
-      style="{$datatableShow ? 'height30vh' : 'height:0px'};overflow-y:hidden">
+      style="{$datatableShow ? 'height:30%' : 'height:0px'};overflow-y:hidden">
       <DataTable />
     </div>
   </div>
