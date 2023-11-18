@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { Grid } from "ag-grid-community";
-  import type { GridOptions, ColDef } from "ag-grid-community";
+  import type { GridOptions, ColDef, GridApi } from "ag-grid-community";
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
 
@@ -9,7 +9,9 @@
     filterModelStore,
     data,
     columnDefs,
+    filterAction,
   } from "@/stores/datatable.store";
+  import { get } from "svelte/store";
 
   let gridOptions: GridOptions = {
     columnDefs: $columnDefs,
@@ -20,6 +22,7 @@
     },
     onFilterChanged: (event) => {
       filterModelStore.set(event.api.getFilterModel());
+      executeFilterAction(event.api);
     },
     onSortChanged: (event) => {},
   };
@@ -28,22 +31,31 @@
   let gridElement: HTMLElement;
   let gridApi: any;
 
-  //window.resizeGrid = resizeGrid;
   onMount(() => {
     grid = new Grid(gridElement, gridOptions);
     gridApi = gridOptions.api;
-    //window.addEventListener("resize", resizeGrid);
-  });
-
-  onDestroy(() => {
-   // window.removeEventListener("resize", resizeGrid);
   });
 
   // Reactive statements to update columnDefs and rowData
   $: if (gridApi) {
     gridApi.setColumnDefs($columnDefs);
     gridApi.setRowData($data);
-   // resizeGrid();
+  }
+
+  function executeFilterAction(api: GridApi) {
+    const filterActionFunction = get(filterAction);
+
+    if (!filterActionFunction) {
+      return;
+    }
+    // Retrieve filtered row data
+    const rowData: any[] = [];
+    api.forEachNodeAfterFilter((node) => {
+      rowData.push(node.data);
+    });
+
+    // Invoke the filter action function with the filtered rows
+    filterActionFunction(rowData);
   }
 </script>
 

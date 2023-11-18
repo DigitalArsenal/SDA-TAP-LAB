@@ -9,14 +9,30 @@
     data,
     columnDefs as columnDefStore,
     filterModelStore,
+    filterAction,
   } from "@/stores/datatable.store";
   import type { Entity, SpaceEntity } from "orbpro";
+
+  const filterActionFunction = (filteredRows: any[]) => {
+    if (!$viewer) {
+      return;
+    }
+    const dataSource = $viewer.dataSources.getByName("spaceaware")[0];
+    const filteredIds = new Set(filteredRows.map((row) => row.OBJECT_ID)); // Assuming each row has an 'id' property
+
+    dataSource.entities.values.forEach((entity: Entity) => {
+      // Assuming each entity has a corresponding 'id' property
+      entity.show = filteredIds.has(entity.id);
+    });
+  };
 
   const toggleModal = async () => {
     if ($mode === "SpaceObjects") {
       $mode = null;
+      $filterAction = null;
     } else if (!$mode) {
       $mode = "SpaceObjects";
+      $filterAction = filterActionFunction;
     }
 
     $columnDefStore = columnDefs;
@@ -25,13 +41,9 @@
       const combinedData = dataSource.entities.values.map((e: Entity) => {
         const OMM = e.properties?.OMM.getValue() || {};
         const CAT = e.properties?.CAT.getValue() || {};
-
-        // Combine OMM and CAT in a format suitable for your datatable
-        // Assuming you want an object with both properties
         return { ...OMM, ...CAT };
       });
 
-      // Set the combined data to the $data store
       data.set(combinedData as any);
     }
   };
