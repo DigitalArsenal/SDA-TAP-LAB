@@ -14,17 +14,20 @@
 
 <!-- Fullscreen Modal backdrop with margin -->
 <div
-  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[45%] h-[38%] md:h-[43%] max-h-[300px] min-h-[300px] right-0">
+  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[45%] h-[38%] md:h-[43%] max-h-[300px] min-h-[300px] right-0"
+>
   <div class="flex justify-center items-center z-50 w-full h-full">
     <!-- Modal content -->
     <div
       style="background:rgba(48, 51, 54, .9)"
-      class="bg-opacity-75 text-white rounded-lg shadow-xl w-full h-full overflow-auto flex flex-col border border-gray-600">
+      class="bg-opacity-75 text-white rounded-lg shadow-xl w-full h-full overflow-auto flex flex-col border border-gray-600"
+    >
       <!-- Modal header -->
-      <div class="flex-none text-md md:text-xl">
+      <div class="flex-none text-xs md:text-sm">
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
-          class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
+          class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600"
+        >
           <p class="text-white font-[300]">
             {#if $title}
               {$title}
@@ -34,7 +37,9 @@
               Entity
             {/if}
           </p>
-          <CloseButton onclick={closeModal} />
+          <div class="text-xl">
+            <CloseButton onclick={closeModal} />
+          </div>
         </div>
       </div>
       <!-- Modal body -->

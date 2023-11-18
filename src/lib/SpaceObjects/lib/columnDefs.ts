@@ -1,5 +1,8 @@
 import type { ColDef } from "ag-grid-community/dist/lib/entities/colDef";
-import { objectType, opsStatusCode } from "@/classes/SDS-1-Satellite-Catalog-Message-(CAT)-TypeScript/main";
+import {
+  objectType,
+  opsStatusCode,
+} from "@/classes/SDS-1-Satellite-Catalog-Message-(CAT)-TypeScript/main";
 
 export default [
   {
@@ -26,14 +29,28 @@ export default [
     headerName: "Object Type",
     field: "OBJECT_TYPE",
     sortable: true,
-    filter: true,
+    filter: "agTextColumnFilter",
+    filterParams: {
+      filterOptions: ["contains"], // or other options as needed
+      textCustomComparator: (filter: any, value: any, filterText: any) => {
+        const formattedValue = objectType[value];
+        return formattedValue.toLowerCase().includes(filterText.toLowerCase());
+      },
+    },
     valueFormatter: ({ value }) => objectType[value],
   },
   {
     headerName: "Ops Status Code",
     field: "OPS_STATUS_CODE",
     sortable: true,
-    filter: true,
+    filter: "agTextColumnFilter",
+    filterParams: {
+      filterOptions: ["contains", "notContains", "equals"], // or other options as needed
+      textCustomComparator: (filter: any, value: any, filterText: any) => {
+        const formattedValue = opsStatusCode[value];
+        return formattedValue.toLowerCase().includes(filterText.toLowerCase());
+      },
+    },
     valueFormatter: ({ value }) => opsStatusCode[value],
   },
   { headerName: "Owner", field: "OWNER", sortable: true, filter: true },
