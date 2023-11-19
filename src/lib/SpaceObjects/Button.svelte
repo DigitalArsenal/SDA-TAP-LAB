@@ -22,10 +22,12 @@
     const dataSource = $viewer.dataSources.getByName("spaceaware")[0];
     const filteredIds = new Set(filteredRows.map((row) => row.OBJECT_ID)); // Assuming each row has an 'id' property
 
-    dataSource.entities.values.forEach((entity: Entity) => {
+    const entities = dataSource.entities.values;
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
       // Assuming each entity has a corresponding 'id' property
       entity.show = filteredIds.has(entity.id);
-    });
+    }
   };
 
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
@@ -36,11 +38,11 @@
       $filterAction = filterActionFunction;
       $datatableShow = true;
       defaultToolbar.style.display = "none";
-      $closeMode = ()=>{
+      $closeMode = () => {
         $mode = null;
         $datatableShow = false;
         defaultToolbar.style.display = "";
-      }
+      };
     }
 
     $columnDefStore = columnDefs;

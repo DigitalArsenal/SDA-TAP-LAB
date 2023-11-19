@@ -64,4 +64,13 @@
   }
 </script>
 
-<div bind:this={gridElement} class="ag-theme-balham-dark w-full h-[30vh]" />
+<div class="h-[30vh]">
+  <div bind:this={gridElement} class="ag-theme-balham-dark h-full w-full" />
+  <div class="absolute bottom-0 l-0 h-6 ml-2 mb-1 flex items-center justify-center">
+   {#if Object.keys($filterModelStore).length}
+    <button style="border-radius:0px" class="bg-blue-700 pl-2 pr-2 pb-[.5px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
+      Save
+    </button>
+    {/if}
+  </div>
+</div>
