@@ -28,7 +28,7 @@
     <!-- Modal content -->
     <div
       style="background:rgba(48, 51, 54, .85)"
-      class="bg-opacity-75 text-white rounded-lg shadow-xl w-full h-full overflow-auto flex flex-col border border-gray-600">
+      class="bg-opacity-75 text-white rounded-md shadow-xl w-full h-full overflow-auto flex flex-col border border-gray-600">
       <!-- Modal header -->
       <div class="flex-none text-md md:text-xl">
         <!-- svelte-ignore a11y-no-static-element-interactions -->
