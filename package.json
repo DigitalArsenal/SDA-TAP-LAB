@@ -1,7 +1,7 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1700415136700",
+    "version": "0.0.0+1700416853514",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",

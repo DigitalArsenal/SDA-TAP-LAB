@@ -58,19 +58,38 @@
     api.forEachNodeAfterFilter((node) => {
       rowData.push(node.data);
     });
-
     // Invoke the filter action function with the filtered rows
     filterActionFunction(rowData);
+  }
+
+  const clearFilter = () => {
+    $filterModelStore = {};
+    gridApi.setFilterModel($filterModelStore);
+  };
+  $: {
+    console.log($filterModelStore);
   }
 </script>
 
 <div class="h-[30vh]">
   <div bind:this={gridElement} class="ag-theme-balham-dark h-full w-full" />
-  <div class="absolute bottom-0 l-0 h-6 ml-2 mb-1 flex items-center justify-center">
-   {#if Object.keys($filterModelStore).length}
-    <button style="border-radius:0px" class="bg-blue-700 pl-2 pr-2 pb-[.5px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
-      Save
-    </button>
+  <div
+    class="gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center"
+  >
+    {#if Object.keys($filterModelStore).length}
+      <button
+        style="border-radius:0px"
+        class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center"
+      >
+        Save
+      </button>
+      <button
+        on:click={clearFilter}
+        style="border-radius:0px"
+        class="bg-gray-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center"
+      >
+        Clear
+      </button>
     {/if}
   </div>
 </div>
