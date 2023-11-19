@@ -16,6 +16,7 @@
   import { content, lastcontent } from "@/stores/modal.store";
 
   let myElement: any;
+  let lastLoaded: Date;
 
   const filterActionFunction = (filteredRows: any[]) => {
     if (!$viewer) {
@@ -35,24 +36,27 @@
       $mode = null;
       $filterAction = null;
       myElement.parentElement.classList.remove("cesium-button-hover");
-      $content = null;
+      //$content = null;
     } else if (!$mode) {
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
       myElement.parentElement.classList.add("cesium-button-hover");
-      $content = SpaceObjectsModal;
+      //$content = SpaceObjectsModal;
     }
 
     $columnDefStore = columnDefs;
     if ($viewer) {
       const dataSource = $viewer.dataSources.getByName("spaceaware")[0];
-      const combinedData = dataSource.entities.values.map((e: Entity) => {
-        const OMM = e.properties?.OMM.getValue() || {};
-        const CAT = e.properties?.CAT.getValue() || {};
-        return { ...OMM, ...CAT };
-      });
-
-      data.set(combinedData as any);
+      if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {
+        const combinedData = dataSource.entities.values.map((e: Entity) => {
+          const OMM = e.properties?.OMM.getValue() || {};
+          const CAT = e.properties?.CAT.getValue() || {};
+          return { ...OMM, ...CAT };
+        });
+        lastLoaded = dataSource.lastLoaded;
+        data.set(combinedData as any);
+        console.log(data)
+      }
     }
   };
 </script>
