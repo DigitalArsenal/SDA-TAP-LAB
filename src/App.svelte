@@ -8,8 +8,9 @@
   import { appVersion } from "@/stores/settings.store";
   import COIServiceWorker from "./lib/COIServiceWorker/COIServiceWorker";
   import DataTable from "@/lib/DataTable/DataTable.svelte";
-  import { mode as datatableShow } from "@/stores/datatable.store";
-
+  import { datatableShow } from "@/stores/datatable.store";
+  import CloseButton from "@/lib/MasterCloseButton/MasterCloseButton.svelte";
+  
   onMount(() => {
     COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -26,7 +27,7 @@
 {#if $showEULA}
   <EULA />
 {:else}
-  <div id="container" class="flex flex-col h-full">
+  <div id="container" class="flex flex-col h-full select-none">
     <div class="viewer">
       <Viewer />
     </div>
@@ -39,9 +40,10 @@
   </div>
 {/if}
 <Modal />
-<div class="fixed text-gray-300 top-0 left-0 text-[.5rem]">
+<div class="fixed text-gray-300 top-0 left-2 text-gray-500 text-[.3rem]">
   Build: {appVersion}
 </div>
+<CloseButton/>
 
 <!-- svelte-ignore css-unused-selector -->
 <style global lang="postcss">

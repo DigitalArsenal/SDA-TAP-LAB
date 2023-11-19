@@ -21,8 +21,8 @@ export const filterModelStore: Writable<any> = writable(
 );
 
 // Other stores...
+export const datatableShow = writable(false);
 export const sortModelStore = writable({});
-export const mode: Writable<any> = writable(null);
 export const data = writable([]);
 export const columnDefs: Writable<ColDef[]> = writable([]);
 export const filterAction: Writable<Function | null> = writable(null);

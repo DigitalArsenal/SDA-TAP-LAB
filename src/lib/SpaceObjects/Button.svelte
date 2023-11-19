@@ -5,15 +5,13 @@
   import columnDefs from "./lib/columnDefs";
   import { viewer } from "@/stores/viewer.store";
   import {
-    mode,
+    datatableShow,
     data,
     columnDefs as columnDefStore,
-    filterModelStore,
     filterAction,
   } from "@/stores/datatable.store";
-  import type { Entity } from "orbpro";
-  import SpaceObjectsModal from "./SpaceObjectsModal.svelte";
-  import { content, lastcontent } from "@/stores/modal.store";
+  import { mode, closeMode } from "@/stores/menu.store";
+  import type { Entity, SpaceCatalogDataSource } from "orbpro";
 
   let myElement: any;
   let lastLoaded: Date;
@@ -32,21 +30,21 @@
   };
 
   const toggleModal = async () => {
-    if ($mode === "SpaceObjects") {
-      $mode = null;
-      $filterAction = null;
-      myElement.parentElement.classList.remove("cesium-button-hover");
-      //$content = null;
-    } else if (!$mode) {
+    if (!$mode) {
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
-      myElement.parentElement.classList.add("cesium-button-hover");
-      //$content = SpaceObjectsModal;
+      $datatableShow = true;
+      $closeMode = ()=>{
+        $mode = null;
+        $datatableShow = false;
+      }
     }
 
     $columnDefStore = columnDefs;
     if ($viewer) {
-      const dataSource = $viewer.dataSources.getByName("spaceaware")[0];
+      const dataSource: SpaceCatalogDataSource = $viewer.dataSources.getByName(
+        "spaceaware"
+      )[0] as SpaceCatalogDataSource;
       if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {
         const combinedData = dataSource.entities.values.map((e: Entity) => {
           const OMM = e.properties?.OMM.getValue() || {};
@@ -55,7 +53,7 @@
         });
         lastLoaded = dataSource.lastLoaded;
         data.set(combinedData as any);
-        console.log(data)
+        console.log(data);
       }
     }
   };
