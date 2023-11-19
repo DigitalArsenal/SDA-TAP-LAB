@@ -29,14 +29,19 @@
     });
   };
 
+  const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
+
   const toggleModal = async () => {
     if (!$mode) {
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
       $datatableShow = true;
+      console.log(defaultToolbar.style.display)
+      defaultToolbar.style.display = "none";
       $closeMode = ()=>{
         $mode = null;
         $datatableShow = false;
+        defaultToolbar.style.display = "";
       }
     }
 

@@ -8,10 +8,9 @@
     Cartographic,
     Cartesian3,
     viewerReferenceFrameMixin,
-    SpaceEntity,
-    Entity,
   } from "orbpro";
-  import { onMount, onDestroy } from "svelte";
+
+  import { onMount } from "svelte";
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
   import { addButton } from "../Toolbar/toolbar";
@@ -62,11 +61,23 @@
     const cartographicPosition = Cartographic.fromCartesian(cameraPosition);
     const longitude = CesiumMath.toDegrees(cartographicPosition.longitude);
     const latitude = CesiumMath.toDegrees(cartographicPosition.latitude);
-    const altitude = cartographicPosition.height + 10000000;
+    const altitude = cartographicPosition.height + 30000000;
     viewer.camera.flyTo({
       destination: Cartesian3.fromDegrees(longitude, latitude, altitude),
       duration: 0,
     });
+
+    // Override home button behavior
+    viewer.homeButton.viewModel.command.beforeExecute.addEventListener(
+      function (e) {
+        e.cancel = true; // Cancel the default behavior
+        // Set the new home view
+        viewer.camera.flyTo({
+          destination: Cartesian3.fromDegrees(longitude, latitude, altitude),
+          duration: 0,
+        });
+      }
+    );
     viewer.extend(viewerReferenceFrameMixin);
 
     if (isSafe()) {
