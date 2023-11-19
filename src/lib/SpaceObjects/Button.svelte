@@ -11,8 +11,9 @@
     filterModelStore,
     filterAction,
   } from "@/stores/datatable.store";
-  import type { Entity, SpaceEntity } from "orbpro";
-  import { onMount } from "svelte";
+  import type { Entity } from "orbpro";
+  import SpaceObjectsModal from "./SpaceObjectsModal.svelte";
+  import { content, lastcontent } from "@/stores/modal.store";
 
   let myElement: any;
 
@@ -34,10 +35,12 @@
       $mode = null;
       $filterAction = null;
       myElement.parentElement.classList.remove("cesium-button-hover");
+      $content = null;
     } else if (!$mode) {
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
       myElement.parentElement.classList.add("cesium-button-hover");
+      $content = SpaceObjectsModal;
     }
 
     $columnDefStore = columnDefs;

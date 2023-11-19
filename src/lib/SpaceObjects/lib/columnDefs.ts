@@ -45,10 +45,21 @@ export default [
     sortable: true,
     filter: "agTextColumnFilter",
     filterParams: {
-      filterOptions: ["contains", "notContains", "equals"], // or other options as needed
+      filterOptions: ["contains", "notContains", "equals"],
       textCustomComparator: (filter: any, value: any, filterText: any) => {
-        const formattedValue = opsStatusCode[value];
-        return formattedValue.toLowerCase().includes(filterText.toLowerCase());
+        const formattedValue = opsStatusCode[value].toLowerCase();
+        const lowerCaseFilterText = filterText.toLowerCase();
+
+        switch (filter) {
+          case "contains":
+            return formattedValue.includes(lowerCaseFilterText);
+          case "notContains":
+            return !formattedValue.includes(lowerCaseFilterText);
+          case "equals":
+            return formattedValue === lowerCaseFilterText;
+          default:
+            return false; // or any default behavior you need
+        }
       },
     },
     valueFormatter: ({ value }) => opsStatusCode[value],
