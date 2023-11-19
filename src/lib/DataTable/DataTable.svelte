@@ -14,6 +14,7 @@
   import { get } from "svelte/store";
 
   let gridOptions: GridOptions = {
+    suppressMenuHide:true,
     columnDefs: $columnDefs,
     rowData: $data,
     pagination: true,
