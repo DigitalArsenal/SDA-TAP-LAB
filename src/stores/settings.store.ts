@@ -21,6 +21,13 @@ import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
 import { LatLonGrid, SpaceCatalogDataSource } from "orbpro";
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
+// Function to update URL with the compressed state
+function updateURLWithState(compressedState: string) {
+  const url = new URL(window.location.href);
+  url.searchParams.set(scenarioKey, compressedState);
+  window.history.pushState({}, "", url.toString());
+}
+
 interface DeserializeDataHandler {
   [key: string]: (input: any) => any;
 }
@@ -42,9 +49,7 @@ const groups: Writable<Array<Group>> = scenario.groups;
 
 const saveState = async (exportJSON: boolean = false): Promise<string> => {
   let { ...scenarioRest } = scenario;
-  console.log(scenarioRest);
   let exportScenario = JSON.stringify(scenarioRest, (key, value) => {
-    console.log(key);
     value = value?.subscribe ? get(value) : value;
     if (serializeDataHandlers[key]) {
       value = serializeDataHandlers[key](value);
@@ -95,7 +100,6 @@ const _loadState = (data: string) => {
       return value;
     }
   });
-  console.log(importScenario);
   recurseWrite(importScenario, scenario);
   return 1;
 };
@@ -149,11 +153,6 @@ export const loadScenarioFromURL = async () => {
   }
 };
 
-//@ts-ignore
-window.saveState = saveState;
-//@ts-ignore
-window.loadState = loadState;
-
 const activeComponents = writable([]);
 
 const activeComponentProps = writable({});
@@ -170,7 +169,7 @@ const goBack = () => {
 
 let subscriptions: any = [];
 
-storeViewer.subscribe((viewer) => {
+storeViewer.subscribe(async (viewer) => {
   while (subscriptions.length) {
     let s = subscriptions.pop();
     s();
@@ -203,111 +202,117 @@ storeViewer.subscribe((viewer) => {
   viewer.scene.highDynamicRange = get(highDynamicRange);
   CameraSettings.enableMatrixMode.set(true);
 
+  const saveAndUpdate = async () => {
+    const compressedState = await saveState();
+    updateURLWithState(compressedState);
+    viewer.scene.render();
+  };
+
   subscriptions.push(
-    referenceFrame.subscribe((rF: any) => {
+    referenceFrame.subscribe(async (rF: any) => {
       viewer.referenceFrame = rF;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    skyAtmosphere.subscribe((sA: any) => {
+    skyAtmosphere.subscribe(async (sA: any) => {
       viewer.cesiumWidget.scene.skyAtmosphere.show = sA;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    enableLighting.subscribe((eL: any) => {
+    enableLighting.subscribe(async (eL: any) => {
       viewer.scene.globe.enableLighting = eL;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    depthTestAgainstTerrain.subscribe((eL: any) => {
+    depthTestAgainstTerrain.subscribe(async (eL: any) => {
       viewer.scene.globe.depthTestAgainstTerrain = eL;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    highDynamicRange.subscribe((hDR: any) => {
+    highDynamicRange.subscribe(async (hDR: any) => {
       viewer.scene.highDynamicRange = hDR;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    CameraSettings.enableMatrixMode.subscribe((mM) => {
+    CameraSettings.enableMatrixMode.subscribe(async (mM) => {
       if (mM) {
         addMatrixModeScreenSpaceEventHandler(viewer);
       } else {
         removeMatrixModeScreenSpaceEventHandler();
       }
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    settings.ClockSettings.shouldAnimate.subscribe((a) => {
+    settings.ClockSettings.shouldAnimate.subscribe(async (a) => {
       if (a) {
         viewer.clock.shouldAnimate = true;
       } else {
         viewer.clock.shouldAnimate = false;
       }
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    settings.ClockSettings.multiplier.subscribe((m: number) => {
+    settings.ClockSettings.multiplier.subscribe(async (m: number) => {
       viewer.clock.multiplier = m;
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    settings.debugFPS.subscribe((d: boolean) => {
+    settings.debugFPS.subscribe(async (d: boolean) => {
       viewer.scene.debugShowFramesPerSecond = d;
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    settings.fxaa.subscribe((f: boolean) => {
+    settings.fxaa.subscribe(async (f: boolean) => {
       //@ts-ignore
       viewer.scene.fxaa = f;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    settings.resolutionScale.subscribe((r: Number) => {
+    settings.resolutionScale.subscribe(async (r: Number) => {
       //@ts-ignore
       viewer.resolutionScale = r;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
-    settings.useBrowserRecommendedResolution.subscribe((u: boolean) => {
+    settings.useBrowserRecommendedResolution.subscribe(async (u: boolean) => {
       //@ts-ignore
       viewer.useBrowserRecommendedResolution = u;
-      viewer.scene.render();
+      await saveAndUpdate();
     })
   );
 
   subscriptions.push(
     satelliteCatalogDataProviders.subscribe(
-      (dProviders: Array<SatelliteCatalogDataProvider>) => {
-        dProviders.forEach(async (dP) => {
+      async (dProviders: Array<SatelliteCatalogDataProvider>) => {
+        for (const dP of dProviders) {
           if (dP.OMM_URL) {
-            let ommBuffer = new ArrayBuffer(0),
-              catBuffer = new ArrayBuffer(0);
-            if (dP.OMM_URL) {
-              ommBuffer = await (await fetch(dP.OMM_URL)).arrayBuffer();
-            }
-            if (dP.CAT_URL) {
-              catBuffer = await (await fetch(dP.CAT_URL)).arrayBuffer();
-            }
+            let ommBuffer = await (await fetch(dP.OMM_URL)).arrayBuffer();
+            let catBuffer = dP.CAT_URL
+              ? await (await fetch(dP.CAT_URL)).arrayBuffer()
+              : new ArrayBuffer(0);
+
             let hasDataSource = viewer.dataSources.getByName(
               dP.name
             )[0] as SpaceCatalogDataSource;
@@ -316,33 +321,35 @@ storeViewer.subscribe((viewer) => {
               new SpaceCatalogDataSource({ ...dP, scene: viewer.scene });
 
             await spaceCatalog.loadOMM(ommBuffer, catBuffer);
-
             if (!hasDataSource) {
               await viewer.dataSources.add(spaceCatalog);
             }
           }
-        });
+        }
+        await saveAndUpdate();
       }
     )
   );
 
   let latLonGridInstance: LatLonGrid | undefined = undefined;
   subscriptions.push(
-    showLatLonGrid.subscribe((showLLG: boolean) => {
+    showLatLonGrid.subscribe(async (showLLG: boolean) => {
       if (!latLonGridInstance && showLLG) {
         latLonGridInstance = new LatLonGrid(viewer);
       } else if (latLonGridInstance && !showLLG) {
         (latLonGridInstance as any).destroy();
         latLonGridInstance = undefined;
       }
-      setTimeout(() => {
-        viewer.scene.render();
-      }, 100);
+      await saveAndUpdate();
     })
   );
 });
 
 const appVersion = "a6e8f29c-b66a-11ec-8dfe-5b9767cbddd1";
+
+// Step 2: Automatically load state from URL on page load
+loadScenarioFromURL();
+
 export {
   appVersion,
   scenario,

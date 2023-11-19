@@ -12,6 +12,9 @@
     filterAction,
   } from "@/stores/datatable.store";
   import type { Entity, SpaceEntity } from "orbpro";
+  import { onMount } from "svelte";
+
+  let myElement: any;
 
   const filterActionFunction = (filteredRows: any[]) => {
     if (!$viewer) {
@@ -30,9 +33,11 @@
     if ($mode === "SpaceObjects") {
       $mode = null;
       $filterAction = null;
+      myElement.parentElement.classList.remove("cesium-button-hover");
     } else if (!$mode) {
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
+      myElement.parentElement.classList.add("cesium-button-hover");
     }
 
     $columnDefStore = columnDefs;
@@ -51,6 +56,7 @@
 
 <!-- Button to open the modal -->
 <div
+  bind:this={myElement}
   tabindex="0"
   role="button"
   on:keydown={(e) => {
@@ -61,3 +67,13 @@
 >
   <Icon scale={1.5} data={faSatellite} />
 </div>
+
+<style>
+  :global(.cesium-button-hover) {
+    color: #fff; /* For text buttons */
+    fill: #fff; /* For SVG buttons */
+    background: #4488bb99;
+    border-color: #aef;
+    box-shadow: 0 0 8px #fff;
+  }
+</style>
