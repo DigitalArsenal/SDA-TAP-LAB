@@ -22,7 +22,7 @@
   <!-- Fullscreen Modal backdrop with margin -->
 
     <div
-      class="fixed inset-0 mt-12 pr-2 pl-2 flex justify-end pointer-events-auto select-none flex justify-center items-center z-50 h-1/2 md:h-1/2 md:w-1/2 w-full max-h-[200px]">
+      class="fixed right-0 mt-12 pr-2 pl-2 flex pointer-events-auto select-none z-50 h-1/2 md:h-1/2 md:w-1/2 w-full max-h-[200px]">
       <!-- Modal content -->
       <div
         style="background:rgba(48, 51, 54, .85)"
