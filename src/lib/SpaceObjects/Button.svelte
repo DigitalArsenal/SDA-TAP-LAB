@@ -13,7 +13,6 @@
   import { mode, closeMode } from "@/stores/menu.store";
   import type { Entity, SpaceCatalogDataSource } from "orbpro";
 
-  let myElement: any;
   let lastLoaded: Date;
 
   const filterActionFunction = (filteredRows: any[]) => {
@@ -36,7 +35,6 @@
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
       $datatableShow = true;
-      console.log(defaultToolbar.style.display)
       defaultToolbar.style.display = "none";
       $closeMode = ()=>{
         $mode = null;
@@ -66,7 +64,6 @@
 
 <!-- Button to open the modal -->
 <div
-  bind:this={myElement}
   tabindex="0"
   role="button"
   on:keydown={(e) => {
@@ -79,11 +76,4 @@
 </div>
 
 <style>
-  :global(.cesium-button-hover) {
-    color: #fff; /* For text buttons */
-    fill: #fff; /* For SVG buttons */
-    background: #4488bb99;
-    border-color: #aef;
-    box-shadow: 0 0 8px #fff;
-  }
 </style>
