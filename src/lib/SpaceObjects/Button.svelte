@@ -63,4 +63,8 @@
 </div>
 
 <style>
+  :global(.ag-paging-row-summary-panel){
+    position:relative;
+    left:10px;
+  }
 </style>
