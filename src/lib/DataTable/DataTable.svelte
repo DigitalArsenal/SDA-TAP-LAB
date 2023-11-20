@@ -75,7 +75,7 @@
 <div class="h-[30vh]">
   <div bind:this={gridElement} class="ag-theme-balham-dark h-full w-full" />
   <div
-    class="gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center"
+    class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center"
   >
     {#if Object.keys($filterModelStore).length}
       <button
