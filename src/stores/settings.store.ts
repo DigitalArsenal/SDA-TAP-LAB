@@ -45,6 +45,9 @@ let serializeDataHandlers: serializeDataHandler = {
   selectedEntity: serializeEntity,
 };
 
+export const updatedDataSources: Writable<any> = writable(null);
+export const lastUpdateDataSource: Writable<any> = writable(null);
+
 const groups: Writable<Array<Group>> = scenario.groups;
 
 const saveState = async (exportJSON: boolean = false): Promise<string> => {
@@ -138,9 +141,8 @@ export const writeScenarioToURL = async () => {
   let url = new URL(document.URL);
   let params = new URLSearchParams(url.search);
   params.set(scenarioKey, _scenario);
-  let urlxx = `${
-    document.location.host + document.location.pathname
-  }?${params.toString()}`;
+  let urlxx = `${document.location.host + document.location.pathname
+    }?${params.toString()}`;
   return urlxx;
 };
 export const loadScenarioFromURL = async () => {
@@ -149,7 +151,7 @@ export const loadScenarioFromURL = async () => {
   let params = new URLSearchParams(url.search);
   let sc = params.get(scenarioKey);
   if (sc) {
-    return loadState(sc).then((a) => {});
+    return loadState(sc).then((a) => { });
   }
 };
 
@@ -324,6 +326,8 @@ storeViewer.subscribe(async (viewer) => {
             if (!hasDataSource) {
               await viewer.dataSources.add(spaceCatalog);
             }
+            updatedDataSources.set(new Date());
+            lastUpdateDataSource.set(dP.name);
           }
         }
         await saveAndUpdate();

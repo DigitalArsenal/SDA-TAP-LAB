@@ -3,6 +3,10 @@ import {
   objectType,
   opsStatusCode,
 } from "@/classes/SDS-1-Satellite-Catalog-Message-(CAT)-TypeScript/main";
+import { scenario } from "@/stores/settings.store";
+let { trackedEntity, selectedEntity } = scenario;
+import { viewer } from "@/stores/viewer.store";
+import { get } from "svelte/store";
 
 export default [
   {
@@ -11,6 +15,16 @@ export default [
     sortable: true,
     filter: true,
     pinned: true,
+    onCellClicked: (event) => {
+      const $viewer = get(viewer);
+      if ($viewer) {
+        let entity = $viewer.dataSources.getByName("spaceaware")[0]?.entities.getById(event.data.OBJECT_ID);
+        if (entity) {
+          trackedEntity.set(entity);
+          selectedEntity.set(entity);
+        }
+      }
+    }
   },
   {
     headerName: "Object ID",

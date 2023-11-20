@@ -3,6 +3,7 @@
   import Icon from "svelte-awesome";
   import { faSatellite } from "@fortawesome/free-solid-svg-icons";
   import columnDefs from "./lib/columnDefs";
+  import { loadData } from "./lib/loadData";
   import { viewer } from "@/stores/viewer.store";
   import {
     datatableShow,
@@ -11,11 +12,27 @@
     filterAction,
   } from "@/stores/datatable.store";
   import { mode, closeMode } from "@/stores/menu.store";
-  import type { Entity, SpaceCatalogDataSource } from "orbpro";
+  import {
+    scenario,
+    updatedDataSources,
+    lastUpdateDataSource,
+  } from "@/stores/settings.store";
   import filterActionFunction from "./lib/FilterActionFunction";
-  let lastLoaded: Date;
 
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
+  let lastLoaded: Date = new Date("01-01-1970");
+  let dataSourceName = "spaceaware";
+
+  lastUpdateDataSource.subscribe(async (udatasource) => {
+    if (udatasource !== dataSourceName) {
+      return;
+    }
+    if ($viewer && $updatedDataSources > lastLoaded) {
+      const combinedData = await loadData($viewer, dataSourceName);
+      lastLoaded = $updatedDataSources;
+      data.set(combinedData as any);
+    }
+  });
 
   const toggleModal = async () => {
     if (!$mode) {
@@ -31,21 +48,6 @@
     }
 
     $columnDefStore = columnDefs;
-    if ($viewer) {
-      const dataSource: SpaceCatalogDataSource = $viewer.dataSources.getByName(
-        "spaceaware"
-      )[0] as SpaceCatalogDataSource;
-      if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {
-        const combinedData = dataSource.entities.values.map((e: Entity) => {
-          const OMM = e.properties?.OMM.getValue() || {};
-          const CAT = e.properties?.CAT.getValue() || {};
-          return { ...OMM, ...CAT };
-        });
-        lastLoaded = dataSource.lastLoaded;
-        data.set(combinedData as any);
-        console.log(data);
-      }
-    }
   };
 </script>
 
@@ -57,14 +59,13 @@
     if (e.key === "Enter" || e.key === "Space") toggleModal();
   }}
   class="text-white flex items-center text-md justify-center cursor-pointer"
-  on:click={toggleModal}
->
+  on:click={toggleModal}>
   <Icon scale={1.5} data={faSatellite} />
 </div>
 
 <style>
-  :global(.ag-paging-row-summary-panel){
-    position:relative;
-    left:10px;
+  :global(.ag-paging-row-summary-panel) {
+    position: relative;
+    left: 10px;
   }
 </style>
