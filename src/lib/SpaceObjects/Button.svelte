@@ -11,8 +11,9 @@
     filterAction,
   } from "@/stores/datatable.store";
   import { mode, closeMode } from "@/stores/menu.store";
-  import type { Entity, SpaceCatalogDataSource } from "orbpro";
+  import type { SpaceCatalogDataSource } from "orbpro";
   import filterActionFunction from "./lib/FilterActionFunction";
+  import { loadData } from "./lib/loadData";
   let lastLoaded: Date;
 
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
@@ -37,14 +38,8 @@
           "spaceaware"
         )[0] as SpaceCatalogDataSource;
       if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {
-        const combinedData = dataSource.entities.values.map((e: Entity) => {
-          const OMM = e.properties?.OMM.getValue() || {};
-          const CAT = e.properties?.CAT.getValue() || {};
-          return { ...OMM, ...CAT };
-        });
         lastLoaded = dataSource.lastLoaded;
-        data.set(combinedData as any);
-        console.log(data);
+        data.set(dataSource.COMBINEDOMMCAT as any);
       }
     }
   };
