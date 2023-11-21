@@ -14,7 +14,7 @@
   import { get } from "svelte/store";
 
   let gridOptions: GridOptions = {
-    suppressMenuHide:true,
+    suppressMenuHide: true,
     columnDefs: $columnDefs,
     rowData: $data,
     pagination: true,
@@ -33,8 +33,10 @@
   let gridApi: any;
 
   onMount(() => {
-    grid = new Grid(gridElement, gridOptions);
-    gridApi = gridOptions.api;
+    if (!grid) {
+      grid = new Grid(gridElement, gridOptions);
+      gridApi = gridOptions.api;
+    }
   });
 
   // Reactive statements to update columnDefs and rowData
