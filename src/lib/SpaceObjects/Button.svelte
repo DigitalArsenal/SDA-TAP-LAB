@@ -9,15 +9,18 @@
     data,
     columnDefs as columnDefStore,
     filterAction,
+    rowID,
+    defaultID
   } from "@/stores/datatable.store";
   import { mode, closeMode } from "@/stores/menu.store";
   import type { SpaceCatalogDataSource } from "orbpro";
   import filterActionFunction from "./lib/FilterActionFunction";
   import { scenario } from "@/stores/settings.store";
+  import getID from "./lib/getID";
   const { selectedEntity, settings } = scenario;
   
   let lastLoaded: Date;
-
+  
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
 
   const toggleModal = async () => {
@@ -26,12 +29,14 @@
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
       $datatableShow = true;
+      $rowID = getID;
       defaultToolbar.style.display = "none";
       $closeMode = () => {
         settings.ClockSettings.shouldAnimate.set(false);
         $selectedEntity = null;
         $mode = null;
         $datatableShow = false;
+        $rowID = defaultID;
         defaultToolbar.style.display = "";
       };
     }

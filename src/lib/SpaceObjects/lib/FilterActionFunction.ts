@@ -1,6 +1,6 @@
 import { viewer } from "@/stores/viewer.store";
 import { get } from "svelte/store";
-
+import getID from "./getID";
 const filterActionFunction = (filteredRows: any[]) => {
   const _viewer = get(viewer);
   if (!_viewer) {
@@ -9,7 +9,7 @@ const filterActionFunction = (filteredRows: any[]) => {
   const dataSource = _viewer.dataSources.getByName("spaceaware")[0];
   const filteredIds = new Set(
     filteredRows.map((row) => {
-      return row.NORAD_CAT_ID.toString();
+      return getID(row);
     })
   ); // Assuming each row has an 'id' property
   const entities = dataSource.entities.values;

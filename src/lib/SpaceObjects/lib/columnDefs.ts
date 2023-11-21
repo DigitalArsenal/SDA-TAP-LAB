@@ -7,13 +7,13 @@ import { scenario } from "@/stores/settings.store";
 let { trackedEntity, selectedEntity } = scenario;
 import { viewer } from "@/stores/viewer.store";
 import { get } from "svelte/store";
-
+import getID from "./getID";
 const cellClickEvent = (event: any) => {
   const $viewer = get(viewer);
   if ($viewer) {
     let entity = $viewer.dataSources
       .getByName("spaceaware")[0]
-      ?.entities.getById(event.data.NORAD_CAT_ID.toString());
+      ?.entities.getById(getID(event.data));
     if (entity) {
       trackedEntity.set(entity);
       selectedEntity.set(entity);

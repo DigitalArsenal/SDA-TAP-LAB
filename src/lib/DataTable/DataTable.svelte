@@ -6,7 +6,7 @@
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
   import { scenario } from "@/stores/settings.store";
-  import { data, columnDefs, filterAction } from "@/stores/datatable.store";
+  import { data, columnDefs, filterAction, rowID } from "@/stores/datatable.store";
   import { get } from "svelte/store";
 
   const { selectedEntity } = scenario;
@@ -21,10 +21,7 @@
     paginationPageSize: 25,
     suppressMovableColumns: true,
     getRowId: function ({ data }) {
-      return (
-        (data as any)?.NORAD_CAT_ID ||
-        (data as any)?.id
-      );
+      return $rowID(data);
     },
     getRowClass: function (params) {
       return params.data.id === highlightedRowId ? "highlighted-row" : "";
