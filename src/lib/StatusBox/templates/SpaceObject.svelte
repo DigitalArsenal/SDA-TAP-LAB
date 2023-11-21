@@ -15,7 +15,8 @@
     OMMT,
   } from "@/classes/SDS-2-Orbit-Mean-Elements-Message-(OMM)-TypeScript/OMM";
   import { onDestroy, onMount } from "svelte";
-  import type { Cartesian3, SpaceEntity } from "orbpro";
+  import type { Cartesian3 } from "orbpro";
+  import { ReferenceFrame } from "orbpro";
   import {
     Cartographic,
     Math as CesiumMath,
@@ -32,6 +33,17 @@
     latitude: number,
     longitude: number,
     altitude: string;
+
+  let selectedReferenceFrame = $activeEntity.referenceFrame; // or the current value of your Entity.referenceFrame
+
+  // Filter out the unwanted enum options
+  const referenceFrameOptions = Object.entries(ReferenceFrame)
+    .filter(
+      ([key, value]) =>
+        typeof value === "number" &&
+        !["FIXED", "INERTIAL", "TEME"].includes(key)
+    )
+    .map(([key, value]) => ({ key: key.substring(0, 5), value }));
 
   $: {
     pOMM = $activeEntity.properties.OMM;
@@ -275,6 +287,14 @@
       });
     }
   }
+
+  // Function to handle the change of the dropdown
+  function onReferenceFrameChange(event: Event) {
+    const newFrame = (event.target as HTMLSelectElement).value;
+    selectedReferenceFrame = parseInt(newFrame, 10);
+    $activeEntity.referenceFrame = selectedReferenceFrame;
+    // Add any additional logic you need to handle when the reference frame changes
+  }
 </script>
 
 <!-- Your existing HTML structure -->
@@ -392,7 +412,23 @@
             AXIS
           </div>
         </div>
-        <div class="flex gap-2" />
+        <div class="flex gap-2">
+          <!-- ... other divs ... -->
+          <div class="flex items-center justify-center gap-2">
+            <select
+              id="referenceFrameSelect"
+              bind:value={selectedReferenceFrame}
+              on:change={onReferenceFrameChange}
+              class="bg-gray-800 text-white rounded p-[1px] pl-[2px] pr-[2px] border border-gray-400"
+            >
+              {#each referenceFrameOptions as { key, value }}
+                <option {value}>
+                  {key}
+                </option>
+              {/each}
+            </select>
+          </div>
+        </div>
       </div>
       <div class="flex flex-col gap-2">
         <div class="flex gap-2">
