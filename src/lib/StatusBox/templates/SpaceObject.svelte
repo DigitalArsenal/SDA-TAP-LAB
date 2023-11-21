@@ -282,7 +282,7 @@
           const debugPrimitive = new DebugModelMatrixPrimitive({
             entity: $activeEntity, // primitive to debug
             length: 30000.0,
-            width: 5.0,
+            width: 2.0,
           });
 
           $viewer.scene.primitives.add(debugPrimitive);
