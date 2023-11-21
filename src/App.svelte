@@ -15,7 +15,6 @@
   import { scenario } from "./stores/settings.store";
   import { title, content } from "@/stores/modal.store";
 
-  const { selectedEntity } = scenario;
   onMount(() => {
     COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -32,13 +31,15 @@
 {#if $showEULA}
   <EULA />
 {:else}
-  <div id="container" class="flex flex-col h-full select-none">
-    <div class="viewer">
+  <div id="container" 
+  class="absolute w-full h-full select-none">
+    <div class="viewer"
+    style={$datatableShow ? "height:70%" : "height: 100%"}>
       <Viewer />
     </div>
     <div
-      class="datatable"
-      style={$datatableShow ? "flex-grow: 1;" : "display: none;"}
+      class="datatable absolute w-full b-0 l-0"
+      style={$datatableShow ? "height:30%" : "display: none;"}
     >
       <DataTable />
     </div>
@@ -68,21 +69,20 @@
     overflow-y: auto; /* Or as per your requirement */
   }
 
-  /* DataTable */
-  .datatable {
-    flex-grow: 1; /* Adjust this value based on how much space you want to allocate */
-    overflow-y: auto; /* Or as per your requirement */
-  }
   :global(html, body) {
+    overscroll-behavior: none;
     width: 100vw;
     height: 100vh;
     padding: 0px;
     margin: 0px;
     overflow: hidden;
+    position: fixed;
+    touch-action: none;
   }
 
   :global(div) {
     box-sizing: border-box;
+    overscroll-behavior: none;
   }
   /* Chrome, safari */
   *::-webkit-scrollbar {

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Icon } from "svelte-awesome";
+    import { groups, activeGroup } from "@/stores/group.store";
     import { content, lastcontent } from "@/stores/modal.store";
     import { scenario } from "@/stores/settings.store";
     import { onMount } from "svelte";
@@ -36,6 +37,7 @@
         </div>
         <!-- Modal body -->
         <div class="flex-grow p-1 overflow-auto">
+          {JSON.stringify($groups[$activeGroup])}
         </div>
 
       </div>

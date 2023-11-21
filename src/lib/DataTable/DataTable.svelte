@@ -1,28 +1,27 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { Grid } from "ag-grid-community";
+  import { groups, activeGroup } from "@/stores/group.store";
   import type { GridOptions, ColDef, GridApi } from "ag-grid-community";
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
 
-  import {
-    filterModelStore,
-    data,
-    columnDefs,
-    filterAction,
-  } from "@/stores/datatable.store";
+  import { data, columnDefs, filterAction } from "@/stores/datatable.store";
   import { get } from "svelte/store";
 
+  $: filterObject = $groups[$activeGroup].filterObject;
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
     columnDefs: $columnDefs,
     rowData: $data,
     pagination: true,
+    paginationPageSize: 25,
+    suppressMovableColumns: true,
     onGridReady: (event) => {
       event.api.sizeColumnsToFit();
     },
     onFilterChanged: (event) => {
-      filterModelStore.set(event.api.getFilterModel());
+      $groups[$activeGroup].filterObject = event.api.getFilterModel();
       executeFilterAction(event.api);
     },
     onSortChanged: (event) => {},
@@ -44,9 +43,8 @@
     gridApi.setColumnDefs($columnDefs);
     gridApi.setRowData($data);
 
-    const storedFilterModel = get(filterModelStore);
-    if (storedFilterModel) {
-      gridApi.setFilterModel(storedFilterModel);
+    if (filterObject) {
+      gridApi.setFilterModel(filterObject);
     }
   }
 
@@ -66,20 +64,17 @@
   }
 
   const clearFilter = () => {
-    $filterModelStore = {};
-    gridApi.setFilterModel($filterModelStore);
+    $groups[$activeGroup].filterObject = {};
+    gridApi.setFilterModel(filterObject);
   };
-  $: {
-    console.log($filterModelStore);
-  }
 </script>
 
-<div class="h-[30vh]">
+<div class="h-full">
   <div bind:this={gridElement} class="ag-theme-balham-dark h-full w-full" />
   <div
     class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center"
   >
-    {#if Object.keys($filterModelStore).length}
+    {#if filterObject && Object.keys(filterObject).length}
       <button
         style="border-radius:0px"
         class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center"

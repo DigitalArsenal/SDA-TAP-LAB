@@ -40,9 +40,7 @@
       OMM = pOMM.getValue();
       CAT = pCAT.getValue();
 
-      $title = `${CAT.OBJECT_NAME} (${
-        CAT_OBJECT_TYPE[CAT.OBJECT_TYPE as any]
-      })`;
+      $title = `${CAT.OBJECT_NAME}`;
     }
   }
 
@@ -88,7 +86,7 @@
         const { currentTime } = clock;
         velocity = $activeEntity.velocity?.getValue(currentTime);
         position = $activeEntity.position?.getValue(currentTime);
-        
+
         if (!velocity || !position) return;
 
         const velocityMs = Math.sqrt(
@@ -237,77 +235,52 @@
 
 <!-- Your existing HTML structure -->
 <div
-  class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
+  class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between"
+>
   {#if $activeEntity && OMM && CAT}
-    <div class="flex flex-col">
-      <div class="flex justify-between">
-        <!-- Row for Intl Des. and NORAD ID -->
-        <div class="p-1 flex flex-col gap-1 w-1/3">
-          <div class="row-header">Intl Des.</div>
-          <div class="text-sm pl-1 row-data">{OMM.OBJECT_ID}</div>
-        </div>
-        <div class="p-1 flex flex-col gap-1 w-1/3">
-          <div class="row-header">NORAD ID</div>
-          <div class="text-sm pl-1 row-data">{OMM.NORAD_CAT_ID}</div>
-        </div>
-        <div class="p-1 flex flex-col gap-1 w-1/3">
-          <div class="row-header">VELOCITY</div>
-          <div class="text-xs pl-1 pt-1 row-data">{velocityKmh} km/h</div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        <!-- Row for Velocity and Lat / Lon -->
-        <div class="p-1 flex flex-col gap-1 w-1/3">
-          <div class="row-header">LAT</div>
-          <div class="flex w-full text-xs row-data">
-            <div class=" w-2/3 text-left pl-1">
-              {latitude?.toFixed(1)}°
-            </div>
-            <div class="w-1/3 text-right">
-              {latitude >= 0 ? "N" : "S"}
-            </div>
-          </div>
-        </div>
-        <div class="p-1 flex flex-col gap-1 w-1/3">
-          <div class="row-header">LON</div>
-          <div class="flex w-full text-xs row-data">
-            <div class="w-2/3 text-left pl-1">
-              {longitude?.toFixed(1)}°
-            </div>
-            <div class="w-1/3 text-right">
-              {longitude >= 0 ? "E" : "W"}
-            </div>
-          </div>
-        </div>
-        <div class="p-1 flex flex-col gap-1 w-1/3">
-          <div class="row-header">ALT</div>
-          <div class="flex flex-col">
-            <div class="row-data">{altitude} km</div>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between">
-        {#if !CAT.OBJECT_TYPE}
-          <div
-            class="text-[.7rem] font-bold bg-opacity-4 ml-2 h-5 mt-2 flex items-center border-l w-52 bg-gray-500 relative">
-            <div
-              style="width:{remainingFuelPercentage}%"
-              class="bg-green-700 border-r-2">
-              &nbsp;
-            </div>
-
-            <div
-              class="text-black absolute text-white pl-2 text-[.6rem] justify-start gap-2 flex w-full pr-1">
-              <div>FUEL (EST):</div>
-              <div>{remainingFuelPercentage}%</div>
-            </div>
-          </div>
-        {/if}
-      </div>
+  <div class="h-24 overflow-y-scroll w-full flex flex-col gap-2">
+    <div class="p-1">
+      <div class="row-header">Type</div>
+      <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
     </div>
-
+    <div class="p-1">
+      <div class="row-header">Intl Des.</div>
+      <div class="text-sm row-data">{OMM.OBJECT_ID}</div>
+    </div>
+    <div class="p-1">
+      <div class="row-header">NORAD ID</div>
+      <div class="text-sm row-data">{OMM.NORAD_CAT_ID}</div>
+    </div>
+    <div class="p-1">
+      <div class="row-header">VELOCITY</div>
+      <div class="text-sm row-data">{velocityKmh} km/h</div>
+    </div>
+    <div class="p-1">
+      <div class="row-header">LAT</div>
+      <div class="text-sm row-data">{latitude?.toFixed(1)}° {latitude >= 0 ? "N" : "S"}</div>
+    </div>
+    <div class="p-1">
+      <div class="row-header">LON</div>
+      <div class="text-sm row-data">{longitude?.toFixed(1)}° {longitude >= 0 ? "E" : "W"}</div>
+    </div>
+    <div class="p-1">
+      <div class="row-header">ALT</div>
+      <div class="text-sm row-data">{altitude} km</div>
+    </div>
+    {#if !CAT.OBJECT_TYPE}
+      <div class="text-xs z-1 p-1 flex items-center relative bg-gray-800 w-[90%]">
+        <div style="width:{remainingFuelPercentage}%" class="absolute bg-green-700">&nbsp;</div>
+        <div
+        class="z-10 flex gap-1 pl-1">
+        <div class="text-xs font-bold">FUEL (EST):</div>
+        <div class="text-xs">{remainingFuelPercentage}%</div></div>
+      </div>
+    {/if}
+  </div>
+  
     <div
-      class="text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-1 pr-1 p-3 border-t-[1px] border-gray-400">
+      class="text-[.65rem] w-full flex gap-6 cursor-pointer items-start justify-between pl-1 pr-1 p-3 border-t-[1px] border-gray-400"
+    >
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-2 items-start justify-start">
           <div class="flex items-center justify-center gap-2">
@@ -322,11 +295,13 @@
                 } else {
                   $trackedEntity = null;
                 }
-              }}>
+              }}
+            >
               <div
                 class:bg-white={$trackedEntity?.id === $activeEntity?.id}
                 class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
-                class="w-2 h-2" />
+                class="w-2 h-2"
+              />
             </div>
             TRACK
           </div>
@@ -337,7 +312,8 @@
               <div
                 class:bg-white={activeObjectState.label}
                 class:bg-gray-800={!activeObjectState.label}
-                class="w-2 h-2" />
+                class="w-2 h-2"
+              />
             </div>
             LABEL
           </div>
@@ -352,7 +328,8 @@
               <div
                 class:bg-white={activeObjectState.orbit}
                 class:bg-gray-800={!activeObjectState.orbit}
-                class="w-2 h-2" />
+                class="w-2 h-2"
+              />
             </div>
             ORBIT
           </div>
@@ -363,11 +340,13 @@
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
               class="border rounded p-1 bg-gray-800"
-              on:click={toggleCoverage}>
+              on:click={toggleCoverage}
+            >
               <div
                 class:bg-white={activeObjectState.coverage}
                 class:bg-gray-800={!activeObjectState.coverage}
-                class="w-2 h-2" />
+                class="w-2 h-2"
+              />
             </div>
             COVERAGE
           </div>
@@ -384,7 +363,7 @@
   }
 
   .row-data {
-    @apply text-[.7rem] font-bold bg-gray-800 p-[1px];
+    @apply text-[.7rem] bg-gray-800 p-[1px] pl-[2px] pr-[2px] w-[80%];
   }
   .row-header {
     @apply text-[.6rem] pl-1 pt-1;

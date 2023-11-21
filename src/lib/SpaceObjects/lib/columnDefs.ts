@@ -8,6 +8,19 @@ let { trackedEntity, selectedEntity } = scenario;
 import { viewer } from "@/stores/viewer.store";
 import { get } from "svelte/store";
 
+const cellClickEvent = (event: any) => {
+  const $viewer = get(viewer);
+  if ($viewer) {
+    let entity = $viewer.dataSources
+      .getByName("spaceaware")[0]
+      ?.entities.getById(event.data.OBJECT_ID);
+    if (entity) {
+      trackedEntity.set(entity);
+      selectedEntity.set(entity);
+    }
+  }
+};
+
 export default [
   {
     headerName: "Object Name",
@@ -15,16 +28,7 @@ export default [
     sortable: true,
     filter: true,
     pinned: true,
-    onCellClicked: (event) => {
-      const $viewer = get(viewer);
-      if ($viewer) {
-        let entity = $viewer.dataSources.getByName("spaceaware")[0]?.entities.getById(event.data.OBJECT_ID);
-        if (entity) {
-          trackedEntity.set(entity);
-          selectedEntity.set(entity);
-        }
-      }
-    }
+    onCellClicked: cellClickEvent
   },
   {
     headerName: "Object ID",
