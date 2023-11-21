@@ -4,7 +4,7 @@
   import GroupsModal from "../Modals/Groups.svelte";
   import { onDestroy, onMount } from "svelte";
   import { content } from "@/stores/modal.store";
-  import { groups } from "@/stores/group.store";
+  import GroupNumber from "@/lib/elements/GroupNumber.svelte";
   onMount(() => {});
 
   onDestroy(() => {
@@ -18,19 +18,11 @@
       $content = null;
     }
   };
-
-  let localGroups = {};
-  $: {
-    if ($groups) {
-      let { defaultGroup, ...otherGroups } = $groups;
-      localGroups = otherGroups;
-    }
-  }
 </script>
 
 <button
   on:click={toggleModal}
   class="relative text-xl w-8 h-8 cesium-button p-1 text-white flex items-center justify-center cursor-pointer">
-  <Icon data={faDatabase} />
-  <p class="text-[.5rem] absolute -bottom-2 right-[1px]">{Object.keys(localGroups).length}</p>
+  <Icon scale={1} data={faDatabase} />
+  <GroupNumber />
 </button>

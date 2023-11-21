@@ -10,17 +10,19 @@
     columnDefs as columnDefStore,
     filterAction,
     rowID,
-    defaultID
+    defaultID,
   } from "@/stores/datatable.store";
   import { mode, closeMode } from "@/stores/menu.store";
   import type { SpaceCatalogDataSource } from "orbpro";
   import filterActionFunction from "./lib/FilterActionFunction";
   import { scenario } from "@/stores/settings.store";
   import getID from "./lib/getID";
+  import GroupNumber from "@/lib/elements/GroupNumber.svelte";
+
   const { selectedEntity, settings } = scenario;
-  
+
   let lastLoaded: Date;
-  
+
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
 
   const toggleModal = async () => {
@@ -62,10 +64,12 @@
   on:keydown={(e) => {
     if (e.key === "Enter" || e.key === "Space") toggleModal();
   }}
-  class="text-white flex items-center text-md justify-center cursor-pointer"
-  on:click={toggleModal}
->
-  <Icon scale={1.5} data={faSatellite} />
+  class="relative text-white flex items-center text-md justify-center cursor-pointer"
+  on:click={toggleModal}>
+  <Icon scale={1.3} data={faSatellite} />
+  <div class="absolute bottom-[2px] right-[0px]">
+    <GroupNumber />
+  </div>
 </div>
 
 <style>
