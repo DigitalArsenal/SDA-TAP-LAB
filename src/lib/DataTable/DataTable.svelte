@@ -5,9 +5,12 @@
   import type { GridOptions, ColDef, GridApi } from "ag-grid-community";
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
-
+  import { scenario } from "@/stores/settings.store";
   import { data, columnDefs, filterAction } from "@/stores/datatable.store";
   import { get } from "svelte/store";
+
+  const { selectedEntity } = scenario;
+  let highlightedRowId: any = null;
 
   $: filterObject = $groups[$activeGroup].filterObject;
   let gridOptions: GridOptions = {
@@ -17,6 +20,15 @@
     pagination: true,
     paginationPageSize: 25,
     suppressMovableColumns: true,
+    getRowId: function ({ data }) {
+      return (
+        (data as any)?.NORAD_CAT_ID ||
+        (data as any)?.id
+      );
+    },
+    getRowClass: function (params) {
+      return params.data.id === highlightedRowId ? "highlighted-row" : "";
+    },
     onGridReady: (event) => {
       event.api.sizeColumnsToFit();
     },
@@ -30,6 +42,27 @@
   let grid: Grid;
   let gridElement: HTMLElement;
   let gridApi: any;
+
+  $: {
+    if ($selectedEntity && gridApi && gridOptions?.paginationPageSize) {
+      const rowNode = gridApi.getRowNode($selectedEntity.id);
+      if (rowNode) {
+        // Calculate the page number and scroll to the row
+        const pageNumber = Math.floor(
+          rowNode.rowIndex / gridOptions.paginationPageSize
+        );
+        gridApi.paginationGoToPage(pageNumber);
+        gridApi.ensureIndexVisible(
+          rowNode.rowIndex % gridOptions.paginationPageSize
+        );
+
+        // Set the row ID for highlighting
+        highlightedRowId = $selectedEntity.id;
+        // Refresh the grid to apply the highlight
+        gridApi.refreshCells({ force: true });
+      }
+    }
+  }
 
   onMount(() => {
     if (!grid) {
@@ -91,3 +124,9 @@
     {/if}
   </div>
 </div>
+
+<style>
+  :global(.highlighted-row) {
+    background-color: yellow; /* Change this to your preferred highlight color */
+  }
+</style>
