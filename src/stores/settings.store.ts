@@ -205,8 +205,8 @@ storeViewer.subscribe(async (viewer) => {
   CameraSettings.enableMatrixMode.set(true);
 
   const saveAndUpdate = async () => {
-   // const compressedState = await saveState();
-   // updateURLWithState(compressedState);
+   //const compressedState = await saveState();
+   //updateURLWithState(compressedState);
     viewer.scene.render();
   };
 

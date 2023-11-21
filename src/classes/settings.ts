@@ -26,7 +26,7 @@ class EntityState {
 }
 
 export default class Settings {
-  referenceFrame: Writable<ReferenceFrame> = writable(ReferenceFrame.FIXED);
+  referenceFrame: Writable<ReferenceFrame> = writable(ReferenceFrame.INERTIAL);
   debugFPS: Writable<boolean> = writable(false);
   depthTestAgainstTerrain: Writable<boolean> = writable(false);
   skyAtmosphere: Writable<boolean> = writable(true);
