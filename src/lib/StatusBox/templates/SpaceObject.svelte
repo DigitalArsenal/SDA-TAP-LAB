@@ -238,7 +238,7 @@
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between"
 >
   {#if $activeEntity && OMM && CAT}
-  <div class="h-24 overflow-y-scroll w-full flex flex-col gap-2">
+  <div class="h-32 overflow-y-scroll w-full flex flex-col gap-2">
     <div class="p-1">
       <div class="row-header">Type</div>
       <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
