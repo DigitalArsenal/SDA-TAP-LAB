@@ -1,1 +1,1 @@
-- [ ] Real-time mode resume after matrix mode
+- [ ] Fix reference frame code to not apply to model (model should always be in RIC / VVLH)

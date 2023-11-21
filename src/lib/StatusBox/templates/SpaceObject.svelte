@@ -16,7 +16,7 @@
   } from "@/classes/SDS-2-Orbit-Mean-Elements-Message-(OMM)-TypeScript/OMM";
   import { onDestroy, onMount } from "svelte";
   import type { Cartesian3 } from "orbpro";
-  import { ReferenceFrame } from "orbpro";
+  import { ModelGraphics, ReferenceFrame } from "orbpro";
   import {
     Cartographic,
     Math as CesiumMath,
@@ -254,6 +254,14 @@
   function toggleReferenceFrameDebug() {
     ensureObjectExists();
     if ($viewer && $activeEntity) {
+      /*$activeEntity.model = new ModelGraphics({
+        uri: "./src/assets/models/starlink_spacex_satellite_4k.glb",
+        minimumPixelSize: 128,
+        maximumScale: 20000,
+      });
+      //Works in RIC
+      $activeEntity.gltfZForwardYUp = true;
+      */
       groups.update((g) => {
         if (!$viewer) {
           return g;
@@ -273,8 +281,8 @@
           // Add the debug primitive to the scene
           const debugPrimitive = new DebugModelMatrixPrimitive({
             entity: $activeEntity, // primitive to debug
-            length: 10000.0,
-            width: 4.0,
+            length: 30000.0,
+            width: 5.0,
           });
 
           $viewer.scene.primitives.add(debugPrimitive);
