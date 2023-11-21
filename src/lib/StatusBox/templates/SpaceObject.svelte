@@ -25,6 +25,13 @@
     MakeBillboardLabel,
     NearFarScalar,
   } from "orbpro";
+  import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
+
+  let statusColors = Object.entries(opsStatusCode);
+
+  $: statusColor = (statusColors[
+    ($activeEntity as any)?.properties?.CAT?.getValue().OPS_STATUS_CODE
+  ] || [null, "#aaaaaa"])[1];
 
   let pOMM: any,
     pCAT: any,
@@ -53,7 +60,7 @@
       OMM = pOMM.getValue();
       CAT = pCAT.getValue();
 
-      $title = `${CAT.OBJECT_NAME}`;
+      $title = `${CAT.OBJECT_NAME}<p style="background-color:${statusColor}" class="rounded h-1 w-full">&nbsp;</p>`;
     }
   }
 
@@ -307,8 +314,7 @@
 
 <!-- Your existing HTML structure -->
 <div
-  class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between"
->
+  class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity && OMM && CAT}
     <div class="h-full overflow-y-scroll w-full flex flex-col gap-2">
       <div class="p-1">
@@ -345,12 +351,10 @@
       </div>
       {#if !CAT.OBJECT_TYPE}
         <div
-          class="text-xs z-1 p-1 flex items-center relative bg-gray-800 w-[90%]"
-        >
+          class="text-xs z-1 p-1 flex items-center relative bg-gray-800 w-[90%]">
           <div
             style="width:{remainingFuelPercentage}%"
-            class="absolute bg-green-700"
-          >
+            class="absolute bg-green-700">
             &nbsp;
           </div>
           <div class="z-10 flex gap-1 pl-1">
@@ -362,8 +366,7 @@
     </div>
 
     <div
-      class="text-[.65rem] w-full flex gap-6 cursor-pointer items-start justify-between pl-1 pr-1 p-3 border-t-[1px] border-gray-400"
-    >
+      class="text-[.65rem] w-full flex gap-6 cursor-pointer items-start justify-between pl-1 pr-1 p-3 border-t-[1px] border-gray-400">
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-2 items-start justify-start">
           <div class="flex items-center justify-center gap-2">
@@ -378,13 +381,11 @@
                 } else {
                   $trackedEntity = null;
                 }
-              }}
-            >
+              }}>
               <div
                 class:bg-white={$trackedEntity?.id === $activeEntity?.id}
                 class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
-                class="w-2 h-2"
-              />
+                class="w-2 h-2" />
             </div>
             TRACK
           </div>
@@ -395,8 +396,7 @@
               <div
                 class:bg-white={activeObjectState.label}
                 class:bg-gray-800={!activeObjectState.label}
-                class="w-2 h-2"
-              />
+                class="w-2 h-2" />
             </div>
             LABEL
           </div>
@@ -409,13 +409,11 @@
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
               class="border rounded p-1 bg-gray-800"
-              on:click={toggleReferenceFrameDebug}
-            >
+              on:click={toggleReferenceFrameDebug}>
               <div
                 class:bg-white={activeObjectState.referenceFrameDebug}
                 class:bg-gray-800={!activeObjectState.referenceFrameDebug}
-                class="w-2 h-2"
-              />
+                class="w-2 h-2" />
             </div>
             AXIS
           </div>
@@ -427,8 +425,7 @@
               id="referenceFrameSelect"
               bind:value={selectedReferenceFrame}
               on:change={onReferenceFrameChange}
-              class="bg-gray-800 text-white rounded p-[1px] pl-[2px] pr-[2px] border border-gray-400"
-            >
+              class="bg-gray-800 text-white rounded p-[1px] pl-[2px] pr-[2px] border border-gray-400">
               {#each referenceFrameOptions as { key, value }}
                 <option {value}>
                   {key}
@@ -447,8 +444,7 @@
               <div
                 class:bg-white={activeObjectState.orbit}
                 class:bg-gray-800={!activeObjectState.orbit}
-                class="w-2 h-2"
-              />
+                class="w-2 h-2" />
             </div>
             ORBIT
           </div>
@@ -459,13 +455,11 @@
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
               class="border rounded p-1 bg-gray-800"
-              on:click={toggleCoverage}
-            >
+              on:click={toggleCoverage}>
               <div
                 class:bg-white={activeObjectState.coverage}
                 class:bg-gray-800={!activeObjectState.coverage}
-                class="w-2 h-2"
-              />
+                class="w-2 h-2" />
             </div>
             COVERAGE
           </div>

@@ -30,7 +30,7 @@
         >
           <p class="text-white font-[300]">
             {#if $title}
-              {$title}
+              {@html $title}
             {:else if $activeEntity}
               {$activeEntity.id}
             {:else}

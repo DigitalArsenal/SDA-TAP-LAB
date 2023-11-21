@@ -111,23 +111,19 @@
   <div
     id="tableElement"
     bind:this={gridElement}
-    class="ag-theme-balham-dark h-full w-full"
-  />
+    class="ag-theme-balham-dark h-full w-full" />
   <div
-    class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center"
-  >
+    class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center">
     {#if filterObject && Object.keys(filterObject).length}
       <button
         style="border-radius:0px"
-        class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center"
-      >
+        class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
         Save
       </button>
       <button
         on:click={clearFilter}
         style="border-radius:0px"
-        class="bg-gray-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center"
-      >
+        class="bg-gray-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
         Clear
       </button>
     {/if}
@@ -139,6 +135,6 @@
     overscroll-behavior: initial;
   }
   :global(.highlighted-row) {
-   @apply bg-blue-800; /* Change this to your preferred highlight color */
+    @apply bg-blue-800; /* Change this to your preferred highlight color */
   }
 </style>
