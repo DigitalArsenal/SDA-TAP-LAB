@@ -7,8 +7,11 @@ const filterActionFunction = (filteredRows: any[]) => {
     return;
   }
   const dataSource = _viewer.dataSources.getByName("spaceaware")[0];
-  const filteredIds = new Set(filteredRows.map((row) => row.OBJECT_ID)); // Assuming each row has an 'id' property
-
+  const filteredIds = new Set(
+    filteredRows.map((row) => {
+      return row.NORAD_CAT_ID.toString();
+    })
+  ); // Assuming each row has an 'id' property
   const entities = dataSource.entities.values;
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i];

@@ -13,7 +13,7 @@ const cellClickEvent = (event: any) => {
   if ($viewer) {
     let entity = $viewer.dataSources
       .getByName("spaceaware")[0]
-      ?.entities.getById(event.data.OBJECT_ID);
+      ?.entities.getById(event.data.NORAD_CAT_ID.toString());
     if (entity) {
       trackedEntity.set(entity);
       selectedEntity.set(entity);
