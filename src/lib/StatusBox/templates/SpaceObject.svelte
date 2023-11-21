@@ -273,7 +273,7 @@
           // Add the debug primitive to the scene
           const debugPrimitive = new DebugModelMatrixPrimitive({
             entity: $activeEntity, // primitive to debug
-            length: 300000.0,
+            length: 10000.0,
             width: 4.0,
           });
 

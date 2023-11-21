@@ -56,6 +56,7 @@
       target: viewer.timeline.container,
     });
 
+    viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100.0;
     viewer.scene.debugShowFramesPerSecond = true;
     const cameraPosition = viewer.camera.positionWC;
     const cartographicPosition = Cartographic.fromCartesian(cameraPosition);
