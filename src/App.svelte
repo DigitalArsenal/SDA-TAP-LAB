@@ -13,6 +13,7 @@
   import SpaceObjectToolbar from "@/lib/SpaceObjects/Toolbar/Toolbar.svelte";
   import { mode } from "./stores/menu.store";
   import { scenario } from "./stores/settings.store";
+  import { title, content } from "@/stores/modal.store";
 
   const { selectedEntity } = scenario;
   onMount(() => {
@@ -43,7 +44,9 @@
     </div>
   </div>
 {/if}
+{#if $title || $content}
   <Modal />
+{/if}
 <div class="fixed text-gray-300 top-0 left-2 text-gray-500 text-[.3rem]">
   Build: {appVersion}
 </div>

@@ -239,25 +239,25 @@
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity && OMM && CAT}
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col">
       <div class="flex justify-between">
         <!-- Row for Intl Des. and NORAD ID -->
-        <div class="p-2 flex flex-col gap-1 w-1/3">
+        <div class="p-1 flex flex-col gap-1 w-1/3">
           <div class="row-header">Intl Des.</div>
           <div class="text-sm pl-1 row-data">{OMM.OBJECT_ID}</div>
         </div>
-        <div class="p-2 flex flex-col gap-1 w-1/3">
+        <div class="p-1 flex flex-col gap-1 w-1/3">
           <div class="row-header">NORAD ID</div>
           <div class="text-sm pl-1 row-data">{OMM.NORAD_CAT_ID}</div>
         </div>
-        <div class="p-2 flex flex-col gap-1 w-1/3">
+        <div class="p-1 flex flex-col gap-1 w-1/3">
           <div class="row-header">VELOCITY</div>
           <div class="text-xs pl-1 pt-1 row-data">{velocityKmh} km/h</div>
         </div>
       </div>
       <div class="flex justify-between">
         <!-- Row for Velocity and Lat / Lon -->
-        <div class="p-2 flex flex-col gap-1 w-1/3">
+        <div class="p-1 flex flex-col gap-1 w-1/3">
           <div class="row-header">LAT</div>
           <div class="flex w-full text-xs row-data">
             <div class=" w-2/3 text-left pl-1">
@@ -268,7 +268,7 @@
             </div>
           </div>
         </div>
-        <div class="p-2 flex flex-col gap-1 w-1/3">
+        <div class="p-1 flex flex-col gap-1 w-1/3">
           <div class="row-header">LON</div>
           <div class="flex w-full text-xs row-data">
             <div class="w-2/3 text-left pl-1">
@@ -279,7 +279,7 @@
             </div>
           </div>
         </div>
-        <div class="p-2 flex flex-col gap-1 w-1/3">
+        <div class="p-1 flex flex-col gap-1 w-1/3">
           <div class="row-header">ALT</div>
           <div class="flex flex-col">
             <div class="row-data">{altitude} km</div>
@@ -289,10 +289,10 @@
       <div class="flex justify-between">
         {#if !CAT.OBJECT_TYPE}
           <div
-            class="text-[.65rem] bg-opacity-50 rounded-br-[3px] rounded-tr-[3px] ml-2 h-6 flex items-center border-l w-52 bg-gray-500 relative">
+            class="text-[.7rem] font-bold bg-opacity-4 ml-2 h-5 mt-2 flex items-center border-l w-52 bg-gray-500 relative">
             <div
               style="width:{remainingFuelPercentage}%"
-              class="bg-green-700 border border-gray-400 rounded-br-[3px] rounded-tr-[3px]">
+              class="bg-green-700 border-r-2">
               &nbsp;
             </div>
 
@@ -307,7 +307,7 @@
     </div>
 
     <div
-      class="text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-10 pr-10 p-3 border-t-[1px] border-gray-400">
+      class="text-xs w-full flex gap-6 cursor-pointer items-start justify-between pl-1 pr-1 p-3 border-t-[1px] border-gray-400">
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-2 items-start justify-start">
           <div class="flex items-center justify-center gap-2">
@@ -384,10 +384,10 @@
   }
 
   .row-data {
-    @apply text-[.65rem] bg-gray-700 bg-opacity-50 rounded p-1 flex items-center border-l;
+    @apply text-[.7rem] font-bold bg-gray-800 p-[1px];
   }
   .row-header {
-    @apply text-xs pl-1 pt-1;
+    @apply text-[.6rem] pl-1 pt-1;
   }
   *::-webkit-scrollbar-thumb {
     background-color: #ddd;
