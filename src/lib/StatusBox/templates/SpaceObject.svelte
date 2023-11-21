@@ -328,7 +328,7 @@
                 class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
                 class="w-2 h-2" />
             </div>
-            CAMERA TRACK
+            TRACK
           </div>
           <div class="flex items-center justify-center gap-2">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
