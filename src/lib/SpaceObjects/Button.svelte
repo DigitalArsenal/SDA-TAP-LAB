@@ -13,7 +13,9 @@
   import { mode, closeMode } from "@/stores/menu.store";
   import type { SpaceCatalogDataSource } from "orbpro";
   import filterActionFunction from "./lib/FilterActionFunction";
-  import { loadData } from "./lib/loadData";
+  import { scenario } from "@/stores/settings.store";
+  const { selectedEntity } = scenario;
+  
   let lastLoaded: Date;
 
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
@@ -25,6 +27,7 @@
       $datatableShow = true;
       defaultToolbar.style.display = "none";
       $closeMode = () => {
+        $selectedEntity = null;
         $mode = null;
         $datatableShow = false;
         defaultToolbar.style.display = "";
@@ -53,7 +56,8 @@
     if (e.key === "Enter" || e.key === "Space") toggleModal();
   }}
   class="text-white flex items-center text-md justify-center cursor-pointer"
-  on:click={toggleModal}>
+  on:click={toggleModal}
+>
   <Icon scale={1.5} data={faSatellite} />
 </div>
 

@@ -12,7 +12,9 @@
   import CloseButton from "@/lib/MasterCloseButton/MasterCloseButton.svelte";
   import SpaceObjectToolbar from "@/lib/SpaceObjects/Toolbar/Toolbar.svelte";
   import { mode } from "./stores/menu.store";
+  import { scenario } from "./stores/settings.store";
 
+  const { selectedEntity } = scenario;
   onMount(() => {
     COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -41,7 +43,9 @@
     </div>
   </div>
 {/if}
-<Modal />
+{#if $selectedEntity}
+  <Modal />
+{/if}
 <div class="fixed text-gray-300 top-0 left-2 text-gray-500 text-[.3rem]">
   Build: {appVersion}
 </div>
