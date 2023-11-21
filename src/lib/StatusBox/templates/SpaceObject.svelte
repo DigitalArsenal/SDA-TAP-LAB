@@ -19,6 +19,7 @@
   import {
     Cartographic,
     Math as CesiumMath,
+    DebugModelMatrixPrimitive,
     JulianDate,
     MakeBillboardLabel,
     NearFarScalar,
@@ -149,7 +150,12 @@
       unsub();
     }
   });
-  let defaultObjectValue = { orbit: false, coverage: false, label: false };
+  let defaultObjectValue = {
+    orbit: false,
+    coverage: false,
+    label: false,
+    referenceFrame: false,
+  };
   let activeObjectState: any = { ...defaultObjectValue };
   // Reactive statement to update activeObjectState whenever groups or activeGroup changes
   $: {
@@ -162,13 +168,14 @@
     groups.update((g) => {
       // Check if the group and object exist, if not, initialize them
       if (!g[$activeGroup]) {
-        g[$activeGroup] = { objects: {} };
+        g[$activeGroup] = { description: "", filterObject: {}, objects: {} };
       }
       if (!g[$activeGroup].objects[$activeEntity.id]) {
         g[$activeGroup].objects[$activeEntity.id] = {
           orbit: false,
           coverage: false,
           label: false,
+          referenceFrameDebug: false,
         };
       }
       return g;
@@ -231,6 +238,43 @@
     });
     $viewer!.scene.render();
   }
+
+  function toggleReferenceFrameDebug() {
+    ensureObjectExists();
+    if ($viewer && $activeEntity) {
+      groups.update((g) => {
+        if (!$viewer) {
+          return g;
+        }
+        const isActive =
+          !!g[$activeGroup].objects[$activeEntity.id]?.referenceFrameDebug;
+        if (isActive) {
+          // Remove the debug primitive from the scene
+          if ($activeEntity.properties.debugPrimitive) {
+            const worked = $viewer.scene.primitives.remove(
+              $activeEntity.properties.debugPrimitive
+            );
+            $activeEntity.properties.debugPrimitive = undefined;
+          }
+          g[$activeGroup].objects[$activeEntity.id].referenceFrameDebug = false;
+        } else {
+          // Add the debug primitive to the scene
+          const debugPrimitive = new DebugModelMatrixPrimitive({
+            entity: $activeEntity, // primitive to debug
+            length: 300000.0,
+            width: 4.0,
+          });
+
+          $viewer.scene.primitives.add(debugPrimitive);
+          // Store the reference in the property bag
+          $activeEntity.properties.debugPrimitive = debugPrimitive;
+          g[$activeGroup].objects[$activeEntity.id].referenceFrameDebug = true;
+        }
+
+        return g;
+      });
+    }
+  }
 </script>
 
 <!-- Your existing HTML structure -->
@@ -238,46 +282,57 @@
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between"
 >
   {#if $activeEntity && OMM && CAT}
-  <div class="h-32 overflow-y-scroll w-full flex flex-col gap-2">
-    <div class="p-1">
-      <div class="row-header">Type</div>
-      <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
-    </div>
-    <div class="p-1">
-      <div class="row-header">Intl Des.</div>
-      <div class="text-sm row-data">{OMM.OBJECT_ID}</div>
-    </div>
-    <div class="p-1">
-      <div class="row-header">NORAD ID</div>
-      <div class="text-sm row-data">{OMM.NORAD_CAT_ID}</div>
-    </div>
-    <div class="p-1">
-      <div class="row-header">VELOCITY</div>
-      <div class="text-sm row-data">{velocityKmh} km/h</div>
-    </div>
-    <div class="p-1">
-      <div class="row-header">LAT</div>
-      <div class="text-sm row-data">{latitude?.toFixed(1)}° {latitude >= 0 ? "N" : "S"}</div>
-    </div>
-    <div class="p-1">
-      <div class="row-header">LON</div>
-      <div class="text-sm row-data">{longitude?.toFixed(1)}° {longitude >= 0 ? "E" : "W"}</div>
-    </div>
-    <div class="p-1">
-      <div class="row-header">ALT</div>
-      <div class="text-sm row-data">{altitude} km</div>
-    </div>
-    {#if !CAT.OBJECT_TYPE}
-      <div class="text-xs z-1 p-1 flex items-center relative bg-gray-800 w-[90%]">
-        <div style="width:{remainingFuelPercentage}%" class="absolute bg-green-700">&nbsp;</div>
-        <div
-        class="z-10 flex gap-1 pl-1">
-        <div class="text-xs font-bold">FUEL (EST):</div>
-        <div class="text-xs">{remainingFuelPercentage}%</div></div>
+    <div class="h-32 overflow-y-scroll w-full flex flex-col gap-2">
+      <div class="p-1">
+        <div class="row-header">Type</div>
+        <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
       </div>
-    {/if}
-  </div>
-  
+      <div class="p-1">
+        <div class="row-header">Intl Des.</div>
+        <div class="text-sm row-data">{OMM.OBJECT_ID}</div>
+      </div>
+      <div class="p-1">
+        <div class="row-header">NORAD ID</div>
+        <div class="text-sm row-data">{OMM.NORAD_CAT_ID}</div>
+      </div>
+      <div class="p-1">
+        <div class="row-header">VELOCITY</div>
+        <div class="text-sm row-data">{velocityKmh} km/h</div>
+      </div>
+      <div class="p-1">
+        <div class="row-header">LAT</div>
+        <div class="text-sm row-data">
+          {latitude?.toFixed(1)}° {latitude >= 0 ? "N" : "S"}
+        </div>
+      </div>
+      <div class="p-1">
+        <div class="row-header">LON</div>
+        <div class="text-sm row-data">
+          {longitude?.toFixed(1)}° {longitude >= 0 ? "E" : "W"}
+        </div>
+      </div>
+      <div class="p-1">
+        <div class="row-header">ALT</div>
+        <div class="text-sm row-data">{altitude} km</div>
+      </div>
+      {#if !CAT.OBJECT_TYPE}
+        <div
+          class="text-xs z-1 p-1 flex items-center relative bg-gray-800 w-[90%]"
+        >
+          <div
+            style="width:{remainingFuelPercentage}%"
+            class="absolute bg-green-700"
+          >
+            &nbsp;
+          </div>
+          <div class="z-10 flex gap-1 pl-1">
+            <div class="text-xs font-bold">FUEL (EST):</div>
+            <div class="text-xs">{remainingFuelPercentage}%</div>
+          </div>
+        </div>
+      {/if}
+    </div>
+
     <div
       class="text-[.65rem] w-full flex gap-6 cursor-pointer items-start justify-between pl-1 pr-1 p-3 border-t-[1px] border-gray-400"
     >
@@ -318,6 +373,26 @@
             LABEL
           </div>
         </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex gap-2">
+          <div class="flex items-center justify-center gap-2">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div
+              class="border rounded p-1 bg-gray-800"
+              on:click={toggleReferenceFrameDebug}
+            >
+              <div
+                class:bg-white={activeObjectState.referenceFrameDebug}
+                class:bg-gray-800={!activeObjectState.referenceFrameDebug}
+                class="w-2 h-2"
+              />
+            </div>
+            AXIS
+          </div>
+        </div>
+        <div class="flex gap-2" />
       </div>
       <div class="flex flex-col gap-2">
         <div class="flex gap-2">

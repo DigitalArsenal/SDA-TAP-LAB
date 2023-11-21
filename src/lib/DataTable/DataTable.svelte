@@ -6,7 +6,12 @@
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
   import { scenario } from "@/stores/settings.store";
-  import { data, columnDefs, filterAction, rowID } from "@/stores/datatable.store";
+  import {
+    data,
+    columnDefs,
+    filterAction,
+    rowID,
+  } from "@/stores/datatable.store";
   import { get } from "svelte/store";
 
   const { selectedEntity } = scenario;
@@ -24,7 +29,8 @@
       return $rowID(data);
     },
     getRowClass: function (params) {
-      return params.data.id === highlightedRowId ? "highlighted-row" : "";
+      console.log($rowID(params.data), highlightedRowId);
+      return $rowID(params.data) === highlightedRowId ? "highlighted-row" : "";
     },
     onGridReady: (event) => {
       event.api.sizeColumnsToFit();
@@ -44,20 +50,22 @@
     if ($selectedEntity && gridApi && gridOptions?.paginationPageSize) {
       const rowNode = gridApi.getRowNode($selectedEntity.id);
       if (rowNode) {
+        highlightedRowId = $selectedEntity.id;
+
         // Calculate the page number and scroll to the row
         const pageNumber = Math.floor(
           rowNode.rowIndex / gridOptions.paginationPageSize
         );
+        gridApi.refreshCells({ force: true });
         gridApi.paginationGoToPage(pageNumber);
-        gridApi.ensureIndexVisible(
-          rowNode.rowIndex % gridOptions.paginationPageSize
-        );
+        gridApi.refreshCells({ force: true });
 
-        // Set the row ID for highlighting
-        highlightedRowId = $selectedEntity.id;
-        // Refresh the grid to apply the highlight
+        gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
+        console.log($selectedEntity.id);
         gridApi.refreshCells({ force: true });
       }
+    } else if (!$selectedEntity) {
+      highlightedRowId = null;
     }
   }
 
@@ -100,7 +108,11 @@
 </script>
 
 <div class="h-full">
-  <div bind:this={gridElement} class="ag-theme-balham-dark h-full w-full" />
+  <div
+    id="tableElement"
+    bind:this={gridElement}
+    class="ag-theme-balham-dark h-full w-full"
+  />
   <div
     class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center"
   >
@@ -122,8 +134,11 @@
   </div>
 </div>
 
-<style>
+<style lang="postcss">
+  #tableElement {
+    overscroll-behavior: initial;
+  }
   :global(.highlighted-row) {
-    background-color: yellow; /* Change this to your preferred highlight color */
+   @apply bg-blue-800; /* Change this to your preferred highlight color */
   }
 </style>

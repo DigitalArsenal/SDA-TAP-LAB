@@ -2,6 +2,7 @@ import type { IFilterComp, IFilterDef } from "ag-grid-community";
 
 // Define the structure of a space object
 interface GroupSpaceObject {
+  referenceFrameDebug: boolean;
   orbit: boolean;
   coverage: boolean;
   label: boolean;
