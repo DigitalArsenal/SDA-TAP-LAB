@@ -43,9 +43,7 @@
     </div>
   </div>
 {/if}
-{#if $selectedEntity}
   <Modal />
-{/if}
 <div class="fixed text-gray-300 top-0 left-2 text-gray-500 text-[.3rem]">
   Build: {appVersion}
 </div>

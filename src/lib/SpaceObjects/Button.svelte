@@ -14,19 +14,21 @@
   import type { SpaceCatalogDataSource } from "orbpro";
   import filterActionFunction from "./lib/FilterActionFunction";
   import { scenario } from "@/stores/settings.store";
-  const { selectedEntity } = scenario;
+  const { selectedEntity, settings } = scenario;
   
   let lastLoaded: Date;
 
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
 
   const toggleModal = async () => {
+    settings.ClockSettings.shouldAnimate.set(false);
     if (!$mode) {
       $mode = "SpaceObjects";
       $filterAction = filterActionFunction;
       $datatableShow = true;
       defaultToolbar.style.display = "none";
       $closeMode = () => {
+        settings.ClockSettings.shouldAnimate.set(false);
         $selectedEntity = null;
         $mode = null;
         $datatableShow = false;
