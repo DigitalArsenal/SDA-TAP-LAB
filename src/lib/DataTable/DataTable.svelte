@@ -16,7 +16,28 @@
 
   const { selectedEntity } = scenario;
   let highlightedRowId: any = null;
+  const processRow = () => {
+    if ($selectedEntity && gridApi && gridOptions?.paginationPageSize) {
+      const rowNode = gridApi.getRowNode($selectedEntity.id);
+      if (rowNode) {
+        highlightedRowId = $selectedEntity.id;
 
+        // Calculate the page number and scroll to the row
+        const pageNumber = Math.floor(
+          rowNode.rowIndex / gridOptions.paginationPageSize
+        );
+        gridApi.refreshCells({ force: true });
+        gridApi.paginationGoToPage(pageNumber);
+        gridApi.refreshCells({ force: true });
+
+        gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
+        console.log($selectedEntity.id);
+        gridApi.refreshCells({ force: true });
+      }
+    } else if (!$selectedEntity) {
+      highlightedRowId = null;
+    }
+  };
   $: filterObject = $groups[$activeGroup].filterObject;
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
@@ -38,6 +59,7 @@
     onFilterChanged: (event) => {
       $groups[$activeGroup].filterObject = event.api.getFilterModel();
       executeFilterAction(event.api);
+      processRow();
     },
     onSortChanged: (event) => {},
   };
@@ -47,25 +69,8 @@
   let gridApi: any;
 
   $: {
-    if ($selectedEntity && gridApi && gridOptions?.paginationPageSize) {
-      const rowNode = gridApi.getRowNode($selectedEntity.id);
-      if (rowNode) {
-        highlightedRowId = $selectedEntity.id;
-
-        // Calculate the page number and scroll to the row
-        const pageNumber = Math.floor(
-          rowNode.rowIndex / gridOptions.paginationPageSize
-        );
-        gridApi.refreshCells({ force: true });
-        gridApi.paginationGoToPage(pageNumber);
-        gridApi.refreshCells({ force: true });
-
-        gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
-        console.log($selectedEntity.id);
-        gridApi.refreshCells({ force: true });
-      }
-    } else if (!$selectedEntity) {
-      highlightedRowId = null;
+    if ($selectedEntity) {
+      processRow();
     }
   }
 
