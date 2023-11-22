@@ -345,12 +345,12 @@
       </div>
       <div class="p-1">
         <div class="row-header">LAT/LON</div>
-        <div class="text-xs flex flex-col bg-gray-800">
-          <div class="flex justify-between text-[.5rem]">
+        <div class="text-[.6rem] flex bg-gray-800 pt-1">
+          <div class="flex justify-between ">
             <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
             <div>{latitude >= 0 ? "N" : "S"}</div>
           </div>
-          <div class="flex justify-between text-[.5rem]">
+          <div class="flex justify-between ">
             <div>{longitude?.toFixed(1)}°</div>
             <div>{longitude >= 0 ? "E" : "W"}</div>
           </div>
