@@ -10,7 +10,7 @@
     BoundingSphereState,
   } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
-
+  import { forceHideWidget } from "@/stores/selectionwidget.store";
   export let viewer: any;
 
   const { selectedEntity } = scenario;
@@ -132,7 +132,7 @@
   });
 </script>
 
-{#if c2?.x && c2?.y}
+{#if c2?.x && c2?.y && !$forceHideWidget}
   <div
     id="selected"
     class="fixed flex text-white pointer-events-none"

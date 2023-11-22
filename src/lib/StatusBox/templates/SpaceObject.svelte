@@ -27,6 +27,8 @@
   } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
   import getLifespan from "@/lib/SpaceObjects/lib/lifespan";
+  import getModel from "@/lib/SpaceObjects/lib/models";
+  import { forceHideWidget } from "@/stores/selectionwidget.store";
   let statusColors = Object.entries(opsStatusCode);
 
   $: statusColor = (statusColors[
@@ -53,8 +55,8 @@
     .map(([key, value]) => ({ key: key.substring(0, 5), value }));
 
   $: {
-    pOMM = $activeEntity.properties.OMM;
-    pCAT = $activeEntity.properties.CAT;
+    pOMM = $activeEntity?.properties?.OMM;
+    pCAT = $activeEntity?.properties?.CAT;
 
     if (pOMM && pCAT) {
       OMM = pOMM.getValue();
@@ -177,6 +179,7 @@
     coverage: false,
     label: false,
     referenceFrame: false,
+    model: undefined,
   };
   let activeObjectState: any = { ...defaultObjectValue };
   // Reactive statement to update activeObjectState whenever groups or activeGroup changes
@@ -198,6 +201,7 @@
           coverage: false,
           label: false,
           referenceFrameDebug: false,
+          model: undefined,
         };
       }
       return g;
@@ -264,14 +268,6 @@
   function toggleReferenceFrameDebug() {
     ensureObjectExists();
     if ($viewer && $activeEntity) {
-      $activeEntity.model = new ModelGraphics({
-        uri: "./src/assets/models/starlink_spacex_satellite_4k.glb",
-        minimumPixelSize: 128,
-        maximumScale: 20000,
-      });
-      //Works in RIC
-      $activeEntity.gltfZForwardYUp = true;
-      /**/
       groups.update((g) => {
         if (!$viewer) {
           return g;
@@ -299,6 +295,38 @@
           // Store the reference in the property bag
           $activeEntity.properties.debugPrimitive = debugPrimitive;
           g[$activeGroup].objects[$activeEntity.id].referenceFrameDebug = true;
+        }
+
+        return g;
+      });
+    }
+  }
+
+  function toggleModel() {
+    ensureObjectExists();
+    const modelURL = getModel(OMM.OBJECT_NAME);
+    console.log(modelURL);
+    if ($viewer && $activeEntity && modelURL) {
+      groups.update((g) => {
+        if (!$viewer) {
+          return g;
+        }
+        const isActive = !!g[$activeGroup].objects[$activeEntity.id]?.model;
+        if (isActive) {
+          $forceHideWidget = false;
+          $activeEntity.model = undefined;
+          g[$activeGroup].objects[$activeEntity.id].model = undefined;
+        } else {
+          $forceHideWidget = true;
+          $activeEntity.model = new ModelGraphics({
+            uri: modelURL,
+            minimumPixelSize: 128,
+            maximumScale: 20000,
+          });
+          //Works in RIC
+          $activeEntity.gltfZForwardYUp = true;
+          /**/
+          g[$activeGroup].objects[$activeEntity.id].model = modelURL;
         }
 
         return g;
@@ -460,6 +488,28 @@
           </div>
         </div>
       </div>
+      {#if CAT && CAT.OBJECT_NAME && ~CAT.OBJECT_NAME.toString()
+          .toLowerCase()
+          .indexOf("starlink")}
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-2">
+            <div class="flex items-center justify-center gap-2">
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <!-- svelte-ignore a11y-no-static-element-interactions -->
+              <div
+                class="border rounded p-1 bg-gray-800"
+                on:click={toggleModel}>
+                <div
+                  class:bg-white={activeObjectState.model}
+                  class:bg-gray-800={!activeObjectState.model}
+                  class="w-2 h-2" />
+              </div>
+              MODEL
+            </div>
+          </div>
+          <div class="flex gap-2" />
+        </div>
+      {/if}
     </div>
   {/if}
 </div>

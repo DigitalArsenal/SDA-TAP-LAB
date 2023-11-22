@@ -6,6 +6,7 @@ import sveltePreprocess from 'svelte-preprocess'
 import { RollupPluginObfuscatorOptions } from 'rollup-plugin-obfuscator';
 import viteCompression from 'vite-plugin-compression';
 import copy from 'rollup-plugin-copy';
+import { createServer } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -106,5 +107,10 @@ export default defineConfig({
   },
   server: {
     host: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    }
   },
 });

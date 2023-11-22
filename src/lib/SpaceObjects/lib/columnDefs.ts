@@ -21,6 +21,12 @@ const cellClickEvent = (event: any) => {
   }
 };
 
+function metersComparator(valueA: any, valueB: any) {
+  const formattedValueA = valueA.toFixed(2) / 1000;
+  const formattedValueB = valueB.toFixed(2) / 1000;
+  return formattedValueA - formattedValueB;
+}
+
 export default [
   {
     headerName: "Object Name",
@@ -156,8 +162,8 @@ export default [
     sortable: true,
     filter: true,
   },
-  { headerName: "Apogee", field: "APOGEE", sortable: true, filter: true },
-  { headerName: "Perigee", field: "PERIGEE", sortable: true, filter: true },
+  { headerName: "Apogee", field: "APOGEE", sortable: true, filter: true, comparator: metersComparator, valueFormatter: ({ value }) => value.toFixed(5) },
+  { headerName: "Perigee", field: "PERIGEE", sortable: true, filter: true, comparator: metersComparator, valueFormatter: ({ value }) => value.toFixed(5) },
   { headerName: "RCS", field: "RCS", sortable: true, filter: true },
   {
     headerName: "Data Status Code",

@@ -18,7 +18,7 @@ class CameraSettings {
   enableZoom: Writable<boolean> = writable(true);
   enableMatrixMode: Writable<boolean> = writable(false);
   enableReferenceFrameSwapOnAltitude: Writable<boolean> = writable(true);
-  referenceFrameSwapAltitude: Writable<number> = writable(484673);
+  referenceFrameSwapAltitude: Writable<number> = writable(100000);
 }
 
 class EntityState {

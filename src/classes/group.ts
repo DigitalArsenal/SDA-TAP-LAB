@@ -6,6 +6,7 @@ interface GroupSpaceObject {
   orbit: boolean;
   coverage: boolean;
   label: boolean;
+  model: string | undefined;
 }
 
 // Define the structure of a group containing space objects

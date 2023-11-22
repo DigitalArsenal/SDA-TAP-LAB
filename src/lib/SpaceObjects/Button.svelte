@@ -20,7 +20,7 @@
   import GroupNumber from "@/lib/elements/GroupNumber.svelte";
   import { activeEntity } from "@/stores/entity.store";
 
-  const { selectedEntity, settings } = scenario;
+  const { settings } = scenario;
 
   let lastLoaded: Date;
 

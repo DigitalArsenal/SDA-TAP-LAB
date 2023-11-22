@@ -78,6 +78,8 @@
           destination: Cartesian3.fromDegrees(longitude, latitude, altitude),
           duration: 0,
         });
+        $selectedEntity = null;
+        $trackedEntity = null;
       }
     );
     viewer.extend(viewerReferenceFrameMixin);

@@ -6,7 +6,7 @@ import { get } from "svelte/store";
 let rfSwap: any;
 let swapAlt: any;
 let reF;
-let _old = 1;
+let _old: any = null;
 
 export const addRFSwap = (viewer: Viewer) => {
     let { settings } = scenario;
@@ -26,9 +26,10 @@ export const addRFSwap = (viewer: Viewer) => {
             //viewer.imageryLayers.get(2).show = true; //TODO pull out into Imagery Layers Widget
             _old = get(referenceFrame);
             referenceFrame.set(0);
-        } else if ((viewer.camera as any)._positionCartographic.height > swapAlt) {
+        } else if ((viewer.camera as any)._positionCartographic.height > swapAlt && _old !== null) {
             //viewer.imageryLayers.get(2).show = false; //TODO pull out into Imagery Layers Widget
             referenceFrame.set(_old);
+            _old = null;
         }
     });
 }
