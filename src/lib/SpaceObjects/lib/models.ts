@@ -1,11 +1,15 @@
 import starlinkModel from "@/assets/models/ISS_stationary.glb?url";
 import issModel from "@/assets/models/ISS_stationary.glb?url";
+import onewebModel from "@/assets/models/oneweb.glb?url";
 
 export default (name: any) => {
-    if (name.toString()?.toLowerCase().includes("starlink")) {
+    const sname = name.toString()?.toLowerCase();
+    if (sname.includes("starlink")) {
         return starlinkModel;
-    } else if (name.toString()?.toLowerCase().includes("zarya")) {
+    } else if (sname.includes("zarya")) {
         return issModel;
+    } else if (sname.includes("oneweb")) {
+        return onewebModel;
     }
     return undefined;
 }
