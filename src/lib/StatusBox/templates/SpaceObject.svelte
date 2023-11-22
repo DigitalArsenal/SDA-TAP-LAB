@@ -68,7 +68,7 @@
   let position = { x: 0, y: 0, z: 0 };
   let velocityKmh: string = "";
   let unsub: Function | null = null;
-
+  
   //launch
   let launchDate: any;
   let lifespan = 7; // lifespan of the satellite in years, as a constant
@@ -103,6 +103,7 @@
   onMount(() => {
     if ($viewer) {
       unsub = $viewer.clock.onTick.addEventListener((clock) => {
+        if (CAT.OBJECT_TYPE) return;
         const { currentTime } = clock;
         velocity = $activeEntity.velocity?.getValue(currentTime);
         position = $activeEntity.position?.getValue(currentTime);
@@ -151,6 +152,10 @@
         remainingFuelPercentage = Math.min(remainingFuelPercentage, 100);
 
         remainingFuelPercentage = remainingFuelPercentage.toFixed(2);
+        $title = `${CAT.OBJECT_NAME}
+<div style="background-color: gray; width: 100%; height: 8px; border-radius: 0.25rem; position: relative;">
+  <div style="background-color:${statusColor}; width: ${remainingFuelPercentage}%; height: 100%; border-radius: 0.25rem;"></div>
+</div>`;
       });
     }
   });
@@ -316,10 +321,15 @@
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity && OMM && CAT}
-    <div class="h-full overflow-y-scroll w-full flex flex-wrap md:flex-col gap-2">
+    <div
+      class="h-full overflow-y-scroll w-full flex flex-wrap gap-2">
       <div class="p-1">
         <div class="row-header">Type</div>
         <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
+      </div>
+      <div class="p-1">
+        <div class="row-header">Owner</div>
+        <div class="text-sm row-data">{CAT.OWNER}</div>
       </div>
       <div class="p-1">
         <div class="row-header">Intl Des.</div>
@@ -334,35 +344,22 @@
         <div class="text-sm row-data">{velocityKmh} km/h</div>
       </div>
       <div class="p-1">
-        <div class="row-header">LAT</div>
-        <div class="text-sm row-data">
-          {latitude?.toFixed(1)}° {latitude >= 0 ? "N" : "S"}
-        </div>
-      </div>
-      <div class="p-1">
-        <div class="row-header">LON</div>
-        <div class="text-sm row-data">
-          {longitude?.toFixed(1)}° {longitude >= 0 ? "E" : "W"}
+        <div class="row-header">LAT/LON</div>
+        <div class="text-xs flex flex-col bg-gray-800">
+          <div class="flex justify-between text-[.5rem]">
+            <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
+            <div>{latitude >= 0 ? "N" : "S"}</div>
+          </div>
+          <div class="flex justify-between text-[.5rem]">
+            <div>{longitude?.toFixed(1)}°</div>
+            <div>{longitude >= 0 ? "E" : "W"}</div>
+          </div>
         </div>
       </div>
       <div class="p-1">
         <div class="row-header">ALT</div>
         <div class="text-sm row-data">{altitude} km</div>
       </div>
-      {#if !CAT.OBJECT_TYPE}
-        <div
-          class="text-xs z-1 p-1 flex items-center relative bg-gray-800 w-[90%]">
-          <div
-            style="width:{remainingFuelPercentage}%"
-            class="absolute bg-green-700">
-            &nbsp;
-          </div>
-          <div class="z-10 flex gap-1 pl-1">
-            <div class="text-xs font-bold">FUEL (EST):</div>
-            <div class="text-xs">{remainingFuelPercentage}%</div>
-          </div>
-        </div>
-      {/if}
     </div>
 
     <div
@@ -479,7 +476,7 @@
     @apply text-[.7rem] bg-gray-800 p-[1px] pl-[2px] pr-[2px];
   }
   .row-header {
-    @apply text-[.6rem] pl-1 pt-1;
+    @apply text-[.6rem] pl-[1px] pt-1;
   }
   *::-webkit-scrollbar-thumb {
     background-color: #ddd;

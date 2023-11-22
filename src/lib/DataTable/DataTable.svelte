@@ -31,7 +31,6 @@
         gridApi.refreshCells({ force: true });
 
         gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
-        console.log($selectedEntity.id);
         gridApi.refreshCells({ force: true });
       }
     } else if (!$selectedEntity) {
@@ -50,7 +49,6 @@
       return $rowID(data);
     },
     getRowClass: function (params) {
-      console.log($rowID(params.data), highlightedRowId);
       return $rowID(params.data) === highlightedRowId ? "highlighted-row" : "";
     },
     onGridReady: (event) => {

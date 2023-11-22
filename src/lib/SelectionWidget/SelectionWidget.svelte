@@ -132,7 +132,7 @@
   });
 </script>
 
-{#if c2.x && c2.y}
+{#if c2?.x && c2?.y}
   <div
     id="selected"
     class="fixed flex text-white pointer-events-none"

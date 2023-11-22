@@ -4,7 +4,7 @@
   import { activeEntity } from "@/stores/entity.store";
 
   // Reactive statement to handle style changes
-  $: if ($activeEntity && !$content) {
+  $: if ($activeEntity) {
     // Try to access the element and apply styles
     let perf = document.getElementsByClassName(
       "cesium-performanceDisplay-defaultContainer"
@@ -12,6 +12,7 @@
     if (perf) {
       //@ts-ignore
       perf.style.top = "90px";
+      perf.style.right = "7px"
     }
   } else {
     let perf = document.getElementsByClassName(

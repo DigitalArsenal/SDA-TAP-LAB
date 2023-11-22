@@ -10,6 +10,7 @@
     viewerReferenceFrameMixin,
   } from "orbpro";
 
+  import { addRFSwap, removeRFSwap } from "@/behaviors/referenceFrameSwapAlt";
   import { onMount } from "svelte";
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
@@ -55,7 +56,7 @@
       props: { viewer },
       target: viewer.timeline.container,
     });
-
+    addRFSwap(viewer);
     viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100.0;
     viewer.scene.debugShowFramesPerSecond = true;
     const cameraPosition = viewer.camera.positionWC;

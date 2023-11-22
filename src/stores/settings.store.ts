@@ -18,7 +18,7 @@ scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { LatLonGrid, SpaceCatalogDataSource } from "orbpro";
+import { Color, LatLonGrid, SpaceCatalogDataSource } from "orbpro";
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
 // Function to update URL with the compressed state
@@ -205,8 +205,8 @@ storeViewer.subscribe(async (viewer) => {
   CameraSettings.enableMatrixMode.set(true);
 
   const saveAndUpdate = async () => {
-   //const compressedState = await saveState();
-   //updateURLWithState(compressedState);
+    //const compressedState = await saveState();
+    //updateURLWithState(compressedState);
     viewer.scene.render();
   };
 
@@ -320,7 +320,17 @@ storeViewer.subscribe(async (viewer) => {
             )[0] as SpaceCatalogDataSource;
             let spaceCatalog: SpaceCatalogDataSource =
               hasDataSource ||
-              new SpaceCatalogDataSource({ ...dP, scene: viewer.scene });
+              new SpaceCatalogDataSource({
+                ...dP,
+                entityDefault:
+                {
+                  point: {
+                    pixelSize: 1.7,
+                    color: Color.WHITE.withAlpha(.57)
+                  }
+                },
+                scene: viewer.scene
+              });
 
             await spaceCatalog.loadOMM(ommBuffer, catBuffer);
             if (!hasDataSource) {
