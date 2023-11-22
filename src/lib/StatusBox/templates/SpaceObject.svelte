@@ -26,7 +26,7 @@
     NearFarScalar,
   } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
-
+  import getLifespan from "@/lib/SpaceObjects/lib/lifespan";
   let statusColors = Object.entries(opsStatusCode);
 
   $: statusColor = (statusColors[
@@ -71,7 +71,6 @@
 
   //launch
   let launchDate: any;
-  let lifespan = 7; // lifespan of the satellite in years, as a constant
   let remainingFuelPercentage: number | string = 100; // Start with 100% fuel at launch
 
   $: launchDate = CAT?.LAUNCH_DATE
@@ -100,6 +99,11 @@
         (GEO_PERIGEE - LEO_PERIGEE)
     );
   }
+
+  $: lifespan =
+    getLifespan(CAT?.OBJECT_NAME?.toString()) ||
+    calculateLifespan(CAT?.PERIGEE / 1000);
+
   onMount(() => {
     if ($viewer) {
       unsub = $viewer.clock.onTick.addEventListener((clock) => {
@@ -113,11 +117,8 @@
         );
         // Convert m/s to km/h
         velocityKmh = (velocityMs * 3.6).toFixed(2);
-        
+
         if (CAT.OBJECT_TYPE) return;
-        // Determine lifespan based on perigee altitude
-        const perigee = CAT?.PERIGEE / 1000;
-        lifespan = calculateLifespan(perigee);
 
         // Launch and End of Life calculations
         const endOfLifeDate = new Date(launchDate);
@@ -129,12 +130,10 @@
           currentTime,
           launchTime
         );
-
         // Exponential decay fuel calculation
         const lifeRatio = elapsedLife / totalLifeSpan;
-        const decayFactor = 2; // Controls initial decay rate
-        remainingFuelPercentage = 100 * Math.exp(-decayFactor * lifeRatio);
-
+        remainingFuelPercentage = 100 * (1 - lifeRatio);
+        console.log(lifeRatio, remainingFuelPercentage);
         // Asymptotic behavior near low fuel level
         const lowFuelThreshold = 5; // Threshold for slower decay, e.g., 5%
         if (remainingFuelPercentage < lowFuelThreshold) {
@@ -265,14 +264,14 @@
   function toggleReferenceFrameDebug() {
     ensureObjectExists();
     if ($viewer && $activeEntity) {
-      /*$activeEntity.model = new ModelGraphics({
+      $activeEntity.model = new ModelGraphics({
         uri: "./src/assets/models/starlink_spacex_satellite_4k.glb",
         minimumPixelSize: 128,
         maximumScale: 20000,
       });
       //Works in RIC
       $activeEntity.gltfZForwardYUp = true;
-      */
+      /**/
       groups.update((g) => {
         if (!$viewer) {
           return g;
@@ -347,7 +346,8 @@
           <div class="flex justify-between">
             <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
             <div>{latitude >= 0 ? "N" : "S"}</div>
-          </div>|
+          </div>
+          |
           <div class="flex justify-between">
             <div>{longitude?.toFixed(1)}°</div>
             <div>{longitude >= 0 ? "E" : "W"}</div>
