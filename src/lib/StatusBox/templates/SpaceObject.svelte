@@ -316,7 +316,7 @@
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity && OMM && CAT}
-    <div class="h-full overflow-y-scroll w-full flex flex-col gap-2">
+    <div class="h-full overflow-y-scroll w-full flex flex-wrap md:flex-col gap-2">
       <div class="p-1">
         <div class="row-header">Type</div>
         <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
@@ -476,7 +476,7 @@
   }
 
   .row-data {
-    @apply text-[.7rem] bg-gray-800 p-[1px] pl-[2px] pr-[2px] w-[80%];
+    @apply text-[.7rem] bg-gray-800 p-[1px] pl-[2px] pr-[2px];
   }
   .row-header {
     @apply text-[.6rem] pl-1 pt-1;

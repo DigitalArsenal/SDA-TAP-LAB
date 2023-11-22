@@ -14,7 +14,7 @@
 
 <!-- Fullscreen Modal backdrop with margin -->
 <div
-  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-[45%] md:w-[38%] h-[35%] md:h-[34%] max-h-[300px] right-0"
+  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[38%] h-[25%] md:h-[34%] max-h-[300px] right-0"
 >
   <div class="flex justify-center items-center z-50 w-full h-full">
     <!-- Modal content -->
