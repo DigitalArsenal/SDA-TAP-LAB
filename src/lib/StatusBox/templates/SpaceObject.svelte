@@ -133,7 +133,7 @@
         // Exponential decay fuel calculation
         const lifeRatio = elapsedLife / totalLifeSpan;
         remainingFuelPercentage = 100 * (1 - lifeRatio);
-        console.log(lifeRatio, remainingFuelPercentage);
+
         // Asymptotic behavior near low fuel level
         const lowFuelThreshold = 5; // Threshold for slower decay, e.g., 5%
         if (remainingFuelPercentage < lowFuelThreshold) {
