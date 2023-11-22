@@ -325,8 +325,8 @@ storeViewer.subscribe(async (viewer) => {
                 entityDefault:
                 {
                   point: {
-                    pixelSize: 1.7,
-                    color: Color.WHITE.withAlpha(.57)
+                    pixelSize: 2,
+                    color: Color.WHITE.withAlpha(.85)
                   }
                 },
                 scene: viewer.scene

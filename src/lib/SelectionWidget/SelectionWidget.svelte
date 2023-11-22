@@ -1,6 +1,6 @@
 <script lang="ts">
   import { scenario } from "@/stores/settings.store";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { arc } from "d3-shape";
   import {
     SceneTransforms,
@@ -10,11 +10,10 @@
     BoundingSphereState,
   } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
-  import type { Viewer } from "orbpro";
 
   export let viewer: any;
 
-  const { trackedEntity, selectedEntity } = scenario;
+  const { selectedEntity } = scenario;
   const boundingSphereScratch = new BoundingSphere();
 
   let statusColors = Object.entries(opsStatusCode);
@@ -122,7 +121,8 @@
             }
           );
           segments[1].color = (statusColors[
-            ($selectedEntity as any)?.properties?.CAT?.getValue().OPS_STATUS_CODE
+            ($selectedEntity as any)?.properties?.CAT?.getValue()
+              .OPS_STATUS_CODE
           ] || [null, "#aaaaaa"])[1];
           updateSegments(0);
         }
