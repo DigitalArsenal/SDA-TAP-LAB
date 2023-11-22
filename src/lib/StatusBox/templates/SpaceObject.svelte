@@ -493,9 +493,7 @@
           </div>
         </div>
       </div>
-      {#if CAT && CAT.OBJECT_NAME && ~CAT.OBJECT_NAME.toString()
-          .toLowerCase()
-          .indexOf("starlink")}
+      {#if getModel(OMM.OBJECT_NAME)}
         <div class="flex flex-col gap-2">
           <div class="flex gap-2">
             <div class="flex items-center justify-center gap-2">
