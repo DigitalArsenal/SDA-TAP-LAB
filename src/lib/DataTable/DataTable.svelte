@@ -13,7 +13,8 @@
   } from "@/stores/datatable.store";
   import { get } from "svelte/store";
   import { activeEntity } from "@/stores/entity.store";
-
+  import { content } from "@/stores/modal.store";
+  import AddGroup from "../SpaceObjects/Toolbar/Modals/AddGroup.svelte";
   let highlightedRowId: any = null;
   const processRow = () => {
     if ($activeEntity && gridApi && gridOptions?.paginationPageSize) {
@@ -107,6 +108,10 @@
     $groups[$activeGroup].filterObject = {};
     gridApi.setFilterModel(filterObject);
   };
+
+  const saveFilter = () => {
+    $content = AddGroup;
+  };
 </script>
 
 <div class="h-full">
@@ -118,6 +123,7 @@
     class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center">
     {#if filterObject && Object.keys(filterObject).length}
       <button
+        on:click={saveFilter}
         style="border-radius:0px"
         class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
         Save
