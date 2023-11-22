@@ -29,6 +29,7 @@
   import getLifespan from "@/lib/SpaceObjects/lib/lifespan";
   import getModel from "@/lib/SpaceObjects/lib/models";
   import { forceHideWidget } from "@/stores/selectionwidget.store";
+
   let statusColors = Object.entries(opsStatusCode);
 
   $: statusColor = (statusColors[
@@ -251,9 +252,9 @@
           //@ts-ignore
           MakeBillboardLabel({
             entity: $activeEntity,
-            text: CAT.OBJECT_NAME,
+            text: CAT.OBJECT_NAME?.toString() || "",
             fontSize: 26,
-            corderRadius: 2,
+            cornerRadius: 2,
             scaleByDistance: new NearFarScalar(0, 1, 1000, 0.5),
           });
         } else {
@@ -302,10 +303,11 @@
     }
   }
 
+  const { shouldAnimate } = scenario.settings.ClockSettings;
+
   function toggleModel() {
     ensureObjectExists();
     const modelURL = getModel(OMM.OBJECT_NAME);
-    console.log(modelURL);
     if ($viewer && $activeEntity && modelURL) {
       groups.update((g) => {
         if (!$viewer) {
@@ -317,7 +319,9 @@
           $activeEntity.model = undefined;
           g[$activeGroup].objects[$activeEntity.id].model = undefined;
         } else {
+          $shouldAnimate = false;
           $forceHideWidget = true;
+
           $activeEntity.model = new ModelGraphics({
             uri: modelURL,
             minimumPixelSize: 128,
@@ -325,6 +329,7 @@
           });
           //Works in RIC
           $activeEntity.gltfZForwardYUp = true;
+
           /**/
           g[$activeGroup].objects[$activeEntity.id].model = modelURL;
         }
