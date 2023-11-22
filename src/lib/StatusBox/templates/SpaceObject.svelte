@@ -347,7 +347,7 @@
           <div class="flex justify-between">
             <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
             <div>{latitude >= 0 ? "N" : "S"}</div>
-          </div>
+          </div>|
           <div class="flex justify-between">
             <div>{longitude?.toFixed(1)}°</div>
             <div>{longitude >= 0 ? "E" : "W"}</div>
