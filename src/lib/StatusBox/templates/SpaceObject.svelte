@@ -104,7 +104,7 @@
   }
 
   $: lifespan =
-    getLifespan(CAT?.OBJECT_NAME?.toString()) ||
+    getLifespan(CAT?.OBJECT_NAME?.toString() || "") ||
     calculateLifespan(CAT?.PERIGEE / 1000);
 
   onMount(() => {
@@ -394,7 +394,7 @@
     </div>
 
     <div
-      class="text-[.5rem] md:text-[.45rem] lg:text-[.65rem] w-full flex gap-6 cursor-pointer items-start justify-between p-1 border-t-[1px] border-gray-400">
+      class="text-[.5rem] md:text-[.48rem] lg:text-[.65rem] w-full flex gap-6 cursor-pointer items-start justify-between p-1 border-t-[1px] border-gray-400">
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-2 items-start justify-start">
           <div class="flex items-center justify-center gap-2">
