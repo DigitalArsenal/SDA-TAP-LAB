@@ -1,4 +1,4 @@
-import starlinkModel from "@/assets/models/starlink_spacex_satellite_4k.glb?url";
+import starlinkModel from "@/assets/models/starlink_spacex_satellite.glb?url";
 
 export default (name: any) => {
     if (name.toString()?.toLowerCase().includes("starlink")) {

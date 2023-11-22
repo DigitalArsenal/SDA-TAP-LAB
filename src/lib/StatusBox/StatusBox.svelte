@@ -41,7 +41,7 @@
         <div class="flex-none text-xs md:text-sm">
           <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div
-            class="select-none flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
+            class="select-none flex justify-between items-center pl-2 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
             <p class="text-white font-[300]">
               {#if $title}
                 {@html $title}

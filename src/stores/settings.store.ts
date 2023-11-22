@@ -18,7 +18,7 @@ scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { Color, LatLonGrid, SpaceCatalogDataSource } from "orbpro";
+import { Color, LatLonGrid, NearFarScalar, SpaceCatalogDataSource } from "orbpro";
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
 // Function to update URL with the compressed state
