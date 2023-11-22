@@ -18,6 +18,7 @@
   import { scenario } from "@/stores/settings.store";
   import getID from "./lib/getID";
   import GroupNumber from "@/lib/elements/GroupNumber.svelte";
+  import { activeEntity } from "@/stores/entity.store";
 
   const { selectedEntity, settings } = scenario;
 
@@ -33,9 +34,11 @@
       $datatableShow = true;
       $rowID = getID;
       defaultToolbar.style.display = "none";
+      setTimeout(() => {
+        $activeEntity = $activeEntity; //needed for datatable reactivity
+      }, 100);
       $closeMode = () => {
         settings.ClockSettings.shouldAnimate.set(false);
-        $selectedEntity = null;
         $mode = null;
         $datatableShow = false;
         $rowID = defaultID;

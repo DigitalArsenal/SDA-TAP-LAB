@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { Grid } from "ag-grid-community";
   import { groups, activeGroup } from "@/stores/group.store";
-  import type { GridOptions, ColDef, GridApi } from "ag-grid-community";
+  import type { GridOptions, GridApi } from "ag-grid-community";
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
-  import { scenario } from "@/stores/settings.store";
   import {
     data,
     columnDefs,
@@ -13,14 +12,14 @@
     rowID,
   } from "@/stores/datatable.store";
   import { get } from "svelte/store";
+  import { activeEntity } from "@/stores/entity.store";
 
-  const { selectedEntity } = scenario;
   let highlightedRowId: any = null;
   const processRow = () => {
-    if ($selectedEntity && gridApi && gridOptions?.paginationPageSize) {
-      const rowNode = gridApi.getRowNode($selectedEntity.id);
+    if ($activeEntity && gridApi && gridOptions?.paginationPageSize) {
+      const rowNode = gridApi.getRowNode($activeEntity.id);
       if (rowNode) {
-        highlightedRowId = $selectedEntity.id;
+        highlightedRowId = $activeEntity.id;
 
         // Calculate the page number and scroll to the row
         const pageNumber = Math.floor(
@@ -33,7 +32,7 @@
         gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
         gridApi.refreshCells({ force: true });
       }
-    } else if (!$selectedEntity) {
+    } else if (!$activeEntity) {
       highlightedRowId = null;
     }
   };
@@ -67,7 +66,7 @@
   let gridApi: any;
 
   $: {
-    if ($selectedEntity) {
+    if ($activeEntity) {
       processRow();
     }
   }

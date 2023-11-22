@@ -7,10 +7,6 @@
   import GroupNumber from "@/lib/elements/GroupNumber.svelte";
   onMount(() => {});
 
-  onDestroy(() => {
-    $content = null;
-  });
-
   const toggleModal = () => {
     if ($content !== GroupsModal) {
       $content = GroupsModal;

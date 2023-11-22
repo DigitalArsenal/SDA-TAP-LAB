@@ -68,7 +68,7 @@
   let position = { x: 0, y: 0, z: 0 };
   let velocityKmh: string = "";
   let unsub: Function | null = null;
-  
+
   //launch
   let launchDate: any;
   let lifespan = 7; // lifespan of the satellite in years, as a constant
@@ -103,19 +103,18 @@
   onMount(() => {
     if ($viewer) {
       unsub = $viewer.clock.onTick.addEventListener((clock) => {
-        if (CAT.OBJECT_TYPE) return;
         const { currentTime } = clock;
         velocity = $activeEntity.velocity?.getValue(currentTime);
         position = $activeEntity.position?.getValue(currentTime);
 
         if (!velocity || !position) return;
-
         const velocityMs = Math.sqrt(
           velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2
         );
         // Convert m/s to km/h
         velocityKmh = (velocityMs * 3.6).toFixed(2);
-
+        
+        if (CAT.OBJECT_TYPE) return;
         // Determine lifespan based on perigee altitude
         const perigee = CAT?.PERIGEE / 1000;
         lifespan = calculateLifespan(perigee);
@@ -321,8 +320,7 @@
 <div
   class="flex flex-col w-full whitespace-nowrap font-mono h-full justify-between">
   {#if $activeEntity && OMM && CAT}
-    <div
-      class="h-full overflow-y-scroll w-full flex flex-wrap gap-2">
+    <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-2">
       <div class="p-1">
         <div class="row-header">Type</div>
         <div class="text-sm row-data">{CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}</div>
@@ -346,11 +344,11 @@
       <div class="p-1">
         <div class="row-header">LAT/LON</div>
         <div class="text-[.6rem] flex bg-gray-800 pt-1">
-          <div class="flex justify-between ">
+          <div class="flex justify-between">
             <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
             <div>{latitude >= 0 ? "N" : "S"}</div>
           </div>
-          <div class="flex justify-between ">
+          <div class="flex justify-between">
             <div>{longitude?.toFixed(1)}°</div>
             <div>{longitude >= 0 ? "E" : "W"}</div>
           </div>
