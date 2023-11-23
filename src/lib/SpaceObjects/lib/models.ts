@@ -1,4 +1,4 @@
-import starlinkModel from "@/assets/models/ISS_stationary.glb?url";
+import starlinkModel from "@/assets/models/starlink_spacex_satellite.glb?url";
 import issModel from "@/assets/models/ISS_stationary.glb?url";
 import onewebModel from "@/assets/models/oneweb.glb?url";
 

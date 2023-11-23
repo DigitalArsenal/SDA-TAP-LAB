@@ -37,7 +37,7 @@
       </div>
     </div>
     <!-- Modal body -->
-    <form class="flex flex-col space-y-4 w-[90%] p-4" on:submit|preventDefault={addGroup}>
+    <form class="flex flex-col space-y-4 items-center justify-center p-4" on:submit|preventDefault={addGroup}>
       <div>
         <label for="name" class="block text-sm font-medium"
           >Group Name</label>
