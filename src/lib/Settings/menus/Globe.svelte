@@ -99,6 +99,10 @@
               type="checkbox"
               role="switch"
               id="flexSwitchCheckDefault" />
+          {:else}
+            <div class="h-5">
+              &nbsp;
+            </div>
           {/if}
         </div>
       </div>

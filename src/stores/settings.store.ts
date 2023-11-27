@@ -352,6 +352,8 @@ storeViewer.subscribe(async (viewer) => {
     showLatLonGrid.subscribe(async (showLLG: boolean) => {
       if (!latLonGridInstance && showLLG) {
         latLonGridInstance = new LatLonGrid(viewer);
+        latLonGridInstance.showLabels = get(showLatLonLabels);
+        latLonGridInstance.drawGrid(latLonGridInstance.currentExtent);
       } else if (latLonGridInstance && !showLLG) {
         (latLonGridInstance as any).destroy();
         latLonGridInstance = undefined;
