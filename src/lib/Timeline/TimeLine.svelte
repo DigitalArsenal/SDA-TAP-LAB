@@ -3,7 +3,7 @@
   import { JulianDate, Viewer } from "orbpro";
   import { scenario } from "@/stores/settings.store";
   import Logos from "../Logos.svelte";
-  import { timeSettings, getMultiplierForIndex } from "@/stores/timeline.store";
+  import { timeSettings, getMultiplierForIndex, _times } from "@/stores/timeline.store";
   import { get } from "svelte/store";
   /**
    * The `viewer` to add the timeline.
@@ -34,25 +34,6 @@
   const MAX_MULTIPLIER = 303400;
 
   export let timeSpan = 86400;
-
-  const _times = [
-    // 0.05,
-    0.1,
-    // 0.5,
-    1,
-    //  30,
-    60,
-    // 1800,
-    3600,
-    // 43200,
-    86400,
-    //  302400,
-    604800,
-    // 1314144,
-    2628288,
-    // 15768000,
-    31536000,
-  ];
 
   let _timesIndex = 4;
 
@@ -246,20 +227,39 @@
     return false;
   }
 
-  // Updated mouseWheel event handler
   let mouseWheel = (evt: any) => {
     let deltaY = !isNaN(evt.deltaY) ? evt.deltaY : -evt.detail;
-    _timesIndex += deltaY > 0 ? 1 : -1;
-    _timesIndex = minMax(_timesIndex, 0, get(timeSettings).length - 1);
-    timeSpan = _times[_timesIndex];
-    numTicks = Math.round(baseNumTicks * ((_timesIndex + 1) / 3));
+    let currentMultiplier = get(scenario.settings.ClockSettings.multiplier);
 
-    // Update the multiplier store with the new multiplier based on _timesIndex
-    const newMultiplier = getMultiplierForIndex(_timesIndex);
-    if (newMultiplier !== null) {
+    // Switch the sign of the multiplier if _timesIndex is zero and deltaY is opposite sign
+    if (
+      _timesIndex === 0 &&
+      ((deltaY < 0 && currentMultiplier > 0) ||
+        (deltaY > 0 && currentMultiplier < 0))
+    ) {
+      currentMultiplier *= -1;
       scenario.settings.ClockSettings.multiplier.update(
-        (store) => newMultiplier
+        () => currentMultiplier
       );
+    } else {
+      // Adjust _timesIndex based on deltaY and current multiplier sign
+      if (currentMultiplier > 0) {
+        _timesIndex += deltaY > 0 ? 1 : -1;
+      } else {
+        _timesIndex += deltaY > 0 ? -1 : 1;
+      }
+
+      _timesIndex = minMax(_timesIndex, 0, get(timeSettings).length - 1);
+      timeSpan = _times[_timesIndex];
+      numTicks = Math.round(baseNumTicks * ((_timesIndex + 1) / 3));
+
+      // Update the multiplier store with the new multiplier based on _timesIndex
+      const newMultiplier = getMultiplierForIndex(_timesIndex);
+      if (newMultiplier !== null) {
+        scenario.settings.ClockSettings.multiplier.update((store) =>
+          currentMultiplier > 0 ? newMultiplier : -newMultiplier
+        );
+      }
     }
   };
 
