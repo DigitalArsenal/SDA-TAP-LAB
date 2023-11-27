@@ -48,7 +48,7 @@
 {#if $title || $content}
   <Modal />
 {/if}
-<div class="fixed text-gray-300 top-0 left-2 text-gray-500 text-[.3rem]">
+<div class="fixed text-gray-300 top-0 left-2 text-gray-800 text-[1rem]">
   Build: {appVersion}
 </div>
 <CloseButton />
