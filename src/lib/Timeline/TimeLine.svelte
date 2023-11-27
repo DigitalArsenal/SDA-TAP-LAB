@@ -3,7 +3,8 @@
   import { JulianDate, Viewer } from "orbpro";
   import { scenario } from "@/stores/settings.store";
   import Logos from "../Logos.svelte";
-
+  import { timeSettings, getMultiplierForIndex } from "@/stores/timeline.store";
+  import { get } from "svelte/store";
   /**
    * The `viewer` to add the timeline.
    *
@@ -55,30 +56,22 @@
 
   let _timesIndex = 4;
 
+  // Subscribe to multiplier changes
   scenario.settings.ClockSettings.multiplier.subscribe(
     (imultiplier: number) => {
       const multiplier = Math.abs(imultiplier);
-      if (multiplier >= 0.001 && multiplier < 0.01) {
-        _timesIndex = 0;
-      } else if (multiplier >= 0.01 && multiplier < 0.25) {
-        _timesIndex = 1;
-      } else if (multiplier >= 0.25 && multiplier < 1) {
-        _timesIndex = 2;
-      } else if (multiplier >= 1 && multiplier < 500) {
-        _timesIndex = 3;
-      } else if (multiplier >= 500 && multiplier < 1000) {
-        _timesIndex = 4;
-      } else if (multiplier >= 1000 && multiplier < 10000) {
-        _timesIndex = 5;
-      } else if (multiplier >= 10000 && multiplier < 303400) {
-        _timesIndex = 6;
-      } else if (multiplier > 303400) {
-        _timesIndex = 7;
+      const setting = get(timeSettings).find(
+        (s: any) =>
+          multiplier >= s.minMultiplier && multiplier < s.maxMultiplier
+      );
+      if (setting) {
+        _timesIndex = setting.index;
+        timeSpan = _times[_timesIndex];
+        numTicks = Math.round((baseNumTicks * (_timesIndex + 1)) / 3);
       }
-      timeSpan = _times[_timesIndex];
-      numTicks = Math.round(baseNumTicks * _timesIndex + 1 / 3);
     }
   );
+
   // @ts-ignore
   Number.prototype.map = function (in_min, in_max, out_min, out_max) {
     return (
@@ -253,13 +246,23 @@
     return false;
   }
 
+  // Updated mouseWheel event handler
   let mouseWheel = (evt: any) => {
     let deltaY = !isNaN(evt.deltaY) ? evt.deltaY : -evt.detail;
     _timesIndex += deltaY > 0 ? 1 : -1;
-    _timesIndex = minMax(_timesIndex, 0, _times.length - 1);
+    _timesIndex = minMax(_timesIndex, 0, get(timeSettings).length - 1);
     timeSpan = _times[_timesIndex];
     numTicks = Math.round(baseNumTicks * ((_timesIndex + 1) / 3));
+
+    // Update the multiplier store with the new multiplier based on _timesIndex
+    const newMultiplier = getMultiplierForIndex(_timesIndex);
+    if (newMultiplier !== null) {
+      scenario.settings.ClockSettings.multiplier.update(
+        (store) => newMultiplier
+      );
+    }
   };
+
   $: nTicksArray = new Array(numTicks).fill(undefined);
   $: displayTicks = nTicksArray.map((e, i) => infinityScroll(i));
 </script>
