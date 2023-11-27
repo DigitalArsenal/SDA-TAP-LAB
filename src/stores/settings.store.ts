@@ -192,6 +192,7 @@ storeViewer.subscribe(async (viewer) => {
     highDynamicRange,
     CameraSettings,
     showLatLonGrid,
+    showLatLonLabels
   } = scenario.settings;
 
   const { settings, satelliteCatalogDataProviders } = scenario;
@@ -354,6 +355,15 @@ storeViewer.subscribe(async (viewer) => {
       } else if (latLonGridInstance && !showLLG) {
         (latLonGridInstance as any).destroy();
         latLonGridInstance = undefined;
+      }
+      await saveAndUpdate();
+    })
+  );
+  subscriptions.push(
+    showLatLonLabels.subscribe(async (showLLL: boolean) => {
+      if (latLonGridInstance) {
+        latLonGridInstance.showLabels = showLLL;
+        latLonGridInstance.drawGrid(latLonGridInstance.currentExtent);
       }
       await saveAndUpdate();
     })

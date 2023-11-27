@@ -39,10 +39,10 @@ export default class Settings {
   ClockSettings: ClockSettings = new ClockSettings();
   EntityState: EntityState = new EntityState();
   showMousePosition: Writable<boolean> = writable(false);
-  latLonGrid: Writable<boolean> = writable(false);
   showNonGroupedObjects: Writable<boolean> = writable(true);
   lastLoad: Writable<number> = writable(0);
   showLatLonGrid: Writable<boolean> = writable(false);
+  showLatLonLabels: Writable<boolean> = writable(true);
   X_GRID: Writable<boolean> = writable(false);
   Y_GRID: Writable<boolean> = writable(false);
   Z_GRID: Writable<boolean> = writable(false);
