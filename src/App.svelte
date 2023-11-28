@@ -31,24 +31,24 @@
 {#if $showEULA}
   <EULA />
 {:else}
-  <div id="container" 
-  class="absolute w-full h-full select-none">
-    <div class="viewer"
-    style={$datatableShow ? "height:70%" : "height: 100%"}>
+  <div id="container" class="absolute w-full h-full select-none">
+    <div class="viewer" style={$datatableShow ? "height:70%" : "height: 100%"}>
       <Viewer />
     </div>
     <div
       class="datatable absolute w-full b-0 l-0"
-      style={$datatableShow ? "height:30%" : "display: none;"}
-    >
-      <DataTable />
+      style={$datatableShow ? "height:30%" : "display: none;"}>
+      {#if $datatableShow}
+        <DataTable />
+      {/if}
     </div>
   </div>
 {/if}
 {#if $title || $content}
   <Modal />
 {/if}
-<div class="fixed text-gray-300 top-0 left-2 text-gray-600 text-[.45rem] lg:text-[1rem]">
+<div
+  class="fixed text-gray-300 top-0 left-2 text-gray-600 text-[.45rem] lg:text-[1rem]">
   Build: {appVersion}
 </div>
 <CloseButton />

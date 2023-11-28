@@ -15,6 +15,9 @@
   import { activeEntity } from "@/stores/entity.store";
   import { content } from "@/stores/modal.store";
   import AddGroup from "../SpaceObjects/Toolbar/Modals/AddGroup.svelte";
+  import { onDestroy } from "svelte";
+  import { datatableShow } from "@/stores/datatable.store";
+
   let highlightedRowId: any = null;
   const processRow = () => {
     if ($activeEntity && gridApi && gridOptions?.paginationPageSize) {
@@ -49,7 +52,7 @@
     getRowId: function ({ data }) {
       let id = $rowID(data);
       if (!id || id === "undefined") {
-        console.log(id, data);
+        console.log(id, data, $rowID);
       }
       return id;
     },
@@ -57,7 +60,7 @@
       return $rowID(params.data) === highlightedRowId ? "highlighted-row" : "";
     },
     onGridReady: (event) => {
-      event.api.sizeColumnsToFit();
+     // event.api.sizeColumnsToFit();
     },
     onFilterChanged: (event) => {
       $groups[$activeGroup].filterObject = event.api.getFilterModel();
@@ -67,7 +70,7 @@
     onSortChanged: (event) => {},
   };
 
-  let grid: Grid;
+  let grid: Grid | undefined;
   let gridElement: HTMLElement;
   let gridApi: any;
 
@@ -77,11 +80,23 @@
     }
   }
 
-  onMount(() => {
+  const gridCreate = () => {
     if (!grid) {
       grid = new Grid(gridElement, gridOptions);
       gridApi = gridOptions.api;
     }
+  };
+
+  const gridDestroy = () => {
+    if (gridApi) {
+      gridApi.destroy();
+      grid = undefined;
+      gridApi = null;
+    }
+  };
+
+  onMount(() => {
+    gridCreate();
   });
 
   // Reactive statements to update columnDefs and rowData
@@ -117,6 +132,8 @@
   const saveFilter = () => {
     $content = AddGroup;
   };
+
+  onDestroy(gridDestroy);
 </script>
 
 <div class="h-full">
