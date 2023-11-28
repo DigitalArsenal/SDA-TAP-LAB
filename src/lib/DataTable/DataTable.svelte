@@ -38,6 +38,7 @@
     }
   };
   $: filterObject = $groups[$activeGroup].filterObject;
+
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
     columnDefs: $columnDefs,
@@ -46,7 +47,11 @@
     paginationPageSize: 25,
     suppressMovableColumns: true,
     getRowId: function ({ data }) {
-      return $rowID(data);
+      let id = $rowID(data);
+      if (!id || id === "undefined") {
+        console.log(id, data);
+      }
+      return id;
     },
     getRowClass: function (params) {
       return $rowID(params.data) === highlightedRowId ? "highlighted-row" : "";

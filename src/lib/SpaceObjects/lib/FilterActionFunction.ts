@@ -16,7 +16,7 @@ const filterActionFunction = (filteredRows: any[]) => {
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i];
     // Assuming each entity has a corresponding 'id' property
-    entity.show = filteredIds.has(entity.id);
+    entity.show = filteredIds.has(getID(entity?.properties?.CAT.getValue()));
   }
   _viewer.scene.render();
 };
