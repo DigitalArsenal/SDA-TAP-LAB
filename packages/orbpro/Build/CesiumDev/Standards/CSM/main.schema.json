@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CSM" : {
+      "type" : "object",
+      "properties" : {
+        "NORAD_CAT_ID_1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECT_NAME_1" : {
+                "type" : "string"
+              },
+        "DSE_1" : {
+                "type" : "number"
+              },
+        "NORAD_CAT_ID_2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECT_NAME_2" : {
+                "type" : "string"
+              },
+        "DSE_2" : {
+                "type" : "number"
+              },
+        "TCA" : {
+                "type" : "number"
+              },
+        "TCA_RANGE" : {
+                "type" : "number"
+              },
+        "TCA_RELATIVE_SPEED" : {
+                "type" : "number"
+              },
+        "MAX_PROB" : {
+                "type" : "number"
+              },
+        "DILUTION" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CSMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CSM"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CSM"
+}

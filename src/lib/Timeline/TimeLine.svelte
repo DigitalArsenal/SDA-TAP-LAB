@@ -3,7 +3,11 @@
   import { JulianDate, Viewer } from "orbpro";
   import { scenario } from "@/stores/settings.store";
   import Logos from "../Logos.svelte";
-  import { timeSettings, getMultiplierForIndex, _times } from "@/stores/timeline.store";
+  import {
+    timeSettings,
+    getMultiplierForIndex,
+    _times,
+  } from "@/stores/timeline.store";
   import { get } from "svelte/store";
   /**
    * The `viewer` to add the timeline.
@@ -267,7 +271,17 @@
   $: displayTicks = nTicksArray.map((e, i) => infinityScroll(i));
 </script>
 
-<div id="timelineviewer">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+  id="timelineviewer"
+  on:dblclick={(e) => {
+    let currentShouldAnimate = get(
+      scenario.settings.ClockSettings.shouldAnimate
+    );
+    if (!currentShouldAnimate) {
+      scenario.settings.ClockSettings.shouldAnimate.set(true);
+    }
+  }}>
   <div class="absolute bottom-[30px] right-2 -z-100"><Logos /></div>
   <div id="centerLine" />
   <div id="timelineContainer" on:wheel={mouseWheel}>

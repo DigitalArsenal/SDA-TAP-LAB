@@ -1,0 +1,21 @@
+
+table CSM {
+ NORAD_CAT_ID_1: uint32;       
+ OBJECT_NAME_1: string;
+ DSE_1: double;          
+ NORAD_CAT_ID_2: uint32;           
+ OBJECT_NAME_2: string;      
+ DSE_2: double;       
+ TCA: double;
+ TCA_RANGE: double;   
+ TCA_RELATIVE_SPEED: double;   
+ MAX_PROB: double;   
+ DILUTION: double;   
+}
+
+table CSMCOLLECTION {
+  RECORDS:[CSM];
+}
+
+root_type CSM;
+file_identifier "$CSM";

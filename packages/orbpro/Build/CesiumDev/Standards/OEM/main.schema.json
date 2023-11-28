@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "referenceFrame" : {
+      "type" : "string",
+      "enum": ["EME2000", "GCRF", "GRC", "ICRF", "ITRF2000", "ITRF93", "ITRF97", "MCI", "TDR", "TEME", "TOD"]
+    },
+    "timeSystem" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC"]
+    },
+    "manCovRefFrame" : {
+      "type" : "string",
+      "enum": ["RSW", "RTN", "TNW"]
+    },
+    "ephemerisDataLine" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "X_DOT" : {
+                "type" : "number"
+              },
+        "Y_DOT" : {
+                "type" : "number"
+              },
+        "Z_DOT" : {
+                "type" : "number"
+              },
+        "X_DDOT" : {
+                "type" : "number"
+              },
+        "Y_DDOT" : {
+                "type" : "number"
+              },
+        "Z_DDOT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "covarianceMatrixLine" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "COV_REF_FRAME" : {
+                "$ref" : "#/definitions/manCovRefFrame"
+              },
+        "CX_X" : {
+                "type" : "number"
+              },
+        "CY_X" : {
+                "type" : "number"
+              },
+        "CY_Y" : {
+                "type" : "number"
+              },
+        "CZ_X" : {
+                "type" : "number"
+              },
+        "CZ_Y" : {
+                "type" : "number"
+              },
+        "CZ_Z" : {
+                "type" : "number"
+              },
+        "CX_DOT_X" : {
+                "type" : "number"
+              },
+        "CX_DOT_Y" : {
+                "type" : "number"
+              },
+        "CX_DOT_Z" : {
+                "type" : "number"
+              },
+        "CX_DOT_X_DOT" : {
+                "type" : "number"
+              },
+        "CY_DOT_X" : {
+                "type" : "number"
+              },
+        "CY_DOT_Y" : {
+                "type" : "number"
+              },
+        "CY_DOT_Z" : {
+                "type" : "number"
+              },
+        "CY_DOT_X_DOT" : {
+                "type" : "number"
+              },
+        "CY_DOT_Y_DOT" : {
+                "type" : "number"
+              },
+        "CZ_DOT_X" : {
+                "type" : "number"
+              },
+        "CZ_DOT_Y" : {
+                "type" : "number"
+              },
+        "CZ_DOT_Z" : {
+                "type" : "number"
+              },
+        "CZ_DOT_X_DOT" : {
+                "type" : "number"
+              },
+        "CZ_DOT_Y_DOT" : {
+                "type" : "number"
+              },
+        "CZ_DOT_Z_DOT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ephemerisDataBlock" : {
+      "type" : "object",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "CENTER_NAME" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "$ref" : "#/definitions/referenceFrame"
+              },
+        "REF_FRAME_EPOCH" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timeSystem"
+              },
+        "START_TIME" : {
+                "type" : "string"
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string"
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string"
+              },
+        "STOP_TIME" : {
+                "type" : "string"
+              },
+        "INTERPOLATION" : {
+                "type" : "string"
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "EPHEMERIS_DATA_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataLine"}
+              },
+        "COVARIANCE_MATRIX_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/covarianceMatrixLine"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OEM" : {
+      "type" : "object",
+      "properties" : {
+        "CCSDS_OEM_VERS" : {
+                "type" : "number"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_DATA_BLOCK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OEMCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OEM"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OEM"
+}

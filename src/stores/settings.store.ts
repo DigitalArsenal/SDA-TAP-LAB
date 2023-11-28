@@ -331,7 +331,7 @@ storeViewer.subscribe(async (viewer) => {
                     color: Color.WHITE.withAlpha(.7)
                   }
                 },
-                scene: viewer.scene
+                viewer
               });
 
             await spaceCatalog.loadOMM(ommBuffer, catBuffer);

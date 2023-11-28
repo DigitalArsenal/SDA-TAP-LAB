@@ -154,7 +154,7 @@
 
         remainingFuelPercentage = remainingFuelPercentage.toFixed(2);
         $title = `${CAT.OBJECT_NAME}
-<div style="background-color: gray; width: 100%; height: 8px; border-radius: 0.25rem; position: relative;">
+<div style="background-color: gray; width: 100%; height: 8px; border-radius: 0.25rem; position: relative; border:1px ${statusColor} solid;">
   <div style="background-color:${statusColor}; width: ${remainingFuelPercentage}%; height: 100%; border-radius: 0.25rem;"></div>
 </div>`;
       });
@@ -233,7 +233,7 @@
 
       // Update the actual activeEntity if it exists
       if ($activeEntity) {
-        $activeEntity.showCoverage({ show: currentState });
+        $activeEntity.showCoverage({ show: currentState, viewer: $viewer });
       }
       return g;
     });
