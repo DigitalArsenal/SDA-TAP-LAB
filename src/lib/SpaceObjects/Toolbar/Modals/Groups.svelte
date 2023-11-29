@@ -78,12 +78,15 @@
               class="cursor-pointer flex justify-between items-center p-2 hover:bg-gray-700 border border-gray-500 rounded">
               <Icon data={folder} class="text-white" />
               <span class="flex-grow px-2">{name} - {group.description}</span>
+              <!-- svelte-ignore a11y-no-static-element-interactions -->
               <span class="flex items-center">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
                   on:click={() => setActiveGroup(name)}
                   class="p-1 rounded hover:bg-gray-600">
                   <Icon data={table} class="text-white mx-2" />
                 </div>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
                   on:click={() => toggleShow(name)}
                   class="p-1 rounded hover:bg-gray-600">
@@ -91,6 +94,7 @@
                     data={group.show ? eye : eyeSlash}
                     class="text-white mx-2" />
                 </div>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
                   on:click={() => removeGroup(name)}
                   class="p-1 rounded hover:bg-gray-600">
