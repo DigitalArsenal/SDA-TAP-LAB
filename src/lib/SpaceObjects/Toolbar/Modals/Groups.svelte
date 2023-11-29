@@ -5,6 +5,7 @@
   import CloseButton from "@/lib/elements/CloseButton.svelte";
   import { Icon } from "svelte-awesome";
   import { folder, trash, eye, eyeSlash, table } from "svelte-awesome/icons";
+  import { get } from "svelte/store";
 
   let searchTerm = "";
 
@@ -40,7 +41,9 @@
 
   // Sets a group as the active group
   function setActiveGroup(groupName: string) {
-    console.log(groupName);
+    if (get(activeGroup) === groupName) {
+      groupName = "defaultGroup";
+    }
     activeGroup.set(groupName);
   }
 </script>
@@ -55,8 +58,15 @@
     <!-- Modal header -->
     <div class="flex-none text-md md:text-xl">
       <div
-        class="flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
-        <p class="text-white font-[300]">Groups</p>
+        class="h-full flex justify-between items-center pl-4 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
+        <p class="text-white font-[300]">
+          Groups
+          {#if $activeGroup !== "defaultGroup"}
+          :
+            <span class="text-blue-400">{$activeGroup.slice(0, 10)}</span>
+          {/if}
+        </p>
+
         <CloseButton onclick={closeModal} />
       </div>
     </div>
@@ -66,7 +76,7 @@
       <input
         bind:value={searchTerm}
         type="search"
-        class="text-black w-full mb-1 rounded text-xs p-1"
+        class="text-black w-full mb-2 rounded text-xs p-1"
         placeholder="Search groups..." />
       <ul class="flex flex-col gap-1">
         {#each Object.entries($groups).filter(([name]) => name
@@ -74,7 +84,8 @@
             .includes(searchTerm.toLowerCase())) as [name, group]}
           {#if name !== "defaultGroup"}
             <li
-              class:border-white={$activeGroup === name}
+              class:border-blue-400={$activeGroup === name}
+              class:bg-gray-700={$activeGroup === name}
               class="cursor-pointer flex justify-between items-center p-2 hover:bg-gray-700 border border-gray-500 rounded">
               <Icon data={folder} class="text-white" />
               <span class="flex-grow px-2">{name} - {group.description}</span>
