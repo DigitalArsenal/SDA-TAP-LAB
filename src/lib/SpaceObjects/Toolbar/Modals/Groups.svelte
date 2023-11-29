@@ -62,7 +62,7 @@
         <p class="text-white font-[300]">
           Groups
           {#if $activeGroup !== "defaultGroup"}
-          :
+            :
             <span class="text-blue-400">{$activeGroup.slice(0, 10)}</span>
           {/if}
         </p>
@@ -71,7 +71,7 @@
       </div>
     </div>
     <!-- Modal body -->
-    <div class="flex-grow p-1 overflow-y-auto overflow-x-hidden">
+    <div class="flex-grow p-1 overflow-y-auto overflow-x-hidden p-2">
       <!-- Search bar -->
       <input
         bind:value={searchTerm}
@@ -88,7 +88,7 @@
               class:bg-gray-700={$activeGroup === name}
               class="cursor-pointer flex justify-between items-center p-2 hover:bg-gray-700 border border-gray-500 rounded">
               <Icon data={folder} class="text-white" />
-              <span class="flex-grow px-2">{name} - {group.description}</span>
+              <span class="flex-grow px-2">{name}</span>
               <!-- svelte-ignore a11y-no-static-element-interactions -->
               <span class="flex items-center">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
