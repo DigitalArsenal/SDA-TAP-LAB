@@ -16,7 +16,6 @@
   import { content } from "@/stores/modal.store";
   import AddGroup from "../SpaceObjects/Toolbar/Modals/AddGroup.svelte";
   import { onDestroy } from "svelte";
-  import { datatableShow } from "@/stores/datatable.store";
 
   let highlightedRowId: any = null;
   const processRow = () => {
@@ -41,7 +40,8 @@
     }
   };
   $: filterObject = $groups[$activeGroup].filterObject;
-
+  $: console.log(filterObject, $activeGroup);
+  
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
     columnDefs: $columnDefs,
@@ -125,8 +125,7 @@
   }
 
   const clearFilter = () => {
-    $groups[$activeGroup].filterObject = {};
-    gridApi.setFilterModel(filterObject);
+    $activeGroup = "defaultGroup";
   };
 
   const saveFilter = () => {

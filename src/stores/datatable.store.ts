@@ -20,7 +20,7 @@ export const filterModelStore: Writable<any> = writable(
   loadFromLocalStorage(LOCAL_STORAGE_KEY)
 );
 
-export const defaultID = (data:any) => data.id;
+export const defaultID = (data: any) => data.id;
 // Other stores...
 export const datatableShow = writable(false);
 export const sortModelStore = writable({});
@@ -28,6 +28,7 @@ export const data = writable([]);
 export const columnDefs: Writable<ColDef[]> = writable([]);
 export const filterAction: Writable<Function | null> = writable(null);
 export const rowID: Writable<Function> = writable(defaultID);
+
 // Subscribe to the filterModelStore and update localStorage whenever it changes
 filterModelStore.subscribe((value) => {
   //saveToLocalStorage(LOCAL_STORAGE_KEY, value);

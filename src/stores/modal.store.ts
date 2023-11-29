@@ -14,10 +14,15 @@ export const lastcontent: Writable<any | undefined> = writable(undefined);
 activeEntity.subscribe((aEntity: Entity | null) => {
     if (aEntity && get(scenario.selectedEntity)) {
         content.set(StatusBox);
+        lastcontent.set(StatusBox);
+
         if (aEntity instanceof SpaceEntity) {
             template.set(SpaceObjectTemplate);
+        } else {
+            template.set(undefined);
         }
     } else {
         content.set(undefined);
+        template.set(undefined);
     }
 });

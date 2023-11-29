@@ -2,7 +2,7 @@
   import Icon from "svelte-awesome";
   import { faDatabase } from "@fortawesome/free-solid-svg-icons";
   import GroupsModal from "../Modals/Groups.svelte";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { content } from "@/stores/modal.store";
   import GroupNumber from "@/lib/elements/GroupNumber.svelte";
   onMount(() => {});

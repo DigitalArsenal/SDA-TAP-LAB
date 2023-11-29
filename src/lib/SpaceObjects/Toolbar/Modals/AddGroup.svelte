@@ -1,9 +1,14 @@
-<script>
+<script lang="ts">
   import { get } from "svelte/store";
-  import { groups, activeGroup, saveGroup } from "@/stores/group.store"; // Update the path
+  import {
+    groups,
+    activeGroup,
+    resetDefaultGroup,
+    saveGroup,
+  } from "@/stores/group.store"; // Update the path
   import { content, lastcontent } from "@/stores/modal.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
-  
+  import Groups from "./Groups.svelte";
   let name = "";
   let description = "";
   let defaultGroup = get(groups).defaultGroup;
@@ -12,11 +17,13 @@
     if (name.trim()) {
       saveGroup(name, { ...defaultGroup, description });
       activeGroup.set(name); // Set the new group as active
+      resetDefaultGroup();
     }
+    closeModal(Groups);
   };
 
-  const closeModal = () => {
-    $content = $lastcontent || undefined;
+  const closeModal = (component?: any) => {
+    $content = $lastcontent || component || undefined;
     $lastcontent = undefined;
   };
 </script>
@@ -37,14 +44,15 @@
       </div>
     </div>
     <!-- Modal body -->
-    <form class="flex flex-col space-y-4 items-center justify-center p-4" on:submit|preventDefault={addGroup}>
+    <form
+      class="flex flex-col space-y-4 items-center justify-center p-4"
+      on:submit|preventDefault={addGroup}>
       <div>
-        <label for="name" class="block text-sm font-medium"
-          >Group Name</label>
+        <label for="name" class="block text-sm font-medium">Group Name</label>
         <input
           type="text"
           id="name"
-          class="mt-1 block w-full border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          class="text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           bind:value={name}
           required />
       </div>
@@ -54,12 +62,12 @@
         <textarea
           id="description"
           rows="3"
-          class="mt-1 block w-full border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          class="text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
           bind:value={description} />
       </div>
       <button
         type="submit"
-        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm  rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >Add Group</button>
     </form>
   </div>

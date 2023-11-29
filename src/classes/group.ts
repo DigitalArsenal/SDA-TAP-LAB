@@ -16,6 +16,7 @@ interface Group {
     [objectId: string]: GroupSpaceObject;
   };
   filterObject: IFilterDef;
+  show: Boolean;
 }
 
 // Define the structure for the groups object

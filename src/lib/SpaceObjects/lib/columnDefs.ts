@@ -8,6 +8,7 @@ let { trackedEntity, selectedEntity } = scenario;
 import { viewer } from "@/stores/viewer.store";
 import { get } from "svelte/store";
 import getID from "./getID";
+
 const cellClickEvent = (event: any) => {
   const $viewer = get(viewer);
   if ($viewer) {
