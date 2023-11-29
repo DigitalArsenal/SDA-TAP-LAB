@@ -228,6 +228,10 @@ storeViewer.subscribe(async (viewer) => {
   subscriptions.push(
     enableLighting.subscribe(async (eL: any) => {
       viewer.scene.globe.enableLighting = eL;
+      //TODO move this to imagery store
+      if ((viewer as any).nightImageryLayer) {
+        (viewer as any).nightImageryLayer.show = eL;
+      }
       await saveAndUpdate();
     })
   );

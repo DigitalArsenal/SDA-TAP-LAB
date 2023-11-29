@@ -60,7 +60,7 @@
       return $rowID(params.data) === highlightedRowId ? "highlighted-row" : "";
     },
     onGridReady: (event) => {
-     // event.api.sizeColumnsToFit();
+      // event.api.sizeColumnsToFit();
     },
     onFilterChanged: (event) => {
       $groups[$activeGroup].filterObject = event.api.getFilterModel();

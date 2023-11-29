@@ -8,9 +8,11 @@
     Cartographic,
     Cartesian3,
     viewerReferenceFrameMixin,
+    TileMapServiceImageryProvider,
+    ImageryLayer,
   } from "orbpro";
 
-  import { addRFSwap, removeRFSwap } from "@/behaviors/referenceFrameSwapAlt";
+  import { addRFSwap } from "@/behaviors/referenceFrameSwapAlt";
   import { onMount } from "svelte";
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
@@ -67,6 +69,21 @@
     viewer.camera.flyTo({
       destination: Cartesian3.fromDegrees(longitude, latitude, altitude),
       duration: 0,
+    });
+
+    //Imagery
+
+    TileMapServiceImageryProvider.fromUrl(
+      "src/assets/worldmap/blackmarble/2016",
+      {
+        fileExtension: "jpg",
+      }
+    ).then((p: TileMapServiceImageryProvider) => {
+      //TODO Imagery Layer Management
+      const layer = viewer.imageryLayers.addImageryProvider(p);
+      layer.dayAlpha = 0.0;
+      layer.contrast = 1;
+      (viewer as any).nightImageryLayer = layer;
     });
 
     // Override home button behavior
