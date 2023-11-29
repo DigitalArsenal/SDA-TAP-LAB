@@ -39,8 +39,8 @@
       highlightedRowId = null;
     }
   };
+  
   $: filterObject = $groups[$activeGroup].filterObject;
-  $: console.log(filterObject, $activeGroup);
   
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
