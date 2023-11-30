@@ -7,6 +7,7 @@ const filterActionFunction = (filteredRows: any[]) => {
     return;
   }
   const dataSource = _viewer.dataSources.getByName("spaceaware")[0];
+  dataSource.entities.suspendEvents();
   const filteredIds = new Set(
     filteredRows.map((row) => {
       return getID(row);
@@ -16,8 +17,9 @@ const filterActionFunction = (filteredRows: any[]) => {
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i];
     // Assuming each entity has a corresponding 'id' property
-    entity.show = filteredIds.has(getID(entity?.properties?.CAT.getValue()));
+    entity.show = filteredIds.has(entity.id);
   }
+  dataSource.entities.resumeEvents();
   _viewer.scene.render();
 };
 

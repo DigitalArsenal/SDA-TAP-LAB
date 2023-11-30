@@ -3,7 +3,25 @@ import type { Groups } from "@/classes/group";
 
 // Define the initial state with a default group
 const initialState: Groups = {
-  defaultGroup: { description: "", objects: {}, filterObject: {}, show: true },
+  defaultGroup: {
+    objectList: [],
+    description: "",
+    objects: {},
+    filterObject: {},
+    show: true,
+    point: {
+      pixelSize: 1,
+      color: "#ffffff",
+      outlineWidth: 0,
+      outlineColor: "#ffffff"
+    },
+    path: {
+      width: 1,
+      material: {
+        color: "#ffffff"
+      }
+    }
+  },
 };
 
 // Create the writable store with the initial state

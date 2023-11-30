@@ -11,12 +11,26 @@ interface GroupSpaceObject {
 
 // Define the structure of a group containing space objects
 interface Group {
+  objectList: any[];
   description: string;
   objects: {
     [objectId: string]: GroupSpaceObject;
   };
   filterObject: IFilterDef;
   show: Boolean;
+  // Include the new style properties here
+  point?: {
+    pixelSize: number,
+    color: string,
+    outlineWidth: number,
+    outlineColor: string
+  };
+  path?: {
+    width: number,
+    material: {
+      color: string
+    }
+  };
 }
 
 // Define the structure for the groups object

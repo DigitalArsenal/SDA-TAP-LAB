@@ -16,6 +16,9 @@
   import { content } from "@/stores/modal.store";
   import AddGroup from "../SpaceObjects/Toolbar/Modals/AddGroup.svelte";
   import { onDestroy } from "svelte";
+  import { scenario } from "@/stores/settings.store";
+  import { viewer } from "@/stores/viewer.store";
+  const { selectedEntity, trackedEntity } = scenario;
 
   let highlightedRowId: any = null;
   const processRow = () => {
@@ -56,6 +59,7 @@
   $: filterIsCurrent =
     JSON.stringify($groups[$activeGroup].filterObject) ===
     JSON.stringify(currentFilter);
+
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
     columnDefs: $columnDefs,
@@ -77,6 +81,9 @@
       // event.api.sizeColumnsToFit();
     },
     onFilterChanged: (event) => {
+      $selectedEntity = null;
+      $trackedEntity = null;
+      $viewer?.camera.flyHome(0);
       currentFilter = event.api.getFilterModel();
       processRow();
       executeFilterAction(event.api);
@@ -134,10 +141,25 @@
   };
 
   const saveFilter = () => {
+    if ($activeGroup !== "defaultGroup") {
+      const overwrite = confirm(
+        `Overwrite group "${$activeGroup}" definition?`
+      );
+      if (!overwrite) {
+        return;
+      }
+    }
+
     $groups[$activeGroup].filterObject = gridApi.getFilterModel();
     if ($activeGroup === "defaultGroup") {
       $content = AddGroup;
+    } else {
     }
+    const rowData: any[] = [];
+    gridApi.forEachNodeAfterFilter((node: any) => {
+      rowData.push(node.data);
+    });
+    $groups[$activeGroup].objectList = rowData;
   };
 
   onDestroy(gridDestroy);
