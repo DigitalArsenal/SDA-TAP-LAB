@@ -43,7 +43,7 @@
     }
   };
 
-  $: filterObject = $groups[$activeGroup].filterObject;
+  $: filterObject = $groups[$activeGroup]?.filterObject;
 
   // Reactive statements to update columnDefs and rowData
   $: if (gridApi) {

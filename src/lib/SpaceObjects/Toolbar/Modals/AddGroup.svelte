@@ -9,14 +9,17 @@
   import { content, lastcontent } from "@/stores/modal.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
   import Groups from "./Groups.svelte";
+  import { createGuid } from "orbpro";
+
   let name = "";
   let description = "";
   let defaultGroup = get(groups).defaultGroup;
 
   const addGroup = () => {
     if (name.trim()) {
-      saveGroup(name, { ...defaultGroup, description });
-      activeGroup.set(name); // Set the new group as active
+      const guid = `group:${createGuid()}`;
+      saveGroup(guid, { ...defaultGroup, name, description });
+      activeGroup.set(guid); // Set the new group as active
       resetDefaultGroup();
     }
     closeModal(Groups);

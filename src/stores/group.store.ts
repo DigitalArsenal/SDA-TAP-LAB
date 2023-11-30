@@ -4,6 +4,7 @@ import type { Groups } from "@/classes/group";
 // Define the initial state with a default group
 const initialState: Groups = {
   defaultGroup: {
+    name: "defaultGroup",
     objectList: [],
     description: "",
     objects: {},

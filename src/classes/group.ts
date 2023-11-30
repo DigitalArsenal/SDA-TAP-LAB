@@ -12,6 +12,7 @@ interface GroupSpaceObject {
 // Define the structure of a group containing space objects
 interface Group {
   objectList: any[];
+  name: string;
   description: string;
   objects: {
     [objectId: string]: GroupSpaceObject;

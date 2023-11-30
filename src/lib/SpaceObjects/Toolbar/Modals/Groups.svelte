@@ -137,7 +137,8 @@
           Groups
           {#if $activeGroup !== "defaultGroup"}
             :
-            <span class="text-blue-400">{$activeGroup.slice(0, 10)}</span>
+            <span class="text-blue-400"
+              >{$groups[$activeGroup].name.slice(0, 10)}</span>
           {/if}
         </p>
 
@@ -147,37 +148,41 @@
     <!-- Modal body -->
     <div class="flex-grow p-1 overflow-y-auto overflow-x-hidden p-2">
       <!-- Search bar -->
-      {#if $activeGroup === "defaultGroup"}
+      {#if $activeGroup === "defaultGroup" && Object.keys($groups).length > 1}
         <input
           bind:value={searchTerm}
           type="search"
           class="text-black w-full mb-2 rounded text-xs p-1"
           placeholder="Search groups..." />
+      {:else if $activeGroup === "defaultGroup"}
+        <div class="w-full p-2 flex items-center justify-center">
+          <h1>No Groups</h1>
+        </div>
       {/if}
       <ul class="flex flex-col gap-1">
         {#each Object.entries($groups).filter(([name]) => name
             .toLowerCase()
-            .includes(searchTerm.toLowerCase())) as [name, group]}
-          {#if $activeGroup === "defaultGroup" && name !== "defaultGroup"}
+            .includes(searchTerm.toLowerCase())) as [id, group]}
+          {#if $activeGroup === "defaultGroup" && id !== "defaultGroup"}
             <li
-              class:border-blue-400={$activeGroup === name}
-              class:bg-gray-700={$activeGroup === name}
+              class:border-blue-400={$activeGroup === id}
+              class:bg-gray-700={$activeGroup === id}
               class="cursor-pointer flex justify-between items-center p-2 hover:bg-gray-700 border border-gray-500 rounded">
               <Icon data={folder} class="text-white" />
-              <span class="flex-grow px-2 text-[.8rem]">{name}</span>
+              <span class="flex-grow px-2 text-[.8rem]">{group.name}</span>
               <span class="flex-grow px-2 text-[.6rem]"
                 >{group.objectList.length} Objects</span>
               <!-- svelte-ignore a11y-no-static-element-interactions -->
               <span class="flex items-center">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
-                  on:click={() => setActiveGroup(name)}
+                  on:click={() => setActiveGroup(id)}
                   class="p-1 rounded hover:bg-gray-600">
                   <Icon data={table} class="text-white mx-2" />
                 </div>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
-                  on:click={() => toggleShow(name)}
+                  on:click={() => toggleShow(id)}
                   class="p-1 rounded hover:bg-gray-600">
                   <Icon
                     data={group.show ? eye : eyeSlash}
@@ -185,7 +190,7 @@
                 </div>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
-                  on:click={() => removeGroup(name)}
+                  on:click={() => removeGroup(id)}
                   class="p-1 rounded hover:bg-gray-600">
                   <Icon data={trash} class="text-white mx-2" />
                 </div>
