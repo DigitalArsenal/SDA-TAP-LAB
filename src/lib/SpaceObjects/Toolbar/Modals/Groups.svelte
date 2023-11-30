@@ -167,9 +167,14 @@
             <li
               class:border-blue-400={$activeGroup === id}
               class:bg-gray-700={$activeGroup === id}
-              class="cursor-pointer flex justify-between items-center p-2 hover:bg-gray-700 border border-gray-500 rounded">
+              class="relative cursor-pointer flex justify-between items-center p-2 hover:bg-gray-700 border border-gray-500 rounded">
+              <div class="absolute bottom-0 right-1 text-[.3rem]">
+                {id}
+              </div>
               <Icon data={folder} class="text-white" />
-              <span class="flex-grow px-2 text-[.8rem]">{group.name}</span>
+              <span class="relative flex-grow px-2 text-[.8rem]">
+                {group.name}
+              </span>
               <span class="flex-grow px-2 text-[.6rem]"
                 >{group.objectList.length} Objects</span>
               <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -199,8 +204,9 @@
           {/if}
         {/each}
       </ul>
-      <div class="flex flex-col text-xs gap-3 pt-2">
+      <div class="relative flex flex-col text-xs gap-3 pt-6">
         {#if $activeGroup !== "defaultGroup"}
+        <div class="absolute text-[.4rem] right-0 -top-2">{$activeGroup}</div>
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Pixel Size:</label>
