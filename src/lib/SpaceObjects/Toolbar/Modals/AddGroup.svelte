@@ -52,7 +52,7 @@
         <input
           type="text"
           id="name"
-          class="text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          class="bg-white text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           bind:value={name}
           required />
       </div>
@@ -62,7 +62,7 @@
         <textarea
           id="description"
           rows="3"
-          class="text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+          class="bg-white text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
           bind:value={description} />
       </div>
       <button

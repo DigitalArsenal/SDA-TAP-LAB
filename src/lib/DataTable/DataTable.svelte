@@ -39,9 +39,21 @@
       highlightedRowId = null;
     }
   };
-  
+
+  // Reactive statements to update columnDefs and rowData
+  $: if (gridApi) {
+    gridApi.setColumnDefs($columnDefs);
+    gridApi.setRowData($data);
+
+    if (filterObject) {
+      gridApi.setFilterModel(filterObject);
+    }
+  }
+
   $: filterObject = $groups[$activeGroup].filterObject;
-  
+
+  let currentFilter: any;
+  $: filterIsCurrent = JSON.stringify($groups[$activeGroup].filterObject) === JSON.stringify(currentFilter);
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
     columnDefs: $columnDefs,
@@ -63,9 +75,9 @@
       // event.api.sizeColumnsToFit();
     },
     onFilterChanged: (event) => {
-      $groups[$activeGroup].filterObject = event.api.getFilterModel();
-      executeFilterAction(event.api);
+      currentFilter = event.api.getFilterModel();
       processRow();
+      executeFilterAction(event.api);
     },
     onSortChanged: (event) => {},
   };
@@ -99,16 +111,6 @@
     gridCreate();
   });
 
-  // Reactive statements to update columnDefs and rowData
-  $: if (gridApi) {
-    gridApi.setColumnDefs($columnDefs);
-    gridApi.setRowData($data);
-
-    if (filterObject) {
-      gridApi.setFilterModel(filterObject);
-    }
-  }
-
   function executeFilterAction(api: GridApi) {
     const filterActionFunction = get(filterAction);
 
@@ -126,10 +128,14 @@
 
   const clearFilter = () => {
     $activeGroup = "defaultGroup";
+    gridApi.setFilterModel({});
   };
 
   const saveFilter = () => {
-    $content = AddGroup;
+    $groups[$activeGroup].filterObject = gridApi.getFilterModel();
+    if ($activeGroup === "defaultGroup") {
+      $content = AddGroup;
+    }
   };
 
   onDestroy(gridDestroy);
@@ -142,13 +148,15 @@
     class="ag-theme-balham-dark h-full w-full" />
   <div
     class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center">
-    {#if filterObject && Object.keys(filterObject).length}
-      <button
-        on:click={saveFilter}
-        style="border-radius:0px"
-        class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
-        Save
-      </button>
+    {#if currentFilter && Object.keys(currentFilter).length}
+      {#if !filterIsCurrent}
+        <button
+          on:click={saveFilter}
+          style="border-radius:0px"
+          class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
+          Save
+        </button>
+      {/if}
       <button
         on:click={clearFilter}
         style="border-radius:0px"
