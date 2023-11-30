@@ -40,20 +40,22 @@
     }
   };
 
+  $: filterObject = $groups[$activeGroup].filterObject;
+
   // Reactive statements to update columnDefs and rowData
   $: if (gridApi) {
     gridApi.setColumnDefs($columnDefs);
     gridApi.setRowData($data);
-
+    currentFilter = {};
     if (filterObject) {
       gridApi.setFilterModel(filterObject);
     }
   }
 
-  $: filterObject = $groups[$activeGroup].filterObject;
-
   let currentFilter: any;
-  $: filterIsCurrent = JSON.stringify($groups[$activeGroup].filterObject) === JSON.stringify(currentFilter);
+  $: filterIsCurrent =
+    JSON.stringify($groups[$activeGroup].filterObject) ===
+    JSON.stringify(currentFilter);
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
     columnDefs: $columnDefs,
