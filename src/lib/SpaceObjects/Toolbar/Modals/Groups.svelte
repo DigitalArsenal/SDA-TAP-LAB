@@ -102,6 +102,10 @@
           entity.point.outlineColor = Color.fromCssColorString(
             localOutlineColor
           ) as any;
+          if (!localOutlineWidth) {
+            entity.point.outlineColor = null as any;
+            entity.point.outlineWidth = null as any;
+          }
         }
         if (entity.path) {
           entity.path.width = localPathWidth;
