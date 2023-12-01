@@ -1,5 +1,6 @@
 import { get, writable, type Writable } from "svelte/store";
 import type { Groups } from "@/classes/group";
+import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 
 // Define the initial state with a default group
 const initialState: Groups = {
@@ -59,6 +60,57 @@ export function loadGroup(name: string): any {
   const currentGroups = get(groups);
   return currentGroups[name];
 }
+
+//IMPORT / EXPORT
+// Function to save a single group or all groups
+export const exportGroup = async (groupName?: string): Promise<void> => {
+  const currentGroups = get(groups);
+  const groupsToSave = groupName ? { [groupName]: currentGroups[groupName] } : currentGroups;
+
+  if (Object.keys(groupsToSave).length === 0) return;
+
+  const serializedGroups = JSON.stringify(groupsToSave);
+  const lzWorker = new lzworker();
+  lzWorker.postMessage({
+    payload: serializedGroups,
+    method: "compressToEncodedURIComponent",
+  });
+
+  lzWorker.onmessage = (event: any) => {
+    const compressedData = event.data;
+    const storageKey = groupName ? `group_${groupName}` : 'all_groups';
+    localStorage.setItem(storageKey, compressedData);
+  };
+};
+
+// Function to load a single group or all groups
+export const importGroup = async (groupName?: string): Promise<void> => {
+  const storageKey = groupName ? `group_${groupName}` : 'all_groups';
+  const compressedData = localStorage.getItem(storageKey);
+  if (!compressedData) return;
+
+  const lzWorker = new lzworker();
+  lzWorker.postMessage({
+    payload: compressedData,
+    method: "decompressFromEncodedURIComponent",
+  });
+
+  lzWorker.onmessage = (event) => {
+    const serializedGroups = event.data;
+    const loadedGroups = JSON.parse(serializedGroups);
+
+    if (groupName) {
+      groups.update((currentGroups) => {
+        currentGroups[groupName] = loadedGroups[groupName];
+        return currentGroups;
+      });
+    } else {
+      groups.set(loadedGroups);
+    }
+  };
+};
+
+
 
 import { Grid, type GridOptions } from 'ag-grid-community';
 

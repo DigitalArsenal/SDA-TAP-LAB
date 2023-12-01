@@ -1,7 +1,7 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1701379405431",
+    "version": "0.0.0+1701447584358",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
@@ -44,6 +44,7 @@
         "ag-grid-community": "^30.2.1",
         "coi-serviceworker": "^0.1.7",
         "d3": "^7.8.5",
+        "downloadjs": "^1.4.7",
         "flatbuffers": "^23.3.3",
         "jquery": "^3.7.1",
         "lz-string": "^1.5.0",

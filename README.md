@@ -1,1 +1,2 @@
-- [ ] Fix reference frame code to not apply to model (model should always be in RIC / VVLH)
+- [ ] Add to group individual row
+- [ ] Camera zoom to all entities in group 

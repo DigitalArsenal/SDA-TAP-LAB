@@ -138,7 +138,7 @@
           {#if $activeGroup !== "defaultGroup"}
             :
             <span class="text-blue-400"
-              >{$groups[$activeGroup].name.slice(0, 10)}</span>
+              >{$groups[$activeGroup].name.slice(0, 20)}</span>
           {/if}
         </p>
 
@@ -206,7 +206,7 @@
       </ul>
       <div class="relative flex flex-col text-xs gap-3 pt-6">
         {#if $activeGroup !== "defaultGroup"}
-        <div class="absolute text-[.4rem] right-0 -top-2">{$activeGroup}</div>
+          <div class="absolute text-[.4rem] right-0 -top-2">{$activeGroup}</div>
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Pixel Size:</label>
@@ -223,11 +223,12 @@
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Point Color:</label>
-            <input
-              type="color"
-              bind:value={localPointColor}
-              on:change={updateProperties}
-              style="width: 70%;" />
+            <div class="w-2">
+              <input
+                type="color"
+                bind:value={localPointColor}
+                on:change={updateProperties} />
+            </div>
           </div>
 
           <div class="flex items-center">
@@ -246,11 +247,12 @@
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Outline Color:</label>
-            <input
-              type="color"
-              bind:value={localOutlineColor}
-              on:change={updateProperties}
-              style="width: 70%;" />
+            <div class="w-2">
+              <input
+                type="color"
+                bind:value={localOutlineColor}
+                on:change={updateProperties} />
+            </div>
           </div>
 
           <div class="flex items-center">
@@ -269,11 +271,12 @@
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Path Color:</label>
-            <input
-              type="color"
-              bind:value={localPathColor}
-              on:change={updateProperties}
-              style="width: 70%;" />
+            <div class="w-2">
+              <input
+                type="color"
+                bind:value={localPathColor}
+                on:change={updateProperties} />
+            </div>
           </div>
         {/if}
       </div>

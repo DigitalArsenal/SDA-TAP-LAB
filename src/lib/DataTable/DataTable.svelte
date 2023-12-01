@@ -176,15 +176,14 @@
       {#if !filterIsCurrent}
         <button
           on:click={saveFilter}
-          style="border-radius:0px"
-          class="bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
+          class="rounded bg-blue-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
           Save
         </button>
       {/if}
       <button
         on:click={clearFilter}
-        style="border-radius:0px"
-        class="bg-gray-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
+ 
+        class="rounded bg-gray-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
         Clear
       </button>
     {/if}
