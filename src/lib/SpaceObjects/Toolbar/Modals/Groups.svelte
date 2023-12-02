@@ -11,6 +11,7 @@
   import getID from "../../lib/getID";
   import { get } from "svelte/store";
   import { Color } from "orbpro";
+  import RangeSlider from "@/lib/widgets/RangeSlider.svelte";
 
   let searchTerm = "";
   // Local versions of properties
@@ -210,15 +211,14 @@
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Pixel Size:</label>
-            <span style="width: 20%;">{localPixelSize}</span>
-            <input
-              type="range"
-              min=".5"
-              max="20"
-              step=".1"
+            <RangeSlider
+              showToolTip={false}
+              min={1}
+              max={50}
+              step={0.5}
               bind:value={localPixelSize}
-              on:change={updateProperties}
-              style="width: 50%;" />
+              on:change={updateProperties} />
+            <span>{localPixelSize.toFixed(1)}</span>
           </div>
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -234,15 +234,14 @@
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Outline Width:</label>
-            <span style="width: 20%;">{localOutlineWidth}</span>
-            <input
-              type="range"
-              min="0"
-              max="10"
-              step=".1"
+            <RangeSlider
+              showToolTip={false}
+              min={0}
+              max={10}
+              step={0.5}
               bind:value={localOutlineWidth}
-              on:change={updateProperties}
-              style="width: 50%;" />
+              on:change={updateProperties} />
+            <span>{localOutlineWidth.toFixed(1)}</span>
           </div>
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -258,15 +257,14 @@
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Path Width:</label>
-            <span style="width: 20%;">{localPathWidth}</span>
-            <input
-              type="range"
-              min="1"
-              max="20"
-              step=".1"
+            <RangeSlider
+              showToolTip={false}
+              min={1}
+              max={20}
+              step={0.1}
               bind:value={localPathWidth}
-              on:change={updateProperties}
-              style="width: 50%;" />
+              on:change={updateProperties} />
+            <span>{localPathWidth.toFixed(1)}</span>
           </div>
           <div class="flex items-center">
             <!-- svelte-ignore a11y-label-has-associated-control -->

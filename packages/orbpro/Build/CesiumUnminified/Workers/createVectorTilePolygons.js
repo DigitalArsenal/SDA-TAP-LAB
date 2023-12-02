@@ -1,7 +1,7 @@
 /**
  * @license
  * Cesium - https://github.com/CesiumGS/cesium
- * Version 1.111
+ * Version 1.112
  *
  * Copyright 2011-2022 Cesium Contributors
  *
@@ -25,44 +25,44 @@
 
 import {
   Color_default
-} from "./chunk-TKH4DD34.js";
+} from "./chunk-CHV3MBJJ.js";
 import {
   createTaskProcessorWorker_default
-} from "./chunk-XG2O5V7X.js";
+} from "./chunk-VCEP4RVU.js";
 import {
   OrientedBoundingBox_default
-} from "./chunk-WVYMMZW6.js";
-import "./chunk-A2YOE4US.js";
-import "./chunk-YRBH2ON4.js";
+} from "./chunk-N3DML2E4.js";
+import "./chunk-TDLCCFXN.js";
+import "./chunk-O7YR3RUF.js";
 import {
   AttributeCompression_default
-} from "./chunk-DTJONX3B.js";
-import "./chunk-M6SJWQM7.js";
-import "./chunk-6DC6PO7J.js";
+} from "./chunk-PX2BOBEB.js";
+import "./chunk-MG5KIY4S.js";
+import "./chunk-SCGNC36I.js";
 import {
   IndexDatatype_default
-} from "./chunk-JOBMFMSV.js";
-import "./chunk-NLOQZLEU.js";
-import "./chunk-TQTG2Q4U.js";
+} from "./chunk-V4VEXECF.js";
+import "./chunk-JTOLNNYW.js";
+import "./chunk-GZ7BL7LQ.js";
 import {
   Rectangle_default
-} from "./chunk-MQNA3P5X.js";
-import "./chunk-3X5MHN3M.js";
+} from "./chunk-KTN4SGGY.js";
+import "./chunk-PDG6JOP7.js";
 import {
   Cartesian3_default,
   Cartographic_default,
   Ellipsoid_default
-} from "./chunk-M35EWU24.js";
+} from "./chunk-HLVA4ANJ.js";
 import {
   Math_default
-} from "./chunk-DM2LKTVS.js";
-import "./chunk-XNRYWRVT.js";
-import "./chunk-PL6YTO4D.js";
-import "./chunk-N73NY3KY.js";
-import "./chunk-TU2FA5CD.js";
+} from "./chunk-NMDY6ZLZ.js";
+import "./chunk-VNRUVNIK.js";
+import "./chunk-R5BRZG2P.js";
+import "./chunk-C53JYYKX.js";
+import "./chunk-AHDNLR3T.js";
 import {
   defined_default
-} from "./chunk-37JEF5H2.js";
+} from "./chunk-2KF5NPJR.js";
 
 // packages/engine/Source/Workers/createVectorTilePolygons.js
 var scratchCenter = new Cartesian3_default();

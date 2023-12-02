@@ -1,7 +1,7 @@
 /**
  * @license
  * Cesium - https://github.com/CesiumGS/cesium
- * Version 1.111
+ * Version 1.112
  *
  * Copyright 2011-2022 Cesium Contributors
  *
@@ -25,33 +25,33 @@
 
 import {
   createTaskProcessorWorker_default
-} from "./chunk-XG2O5V7X.js";
+} from "./chunk-VCEP4RVU.js";
 import {
   AttributeCompression_default
-} from "./chunk-DTJONX3B.js";
+} from "./chunk-PX2BOBEB.js";
 import {
   IndexDatatype_default
-} from "./chunk-JOBMFMSV.js";
+} from "./chunk-V4VEXECF.js";
 import {
   combine_default
-} from "./chunk-TQTG2Q4U.js";
+} from "./chunk-GZ7BL7LQ.js";
 import {
   Rectangle_default
-} from "./chunk-MQNA3P5X.js";
-import "./chunk-3X5MHN3M.js";
+} from "./chunk-KTN4SGGY.js";
+import "./chunk-PDG6JOP7.js";
 import {
   Cartesian3_default,
   Cartographic_default,
   Ellipsoid_default
-} from "./chunk-M35EWU24.js";
+} from "./chunk-HLVA4ANJ.js";
 import {
   Math_default
-} from "./chunk-DM2LKTVS.js";
-import "./chunk-XNRYWRVT.js";
-import "./chunk-PL6YTO4D.js";
-import "./chunk-N73NY3KY.js";
-import "./chunk-TU2FA5CD.js";
-import "./chunk-37JEF5H2.js";
+} from "./chunk-NMDY6ZLZ.js";
+import "./chunk-VNRUVNIK.js";
+import "./chunk-R5BRZG2P.js";
+import "./chunk-C53JYYKX.js";
+import "./chunk-AHDNLR3T.js";
+import "./chunk-2KF5NPJR.js";
 
 // packages/engine/Source/Core/decodeVectorPolylinePositions.js
 var maxShort = 32767;

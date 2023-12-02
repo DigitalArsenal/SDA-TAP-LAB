@@ -1,7 +1,7 @@
 /**
  * @license
  * Cesium - https://github.com/CesiumGS/cesium
- * Version 1.111
+ * Version 1.112
  *
  * Copyright 2011-2022 Cesium Contributors
  *
@@ -25,46 +25,46 @@
 
 import {
   CylinderGeometry_default
-} from "./chunk-L4HDKCFO.js";
-import "./chunk-4NLZA7WT.js";
+} from "./chunk-LZUISWSX.js";
+import "./chunk-4H2G2CPR.js";
 import {
   EllipsoidGeometry_default
-} from "./chunk-FFZG4VFY.js";
+} from "./chunk-4ZO7G2WT.js";
 import {
   Color_default
-} from "./chunk-TKH4DD34.js";
+} from "./chunk-CHV3MBJJ.js";
 import {
   createTaskProcessorWorker_default
-} from "./chunk-XG2O5V7X.js";
+} from "./chunk-VCEP4RVU.js";
 import {
   BoxGeometry_default
-} from "./chunk-SH43ZCK6.js";
-import "./chunk-ZERWARDV.js";
-import "./chunk-YWUU7JYB.js";
+} from "./chunk-J26R5VPC.js";
+import "./chunk-W7F5VTH6.js";
+import "./chunk-4RWJ3QEI.js";
 import {
   IndexDatatype_default
-} from "./chunk-JOBMFMSV.js";
-import "./chunk-EH2PEDWL.js";
-import "./chunk-74N32EZR.js";
+} from "./chunk-V4VEXECF.js";
+import "./chunk-SJDXMQSP.js";
+import "./chunk-D2PE6HOO.js";
 import {
   BoundingSphere_default
-} from "./chunk-NLOQZLEU.js";
-import "./chunk-TQTG2Q4U.js";
+} from "./chunk-JTOLNNYW.js";
+import "./chunk-GZ7BL7LQ.js";
 import {
   Matrix4_default
-} from "./chunk-MQNA3P5X.js";
-import "./chunk-3X5MHN3M.js";
+} from "./chunk-KTN4SGGY.js";
+import "./chunk-PDG6JOP7.js";
 import {
   Cartesian3_default
-} from "./chunk-M35EWU24.js";
-import "./chunk-DM2LKTVS.js";
-import "./chunk-XNRYWRVT.js";
-import "./chunk-PL6YTO4D.js";
-import "./chunk-N73NY3KY.js";
-import "./chunk-TU2FA5CD.js";
+} from "./chunk-HLVA4ANJ.js";
+import "./chunk-NMDY6ZLZ.js";
+import "./chunk-VNRUVNIK.js";
+import "./chunk-R5BRZG2P.js";
+import "./chunk-C53JYYKX.js";
+import "./chunk-AHDNLR3T.js";
 import {
   defined_default
-} from "./chunk-37JEF5H2.js";
+} from "./chunk-2KF5NPJR.js";
 
 // packages/engine/Source/Scene/Vector3DTileBatch.js
 function Vector3DTileBatch(options) {

@@ -1,2 +1,6 @@
 - [ ] Add to group individual row
-- [ ] Camera zoom to all entities in group 
+- [ ] Camera zoom to all entities in group
+- [ ] Change Space Object UI
+-- [ ] Move controls to new tab
+-- [ ] Add covariance
+- [ ] Conjunction Assessment Table / View in the Space toolbar

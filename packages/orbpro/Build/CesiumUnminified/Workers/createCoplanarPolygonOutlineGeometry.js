@@ -1,7 +1,7 @@
 /**
  * @license
  * Cesium - https://github.com/CesiumGS/cesium
- * Version 1.111
+ * Version 1.112
  *
  * Copyright 2011-2022 Cesium Contributors
  *
@@ -25,66 +25,66 @@
 
 import {
   CoplanarPolygonGeometryLibrary_default
-} from "./chunk-OH6BRBRW.js";
+} from "./chunk-LZH2VGB3.js";
 import {
   PolygonGeometryLibrary_default
-} from "./chunk-CW4YXZTM.js";
-import "./chunk-HS5DYMC5.js";
-import "./chunk-WVYMMZW6.js";
-import "./chunk-N2JOS465.js";
-import "./chunk-DHO4HQHW.js";
-import "./chunk-A2YOE4US.js";
-import "./chunk-YRBH2ON4.js";
-import "./chunk-RVUMBNT4.js";
+} from "./chunk-CLTXB4XB.js";
+import "./chunk-TWRY7TD2.js";
+import "./chunk-N3DML2E4.js";
+import "./chunk-UJZTEOZP.js";
+import "./chunk-235MRXLH.js";
+import "./chunk-TDLCCFXN.js";
+import "./chunk-O7YR3RUF.js";
+import "./chunk-XC2NKGWM.js";
 import {
   arrayRemoveDuplicates_default
-} from "./chunk-PT36PAFY.js";
-import "./chunk-EJIMVV5S.js";
+} from "./chunk-PO4SIGY4.js";
+import "./chunk-QRG5TF3N.js";
 import {
   GeometryInstance_default
-} from "./chunk-UMI33BYA.js";
+} from "./chunk-QU7CMZ2N.js";
 import {
   GeometryPipeline_default
-} from "./chunk-WE7GAYUR.js";
-import "./chunk-DTJONX3B.js";
-import "./chunk-AV6H6D2Z.js";
-import "./chunk-M6SJWQM7.js";
-import "./chunk-6DC6PO7J.js";
+} from "./chunk-YX7FJB2K.js";
+import "./chunk-PX2BOBEB.js";
+import "./chunk-7TJKQ3CK.js";
+import "./chunk-MG5KIY4S.js";
+import "./chunk-SCGNC36I.js";
 import {
   IndexDatatype_default
-} from "./chunk-JOBMFMSV.js";
+} from "./chunk-V4VEXECF.js";
 import {
   GeometryAttributes_default
-} from "./chunk-EH2PEDWL.js";
+} from "./chunk-SJDXMQSP.js";
 import {
   GeometryAttribute_default,
   Geometry_default,
   PrimitiveType_default
-} from "./chunk-74N32EZR.js";
+} from "./chunk-D2PE6HOO.js";
 import {
   BoundingSphere_default
-} from "./chunk-NLOQZLEU.js";
-import "./chunk-TQTG2Q4U.js";
-import "./chunk-MQNA3P5X.js";
+} from "./chunk-JTOLNNYW.js";
+import "./chunk-GZ7BL7LQ.js";
+import "./chunk-KTN4SGGY.js";
 import {
   ComponentDatatype_default
-} from "./chunk-3X5MHN3M.js";
+} from "./chunk-PDG6JOP7.js";
 import {
   Cartesian3_default,
   Ellipsoid_default
-} from "./chunk-M35EWU24.js";
-import "./chunk-DM2LKTVS.js";
-import "./chunk-XNRYWRVT.js";
-import "./chunk-PL6YTO4D.js";
+} from "./chunk-HLVA4ANJ.js";
+import "./chunk-NMDY6ZLZ.js";
+import "./chunk-VNRUVNIK.js";
+import "./chunk-R5BRZG2P.js";
 import {
   defaultValue_default
-} from "./chunk-N73NY3KY.js";
+} from "./chunk-C53JYYKX.js";
 import {
   Check_default
-} from "./chunk-TU2FA5CD.js";
+} from "./chunk-AHDNLR3T.js";
 import {
   defined_default
-} from "./chunk-37JEF5H2.js";
+} from "./chunk-2KF5NPJR.js";
 
 // packages/engine/Source/Core/CoplanarPolygonOutlineGeometry.js
 function createGeometryFromPositions(positions) {

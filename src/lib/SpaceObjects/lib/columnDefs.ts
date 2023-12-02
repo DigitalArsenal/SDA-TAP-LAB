@@ -29,7 +29,7 @@ function metersComparator(valueA: any, valueB: any) {
 }
 
 const filterParams = {
-  debounceMs: 500 // debounce time in milliseconds
+  debounceMs: 1000 // debounce time in milliseconds
 };
 
 export default [
