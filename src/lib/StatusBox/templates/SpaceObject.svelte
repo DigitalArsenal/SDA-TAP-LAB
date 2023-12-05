@@ -16,20 +16,19 @@
   } from "@/classes/SDS-2-Orbit-Mean-Elements-Message-(OMM)-TypeScript/OMM";
   import { onDestroy, onMount } from "svelte";
   import type { Cartesian3 } from "orbpro";
-  import { ModelGraphics, ReferenceFrame } from "orbpro";
-  import {
-    Cartographic,
-    Math as CesiumMath,
-    DebugModelMatrixPrimitive,
-    JulianDate,
-    MakeBillboardLabel,
-    NearFarScalar,
-  } from "orbpro";
+  import { ReferenceFrame } from "orbpro";
+  import { Cartographic, Math as CesiumMath, JulianDate } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
   import getLifespan from "@/lib/SpaceObjects/lib/lifespan";
   import getModel from "@/lib/SpaceObjects/lib/models";
-  import { forceHideWidget } from "@/stores/selectionwidget.store";
-
+  import {
+    toggleOrbit,
+    toggleCoverage,
+    toggleLabel,
+    toggleReferenceFrameDebug,
+    toggleModel,
+  } from "@/stores/group/serializegroups";
+  
   let statusColors = Object.entries(opsStatusCode);
 
   $: statusColor = (statusColors[
@@ -188,155 +187,6 @@
     activeObjectState = $groups[$activeGroup]?.objects[$activeEntity?.id] || {
       ...defaultObjectValue,
     };
-  }
-
-  function ensureObjectExists() {
-    groups.update((g) => {
-      // Check if the group and object exist, if not, initialize them
-      if (!g[$activeGroup]) {
-        g[$activeGroup] = { description: "", filterObject: {}, objects: {} };
-      }
-      if (!g[$activeGroup].objects[$activeEntity.id]) {
-        g[$activeGroup].objects[$activeEntity.id] = {
-          orbit: false,
-          coverage: false,
-          label: false,
-          referenceFrameDebug: false,
-          model: undefined,
-        };
-      }
-      return g;
-    });
-  }
-
-  function toggleOrbit() {
-    ensureObjectExists();
-    groups.update((g) => {
-      const currentState = !g[$activeGroup].objects[$activeEntity.id].orbit;
-      g[$activeGroup].objects[$activeEntity.id].orbit = currentState;
-
-      // Update the actual activeEntity if it exists
-      if ($activeEntity) {
-        $activeEntity.showOrbit({ show: currentState });
-      }
-
-      return g;
-    });
-    $viewer!.scene.render();
-  }
-
-  function toggleCoverage() {
-    ensureObjectExists();
-    groups.update((g) => {
-      const currentState = !g[$activeGroup].objects[$activeEntity.id].coverage;
-      g[$activeGroup].objects[$activeEntity.id].coverage = currentState;
-
-      // Update the actual activeEntity if it exists
-      if ($activeEntity) {
-        $activeEntity.showCoverage({ show: currentState, viewer: $viewer });
-      }
-      return g;
-    });
-    $viewer!.scene.render();
-  }
-
-  function toggleLabel() {
-    ensureObjectExists();
-    groups.update((g) => {
-      const currentState = !g[$activeGroup].objects[$activeEntity.id].label;
-      g[$activeGroup].objects[$activeEntity.id].label = currentState;
-
-      // Update the actual activeEntity if it exists
-      if ($activeEntity) {
-        if (!$activeEntity.billboard) {
-          //@ts-ignore
-          MakeBillboardLabel({
-            entity: $activeEntity,
-            text: CAT.OBJECT_NAME?.toString() || "",
-            fontSize: 26,
-            cornerRadius: 2,
-            scaleByDistance: new NearFarScalar(0, 1, 1000, 0.5),
-          });
-        } else {
-          $activeEntity.billboard.show = currentState;
-        }
-      }
-      return g;
-    });
-    $viewer!.scene.render();
-  }
-
-  function toggleReferenceFrameDebug() {
-    ensureObjectExists();
-    if ($viewer && $activeEntity) {
-      groups.update((g) => {
-        if (!$viewer) {
-          return g;
-        }
-        const isActive =
-          !!g[$activeGroup].objects[$activeEntity.id]?.referenceFrameDebug;
-        if (isActive) {
-          // Remove the debug primitive from the scene
-          if ($activeEntity.properties.debugPrimitive) {
-            const worked = $viewer.scene.primitives.remove(
-              $activeEntity.properties.debugPrimitive
-            );
-            $activeEntity.properties.debugPrimitive = undefined;
-          }
-          g[$activeGroup].objects[$activeEntity.id].referenceFrameDebug = false;
-        } else {
-          // Add the debug primitive to the scene
-          const debugPrimitive = new DebugModelMatrixPrimitive({
-            entity: $activeEntity, // primitive to debug
-            length: 30000.0,
-            width: 2.0,
-          });
-
-          $viewer.scene.primitives.add(debugPrimitive);
-          // Store the reference in the property bag
-          $activeEntity.properties.debugPrimitive = debugPrimitive;
-          g[$activeGroup].objects[$activeEntity.id].referenceFrameDebug = true;
-        }
-
-        return g;
-      });
-    }
-  }
-
-  const { shouldAnimate } = scenario.settings.ClockSettings;
-
-  function toggleModel() {
-    ensureObjectExists();
-    const modelURL = getModel(OMM.OBJECT_NAME);
-    if ($viewer && $activeEntity && modelURL) {
-      groups.update((g) => {
-        if (!$viewer) {
-          return g;
-        }
-        const isActive = !!g[$activeGroup].objects[$activeEntity.id]?.model;
-        if (isActive) {
-          $forceHideWidget = false;
-          $activeEntity.model = undefined;
-          g[$activeGroup].objects[$activeEntity.id].model = undefined;
-        } else {
-          $shouldAnimate = false;
-          $forceHideWidget = true;
-
-          $activeEntity.model = new ModelGraphics({
-            uri: modelURL,
-            minimumPixelSize: 128,
-            maximumScale: 20000,
-          });
-          //Works in RIC
-          $activeEntity.gltfZForwardYUp = true;
-
-          /**/
-          g[$activeGroup].objects[$activeEntity.id].model = modelURL;
-        }
-
-        return g;
-      });
-    }
   }
 
   // Function to handle the change of the dropdown

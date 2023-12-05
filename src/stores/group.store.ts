@@ -1,7 +1,7 @@
 import { get, writable, type Writable } from "svelte/store";
 import type { Groups } from "@/classes/group";
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
-
+import { columnDefs as currentColumnDefs, data } from "./datatable.store";
 // Define the initial state with a default group
 const initialState: Groups = {
   defaultGroup: {
@@ -40,6 +40,16 @@ export const resetDefaultGroup = () => {
 
 
 /**
+ * Populates the objectList for a given group using the current columnDefs and data.
+ * @param group - The group to populate objectList for.
+ */
+export function populateObjectList(group: any) {
+  const filterModel = group.filterObject || {};
+  group.objectList = getFilteredData(get(currentColumnDefs), get(data), filterModel);
+}
+
+
+/**
  * Saves a group with the specified name and data.
  * @param name - The name of the group.
  * @param group - The group data to save.
@@ -47,6 +57,7 @@ export const resetDefaultGroup = () => {
 export function saveGroup(name: string, group: any): void {
   groups.update((currentGroups) => {
     currentGroups[name] = group;
+    currentGroups["defaultGroup"].filterObject = {};
     return currentGroups;
   });
 }
@@ -63,54 +74,94 @@ export function loadGroup(name: string): any {
 
 //IMPORT / EXPORT
 // Function to save a single group or all groups
-export const exportGroup = async (groupName?: string): Promise<void> => {
+export const exportGroup = async (groupName?: string): Promise<string> => {
   const currentGroups = get(groups);
-  const groupsToSave = groupName ? { [groupName]: currentGroups[groupName] } : currentGroups;
+  let groupsToSave;
 
-  if (Object.keys(groupsToSave).length === 0) return;
+  if (groupName) {
+    if (currentGroups[groupName]?.objectList !== undefined) {
+      groupsToSave = { [groupName]: { ...currentGroups[groupName] } };
+      groupsToSave[groupName].objectList = [];
+    } else {
+      groupsToSave = { [groupName]: currentGroups[groupName] };
+    }
+  } else {
+    groupsToSave = Object.keys(currentGroups).reduce((acc: any, key: any) => {
+      acc[key] = { ...currentGroups[key] };
+      if (acc[key].objectList !== undefined) {
+        acc[key].objectList = [];
+      }
+      return acc;
+    }, {});
+  }
+
+  if (Object.keys(groupsToSave).length === 0) return Promise.resolve('');
 
   const serializedGroups = JSON.stringify(groupsToSave);
-  const lzWorker = new lzworker();
-  lzWorker.postMessage({
-    payload: serializedGroups,
-    method: "compressToEncodedURIComponent",
-  });
 
-  lzWorker.onmessage = (event: any) => {
-    const compressedData = event.data;
-    const storageKey = groupName ? `group_${groupName}` : 'all_groups';
-    localStorage.setItem(storageKey, compressedData);
-  };
+  return new Promise((resolve, reject) => {
+    const lzWorker = new lzworker();
+    lzWorker.postMessage({
+      payload: serializedGroups,
+      method: "compressToEncodedURIComponent",
+    });
+
+    lzWorker.onmessage = (event: any) => {
+      const compressedData = event.data;
+      resolve(compressedData);
+    };
+
+    lzWorker.onerror = (error: any) => {
+      reject(error);
+    };
+  });
 };
+/**
+ * Imports a group or all groups and creates their objectList using the current columnDefs and data.
+ * @param compressedData - The compressed data string for the groups.
+ * @param groupName - Optional name of the group to import.
+ * @returns The imported groups.
+ */
+export const importGroup = async (compressedData: string, groupName?: string): Promise<any> => {
+  if (!compressedData) return Promise.reject('No data provided');
 
-// Function to load a single group or all groups
-export const importGroup = async (groupName?: string): Promise<void> => {
-  const storageKey = groupName ? `group_${groupName}` : 'all_groups';
-  const compressedData = localStorage.getItem(storageKey);
-  if (!compressedData) return;
+  return new Promise((resolve, reject) => {
+    const lzWorker = new lzworker();
+    lzWorker.postMessage({
+      payload: compressedData,
+      method: "decompressFromEncodedURIComponent",
+    });
 
-  const lzWorker = new lzworker();
-  lzWorker.postMessage({
-    payload: compressedData,
-    method: "decompressFromEncodedURIComponent",
-  });
+    lzWorker.onmessage = (event) => {
+      const serializedGroups = event.data;
+      const loadedGroups = JSON.parse(serializedGroups);
 
-  lzWorker.onmessage = (event) => {
-    const serializedGroups = event.data;
-    const loadedGroups = JSON.parse(serializedGroups);
-
-    if (groupName) {
-      groups.update((currentGroups) => {
-        currentGroups[groupName] = loadedGroups[groupName];
-        return currentGroups;
+      // Populate objectList for each group
+      Object.keys(loadedGroups).forEach(key => {
+        if (key !== "defaultGroup") {
+          populateObjectList(loadedGroups[key]);
+        }
       });
-    } else {
-      groups.set(loadedGroups);
-    }
-  };
+
+      resolve(loadedGroups);
+    };
+
+    lzWorker.onerror = (error) => {
+      reject(error);
+    };
+  });
 };
 
-
+data.subscribe(newData => {
+  groups.update(allGroups => {
+    Object.keys(allGroups).forEach(groupKey => {
+      if (groupKey !== "defaultGroup") {
+        populateObjectList(allGroups[groupKey]);
+      }
+    });
+    return allGroups;
+  });
+});
 
 import { Grid, type GridOptions } from 'ag-grid-community';
 
@@ -119,6 +170,9 @@ type FilterModel = {
 };
 
 export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: FilterModel): any[] {
+  columnDefs = columnDefs || get(currentColumnDefs);
+  rowData = rowData || get(data);
+
   // Create a div element to host the grid (this won't be added to the document)
   const gridDiv = document.createElement('div');
 
@@ -144,3 +198,27 @@ export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: 
 
   return filteredData;
 }
+
+(async () => {
+  let gg = localStorage.getItem("all_groups");
+
+  if (gg) {
+    let deserializedGroups = await importGroup(gg);
+    groups.set(deserializedGroups);
+  }
+
+  //Order is important
+  let init: boolean = false;
+  let currentlyCompressing = false;
+  groups.subscribe(async (groups) => {
+    if (init && !currentlyCompressing && Object.keys(groups).length > 1) {
+      currentlyCompressing = true;
+      let compressedData = await exportGroup();
+      const storageKey = 'all_groups';
+      localStorage.setItem(storageKey, compressedData);
+      currentlyCompressing = false;
+    } else {
+      init = true;
+    }
+  });
+})()

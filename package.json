@@ -1,7 +1,7 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1701559222398",
+    "version": "0.0.0+1701774390539",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
@@ -46,6 +46,7 @@
         "d3": "^7.8.5",
         "downloadjs": "^1.4.7",
         "flatbuffers": "^23.3.3",
+        "flowbite-svelte": "^0.44.20",
         "jquery": "^3.7.1",
         "lz-string": "^1.5.0",
         "svelte-awesome": "^3.2.1"

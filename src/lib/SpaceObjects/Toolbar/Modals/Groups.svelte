@@ -11,7 +11,7 @@
   import getID from "../../lib/getID";
   import { get } from "svelte/store";
   import { Color } from "orbpro";
-  import RangeSlider from "@/lib/widgets/RangeSlider.svelte";
+  import { Range } from "flowbite-svelte";
 
   let searchTerm = "";
   // Local versions of properties
@@ -68,7 +68,6 @@
         localPathWidth = group.path.width;
         localPathColor = group.path.material.color;
       }
-      console.log(group.point, group.path);
     }
   }
   // Sets a group as the active group
@@ -208,21 +207,22 @@
       <div class="relative flex flex-col text-xs gap-3 pt-6">
         {#if $activeGroup !== "defaultGroup"}
           <div class="absolute text-[.4rem] right-0 -top-2">{$activeGroup}</div>
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Pixel Size:</label>
-            <RangeSlider
+            <Range
+              class="rounded max-w-[100px]"
               showToolTip={false}
               min={1}
               max={50}
               step={0.5}
               bind:value={localPixelSize}
               on:change={updateProperties} />
-            <span>{localPixelSize.toFixed(1)}</span>
+            <span class="ml-2">{localPixelSize?.toFixed(1)}</span>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label style="width: 30%;">Point Color:</label>
+            <label style="width: 30%;">Color:</label>
             <div class="w-2">
               <input
                 type="color"
@@ -231,21 +231,22 @@
             </div>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Outline Width:</label>
-            <RangeSlider
+            <Range
+              class="rounded max-w-[100px]"
               showToolTip={false}
               min={0}
               max={10}
               step={0.5}
               bind:value={localOutlineWidth}
               on:change={updateProperties} />
-            <span>{localOutlineWidth.toFixed(1)}</span>
+            <span class="ml-2">{localOutlineWidth?.toFixed(1)}</span>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label style="width: 30%;">Outline Color:</label>
+            <label style="width: 30%;">Color:</label>
             <div class="w-2">
               <input
                 type="color"
@@ -254,21 +255,22 @@
             </div>
           </div>
 
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label style="width: 30%;">Path Width:</label>
-            <RangeSlider
+            <Range
+              class="rounded max-w-[100px]"
               showToolTip={false}
               min={1}
               max={20}
               step={0.1}
               bind:value={localPathWidth}
               on:change={updateProperties} />
-            <span>{localPathWidth.toFixed(1)}</span>
+            <span class="ml-2">{localPathWidth?.toFixed(1)}</span>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label style="width: 30%;">Path Color:</label>
+            <label style="width: 30%;">Color:</label>
             <div class="w-2">
               <input
                 type="color"

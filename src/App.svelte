@@ -12,9 +12,8 @@
   import CloseButton from "@/lib/MasterCloseButton/MasterCloseButton.svelte";
   import SpaceObjectToolbar from "@/lib/SpaceObjects/Toolbar/Toolbar.svelte";
   import { mode } from "./stores/menu.store";
-  import { scenario } from "./stores/settings.store";
   import { title, content } from "@/stores/modal.store";
-
+  
   onMount(() => {
     COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
