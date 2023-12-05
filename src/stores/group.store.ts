@@ -152,16 +152,7 @@ export const importGroup = async (compressedData: string, groupName?: string): P
   });
 };
 
-data.subscribe(newData => {
-  groups.update(allGroups => {
-    Object.keys(allGroups).forEach(groupKey => {
-      if (groupKey !== "defaultGroup") {
-        populateObjectList(allGroups[groupKey]);
-      }
-    });
-    return allGroups;
-  });
-});
+
 
 import { Grid, type GridOptions } from 'ag-grid-community';
 
@@ -199,6 +190,20 @@ export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: 
   return filteredData;
 }
 
+
+// TODO fix this hack to be data source dependent, for now it means load columnDefs first
+
+data.subscribe(newData => {
+  groups.update(allGroups => {
+    Object.keys(allGroups).forEach(groupKey => {
+      if (groupKey !== "defaultGroup") {
+        populateObjectList(allGroups[groupKey]);
+      }
+    });
+    return allGroups;
+  });
+});
+
 (async () => {
   let gg = localStorage.getItem("all_groups");
 
@@ -211,6 +216,7 @@ export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: 
   let init: boolean = false;
   let currentlyCompressing = false;
   groups.subscribe(async (groups) => {
+    console.log(groups);
     if (init && !currentlyCompressing && Object.keys(groups).length > 1) {
       currentlyCompressing = true;
       let compressedData = await exportGroup();
