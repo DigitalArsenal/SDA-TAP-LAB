@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { groups } from "@/stores/group.store";
+  import { groups } from "@/stores/spacecatalog.group.store";
 
   let localGroups = {};
   $: {

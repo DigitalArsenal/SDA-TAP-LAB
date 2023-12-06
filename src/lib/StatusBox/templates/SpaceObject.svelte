@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { groups, activeGroup } from "@/stores/group.store";
+  import { groups, activeGroup } from "@/stores/spacecatalog.group.store";
   import { activeEntity } from "@/stores/entity.store";
   import { title } from "@/stores/modal.store";
   import { scenario } from "@/stores/settings.store";
@@ -184,9 +184,9 @@
   let activeObjectState: any = { ...defaultObjectValue };
   // Reactive statement to update activeObjectState whenever groups or activeGroup changes
   $: {
-    activeObjectState = $groups[$activeGroup]?.objects[$activeEntity?.id] || {
+    /*activeObjectState = $groups[$activeGroup]?.objects[$activeEntity?.id] || {
       ...defaultObjectValue,
-    };
+    };*/
   }
 
   // Function to handle the change of the dropdown

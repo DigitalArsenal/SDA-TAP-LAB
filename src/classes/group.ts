@@ -1,25 +1,19 @@
-import type { IFilterComp, IFilterDef } from "ag-grid-community";
+import type { IFilterDef } from "ag-grid-community";
+import Bitfield from "@/utilities/bitfield";
 
-// Define the structure of a space object
-interface GroupSpaceObject {
-  referenceFrameDebug: boolean;
-  orbit: boolean;
-  coverage: boolean;
-  label: boolean;
-  model: string | undefined;
-}
 
 // Define the structure of a group containing space objects
 interface Group {
-  objectList: any[];
+  objectsBitfield: Bitfield;
+  orbitBitfield: Bitfield;
+  coverageBitfield: Bitfield;
+  labelBitfield: Bitfield;
+  modelBitfield: Bitfield;
   name: string;
   description: string;
-  objects: {
-    [objectId: string]: GroupSpaceObject;
-  };
   filterObject: IFilterDef;
   show: Boolean;
-  // Include the new style properties here
+  // Style properties remain unchanged
   point?: {
     pixelSize: number,
     color: string,
@@ -39,4 +33,4 @@ interface Groups {
   [groupId: string]: Group;
 }
 
-export type { GroupSpaceObject, Group, Groups };
+export type { Group, Groups };

@@ -1,29 +1,11 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import {
-    groups,
-    activeGroup,
-    resetDefaultGroup,
-    saveGroup,
-  } from "@/stores/group.store"; // Update the path
+  import { groups, activeGroup, modifyGroup } from "@/stores/spacecatalog.group.store"; // Update the path
   import { content, lastcontent } from "@/stores/modal.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
-  import Groups from "./Groups.svelte";
-  import { createGuid } from "orbpro";
 
   let name = "";
   let description = "";
-  let defaultGroup = get(groups).defaultGroup;
-
-  const addGroup = () => {
-    if (name.trim()) {
-      const guid = `group:${createGuid()}`;
-      saveGroup(guid, { ...defaultGroup, name, description });
-      activeGroup.set(guid); // Set the new group as active
-      resetDefaultGroup();
-    }
-    closeModal(Groups);
-  };
 
   const closeModal = (component?: any) => {
     $content = $lastcontent || component || undefined;
@@ -49,23 +31,23 @@
     <!-- Modal body -->
     <form
       class="flex flex-col space-y-4 items-center justify-center p-4"
-      on:submit|preventDefault={addGroup}>
-      <div>
+      on:submit|preventDefault={() => modifyGroup(name, description)}>
+      <div class="w-full pl-3 pr-3 max-w-[256px]">
         <label for="name" class="block text-sm font-medium">Group Name</label>
         <input
           type="text"
           id="name"
-          class="bg-white text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          class="w-full bg-white text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           bind:value={name}
           required />
       </div>
-      <div>
+      <div class="w-full pl-3 pr-3 max-w-[256px]">
         <label for="description" class="block text-sm font-medium"
           >Description (Optional)</label>
         <textarea
           id="description"
           rows="3"
-          class="bg-white text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
+          class="w-full bg-white text-black mt-1 block border border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
           bind:value={description} />
       </div>
       <button

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { activeGroup, groups } from "@/stores/group.store";
+  import { activeGroup, groups } from "@/stores/spacecatalog.group.store";
   import { content, lastcontent } from "@/stores/modal.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
   import { Icon } from "svelte-awesome";
@@ -22,104 +22,10 @@
   let localPathWidth: any = 5;
   let localPathColor: any = "#ffffff";
 
-  onDestroy(() => {
-    searchTerm = ""; // Reset the search term when the component is destroyed
-  });
-
   const closeModal = () => {
     $content = $lastcontent !== $content ? $lastcontent : undefined;
     $lastcontent = undefined;
   };
-
-  // Toggles the visibility of a group
-  function toggleShow(groupName: string) {
-    groups.update((currentGroups) => {
-      if (currentGroups[groupName]) {
-        currentGroups[groupName].show = !currentGroups[groupName].show;
-      }
-      return currentGroups;
-    });
-  }
-
-  // Removes a group from the list
-  function removeGroup(groupName: string) {
-    if ($activeGroup === groupName) {
-      activeGroup.set("defaultGroup");
-    }
-    groups.update((currentGroups) => {
-      delete currentGroups[groupName];
-      return currentGroups;
-    });
-  }
-
-  let setLast: any;
-  $: {
-    // Update local versions with the active group's values
-    const group = $groups[$activeGroup];
-    if (group && $activeGroup !== setLast) {
-      setLast = $activeGroup;
-      if (group.point) {
-        localPixelSize = group.point.pixelSize;
-        localPointColor = group.point.color;
-        localOutlineWidth = group.point.outlineWidth;
-        localOutlineColor = group.point.outlineColor;
-      }
-      if (group.path) {
-        localPathWidth = group.path.width;
-        localPathColor = group.path.material.color;
-      }
-    }
-  }
-  // Sets a group as the active group
-  function setActiveGroup(groupName: string) {
-    $selectedEntity = null;
-    $trackedEntity = null;
-    $viewer?.camera.flyHome();
-    activeGroup.set(groupName);
-  }
-
-  // Function to update properties
-  function updateProperties() {
-    const _viewer = get(viewer);
-    if (!_viewer) {
-      return;
-    }
-
-    const filteredRows = $groups[$activeGroup]?.objectList ?? [];
-    const filteredIds = new Set(filteredRows.map((row) => getID(row)));
-
-    const dataSource = _viewer.dataSources.getByName("spaceaware")[0];
-    dataSource.entities.suspendEvents();
-
-    filteredIds.forEach((id) => {
-      const entity = dataSource.entities.getById(id);
-      if (entity) {
-        if (entity.point) {
-          entity.point.show = true as any;
-          entity.point.pixelSize = localPixelSize;
-          entity.point.color = Color.fromCssColorString(localPointColor) as any;
-          entity.point.outlineWidth = localOutlineWidth;
-          entity.point.outlineColor = Color.fromCssColorString(
-            localOutlineColor
-          ) as any;
-          if (!localOutlineWidth) {
-            entity.point.outlineColor = null as any;
-            entity.point.outlineWidth = null as any;
-          }
-        }
-        if (entity.path) {
-          entity.path.width = localPathWidth;
-          entity.path.material = Color.fromCssColorString(
-            localPathColor
-          ) as any;
-        }
-        entity.show = true;
-      }
-    });
-
-    dataSource.entities.resumeEvents();
-    _viewer.scene.render();
-  }
 </script>
 
 <!-- Fullscreen Modal backdrop with margin -->

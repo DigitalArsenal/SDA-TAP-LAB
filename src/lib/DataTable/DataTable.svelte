@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Grid } from "ag-grid-community";
-  import { groups, activeGroup } from "@/stores/group.store";
+  import { groups, activeGroup } from "@/stores/spacecatalog.group.store";
   import type { GridOptions, GridApi } from "ag-grid-community";
   import "@/../node_modules/ag-grid-community/styles/ag-grid.css";
   import "@/../node_modules/ag-grid-community/styles/ag-theme-balham.css";
@@ -10,6 +10,7 @@
     columnDefs,
     filterAction,
     rowID,
+    gridApi,
   } from "@/stores/datatable.store";
   import { get } from "svelte/store";
   import { activeEntity } from "@/stores/entity.store";
@@ -22,8 +23,8 @@
 
   let highlightedRowId: any = null;
   const processRow = () => {
-    if ($activeEntity && gridApi && gridOptions?.paginationPageSize) {
-      const rowNode = gridApi.getRowNode($activeEntity.id);
+    if ($activeEntity && $gridApi && gridOptions?.paginationPageSize) {
+      const rowNode = $gridApi.getRowNode($activeEntity.id);
       if (rowNode) {
         highlightedRowId = $activeEntity.id;
 
@@ -31,12 +32,12 @@
         const pageNumber = Math.floor(
           rowNode.rowIndex / gridOptions.paginationPageSize
         );
-        gridApi.refreshCells({ force: true });
-        gridApi.paginationGoToPage(pageNumber);
-        gridApi.refreshCells({ force: true });
+        $gridApi.refreshCells({ force: true });
+        $gridApi.paginationGoToPage(pageNumber);
+        $gridApi.refreshCells({ force: true });
 
-        gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
-        gridApi.refreshCells({ force: true });
+        $gridApi.ensureIndexVisible(rowNode.rowIndex, "middle");
+        $gridApi.refreshCells({ force: true });
       }
     } else if (!$activeEntity) {
       highlightedRowId = null;
@@ -46,12 +47,12 @@
   $: filterObject = $groups[$activeGroup]?.filterObject;
 
   // Reactive statements to update columnDefs and rowData
-  $: if (gridApi) {
-    gridApi.setColumnDefs($columnDefs);
-    gridApi.setRowData($data);
+  $: if ($gridApi) {
+    $gridApi.setColumnDefs($columnDefs);
+    $gridApi.setRowData($data);
     currentFilter = {};
     if (filterObject) {
-      gridApi.setFilterModel(filterObject);
+      $gridApi.setFilterModel(filterObject);
     }
   }
 
@@ -93,7 +94,6 @@
 
   let grid: Grid | undefined;
   let gridElement: HTMLElement;
-  let gridApi: any;
 
   $: {
     if ($activeEntity) {
@@ -104,15 +104,15 @@
   const gridCreate = () => {
     if (!grid) {
       grid = new Grid(gridElement, gridOptions);
-      gridApi = gridOptions.api;
+      $gridApi = gridOptions.api;
     }
   };
 
   const gridDestroy = () => {
-    if (gridApi) {
-      gridApi.destroy();
+    if ($gridApi) {
+      $gridApi.destroy();
       grid = undefined;
-      gridApi = null;
+      $gridApi = null;
     }
   };
 
@@ -137,7 +137,7 @@
 
   const clearFilter = () => {
     $activeGroup = "defaultGroup";
-    gridApi.setFilterModel({});
+    $gridApi.setFilterModel({});
   };
 
   const saveFilter = () => {
@@ -150,16 +150,10 @@
       }
     }
 
-    $groups[$activeGroup].filterObject = gridApi.getFilterModel();
+    $groups[$activeGroup].filterObject = $gridApi.getFilterModel();
     if ($activeGroup === "defaultGroup") {
       $content = AddGroup;
-    } else {
     }
-    const rowData: any[] = [];
-    gridApi.forEachNodeAfterFilter((node: any) => {
-      rowData.push(node.data);
-    });
-    $groups[$activeGroup].objectList = rowData;
   };
 
   onDestroy(gridDestroy);
@@ -182,7 +176,6 @@
       {/if}
       <button
         on:click={clearFilter}
- 
         class="rounded bg-gray-700 pl-3 pr-3 p-[2px] pb-[3px] border-gray-400 cursor-pointer text-xs flex items-center justify-center">
         Clear
       </button>

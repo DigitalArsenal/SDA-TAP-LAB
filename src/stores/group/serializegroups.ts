@@ -1,5 +1,5 @@
 import type { Group } from "@/classes/group";
-import { groups, activeGroup } from "@/stores/group.store";
+import { groups, activeGroup } from "@/stores/spacecatalog.group.store";
 import { activeEntity } from "@/stores/entity.store";
 import { scenario } from "@/stores/settings.store";
 import { viewer } from "@/stores/viewer.store";
@@ -24,17 +24,15 @@ export const deserializeGroups = (json: string, groups = []) => {
 function ensureObjectExists() {
     const $activeGroup = get(activeGroup);
     const $activeEntity = get(activeEntity);
-
+/*
     groups.update((g) => {
         // Check if the group and object exist, if not, initialize them
         if (!g[$activeGroup]) {
             g[$activeGroup] = {
-                objectList: [],
                 name: "",
                 show: true,
                 description: "",
                 filterObject: {},
-                objects: {},
             };
         }
         if (!g[$activeGroup].objects[$activeEntity.id]) {
@@ -47,7 +45,7 @@ function ensureObjectExists() {
             };
         }
         return g;
-    });
+    });*/
 }
 
 function toggleOrbit() {

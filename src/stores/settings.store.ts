@@ -3,7 +3,6 @@ import type { Writable } from "svelte/store";
 import Settings from "@/classes/settings";
 import { Scenario } from "@/classes/scenario";
 import type { Group } from "@/classes/group";
-import { serializeGroups, deserializeGroups } from "./group/serializegroups";
 import { serializeEntity, deserializeEntity } from "./entities/entities";
 
 import { viewer as storeViewer } from "@/stores/viewer.store";
@@ -18,8 +17,7 @@ scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { Color, LatLonGrid, NearFarScalar, SpaceCatalogDataSource } from "orbpro";
-import { importGroup, exportGroup } from "@/stores/group.store";
+import { Color, LatLonGrid, SpaceCatalogDataSource } from "orbpro";
 
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
@@ -37,12 +35,10 @@ interface serializeDataHandler {
   [key: string]: (input: any) => any;
 }
 let deserializeDataHandlers: DeserializeDataHandler = {
-  groups: deserializeGroups,
   trackedEntity: deserializeEntity,
   selectedEntity: deserializeEntity,
 };
 let serializeDataHandlers: serializeDataHandler = {
-  groups: serializeGroups,
   trackedEntity: serializeEntity,
   selectedEntity: serializeEntity,
 };
@@ -155,20 +151,6 @@ export const loadScenarioFromURL = async () => {
   let sc = params.get(scenarioKey);
   if (sc) {
     return loadState(sc).then((a) => { });
-  }
-};
-
-const activeComponents = writable([]);
-
-const activeComponentProps = writable({});
-
-const goBack = () => {
-  let aC = get(activeComponents);
-  if (aC.length) {
-    activeComponents.update((aCArray) => {
-      aCArray.pop();
-      return aCArray;
-    });
   }
 };
 
@@ -387,9 +369,6 @@ loadScenarioFromURL();
 export {
   appVersion,
   scenario,
-  activeComponents,
-  activeComponentProps,
-  goBack,
   groups,
   saveState,
   loadState,
