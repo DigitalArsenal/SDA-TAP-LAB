@@ -5,6 +5,7 @@ import { columnDefs as currentColumnDefs, data, gridApi, rowID } from "./datatab
 import Bitfield from "@/utilities/bitfield";
 import { Grid, type GridOptions, type IFilterDef } from "ag-grid-community";
 import xxhash from "xxhashjs";
+import { Buffer } from "buffer";
 
 const maxCatalogSize = 2e5;
 
@@ -141,6 +142,9 @@ export const modifyGroup = async (name: string, description: string) => {
   groups.update(currentGroups => {
     currentGroups[gID] = updatedGroup;
     console.log(currentGroups);
+    exportGroup(currentGroups).then((lzG) => {
+      console.log(lzG);
+    });
     return currentGroups;
   });
 };
@@ -171,7 +175,7 @@ export const exportGroup = async (groupsObject: Record<string, any>): Promise<st
   }
 
   const exportScenario = JSON.stringify(serializedGroups);
-
+  console.log(exportScenario);
   const lzWorker = new lzworker();
   lzWorker.postMessage({
     payload: exportScenario,
