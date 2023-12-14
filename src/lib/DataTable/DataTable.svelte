@@ -46,14 +46,17 @@
 
   $: filterObject = $groups[$activeGroup]?.filterObject;
 
+  $: {
+    if ($gridApi && filterObject) {
+      console.log(filterObject, $activeGroup, $groups[$activeGroup]);
+      $gridApi.setFilterModel(filterObject);
+    }
+  }
   // Reactive statements to update columnDefs and rowData
   $: if ($gridApi) {
     $gridApi.setColumnDefs($columnDefs);
     $gridApi.setRowData($data);
     currentFilter = {};
-    if (filterObject) {
-      $gridApi.setFilterModel(filterObject);
-    }
   }
 
   let currentFilter: any;

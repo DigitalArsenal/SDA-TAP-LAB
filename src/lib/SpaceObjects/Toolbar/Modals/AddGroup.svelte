@@ -1,15 +1,25 @@
 <script lang="ts">
-  import { get } from "svelte/store";
-  import { groups, activeGroup, modifyGroup } from "@/stores/spacecatalog.group.store"; // Update the path
+  import {
+    groups,
+    modifyGroup,
+    activeGroup,
+  } from "@/stores/spacecatalog.group.store"; // Update the path
   import { content, lastcontent } from "@/stores/modal.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
-
+  import Groups from "./Groups.svelte";
   let name = "";
   let description = "";
 
-  const closeModal = (component?: any) => {
+  const closeModal: any = (event: any, component?: any) => {
     $content = $lastcontent || component || undefined;
     $lastcontent = undefined;
+  };
+
+  const addNewGroup = async () => {
+    const gID = await modifyGroup(name, description);
+    $activeGroup = gID;
+    $groups["defaultGroup"].filterObject = {};
+    $content = Groups;
   };
 </script>
 
@@ -31,7 +41,7 @@
     <!-- Modal body -->
     <form
       class="flex flex-col space-y-4 items-center justify-center p-4"
-      on:submit|preventDefault={() => modifyGroup(name, description)}>
+      on:submit|preventDefault={addNewGroup}>
       <div class="w-full pl-3 pr-3 max-w-[256px]">
         <label for="name" class="block text-sm font-medium">Group Name</label>
         <input

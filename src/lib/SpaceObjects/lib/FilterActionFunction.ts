@@ -12,7 +12,8 @@ const filterActionFunction = (filteredRows: any[]) => {
     filteredRows.map((row) => {
       return getID(row);
     })
-  ); // Assuming each row has an 'id' property
+  );
+
   const entities = dataSource.entities.values;
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i];

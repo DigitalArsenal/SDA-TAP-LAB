@@ -57,8 +57,6 @@ export const groups: Writable<Groups> = writable(initialState);
 
 export const activeGroup: Writable<string> = writable("defaultGroup");
 
-export const saveGroup = () => { }
-
 export const modifyGroup = async (name: string, description: string) => {
   const currentGroups = get(groups);
   const activeGroupId = get(activeGroup);
@@ -80,7 +78,7 @@ export const modifyGroup = async (name: string, description: string) => {
       coverageBitfield: new Bitfield(maxCatalogSize),
       labelBitfield: new Bitfield(maxCatalogSize),
       modelBitfield: new Bitfield(maxCatalogSize),
-      filterObject: {},
+      filterObject,
       show: true,
       point: {
         pixelSize: 1,
@@ -106,6 +104,7 @@ export const modifyGroup = async (name: string, description: string) => {
       coverageBitfield: new Bitfield(maxCatalogSize),
       labelBitfield: new Bitfield(maxCatalogSize),
       modelBitfield: new Bitfield(maxCatalogSize),
+      filterObject
     }
   }
 
@@ -139,14 +138,10 @@ export const modifyGroup = async (name: string, description: string) => {
   updatedGroup.modelBitfield = newModelBitfield;
 
   // Update the groups store
-  groups.update(currentGroups => {
-    currentGroups[gID] = updatedGroup;
-    console.log(currentGroups);
-    exportGroup(currentGroups).then((lzG) => {
-      console.log(lzG);
-    });
-    return currentGroups;
-  });
+  currentGroups[gID] = updatedGroup;
+  groups.set(currentGroups);
+
+  return gID;
 };
 
 // Helper function to convert a buffer to a base64 string
@@ -166,19 +161,19 @@ export const exportGroup = async (groupsObject: Record<string, any>): Promise<st
   for (const [groupId, group] of Object.entries(groupsObject)) {
     serializedGroups[groupId] = {
       ...group,
-      objectsBitfield: bufferToBase64(group.objectsBitfield.buffer),
-      orbitBitfield: bufferToBase64(group.orbitBitfield.buffer),
-      coverageBitfield: bufferToBase64(group.coverageBitfield.buffer),
-      labelBitfield: bufferToBase64(group.labelBitfield.buffer),
-      modelBitfield: bufferToBase64(group.modelBitfield.buffer)
+      objectsBitfield: group.objectsBitfield.isEmpty() ? '' : bufferToBase64(group.objectsBitfield.buffer),
+      orbitBitfield: group.orbitBitfield.isEmpty() ? '' : bufferToBase64(group.orbitBitfield.buffer),
+      coverageBitfield: group.coverageBitfield.isEmpty() ? '' : bufferToBase64(group.coverageBitfield.buffer),
+      labelBitfield: group.labelBitfield.isEmpty() ? '' : bufferToBase64(group.labelBitfield.buffer),
+      modelBitfield: group.modelBitfield.isEmpty() ? '' : bufferToBase64(group.modelBitfield.buffer)
     };
   }
 
-  const exportScenario = JSON.stringify(serializedGroups);
-  console.log(exportScenario);
+  const exportGroup = JSON.stringify(serializedGroups);
+
   const lzWorker = new lzworker();
   lzWorker.postMessage({
-    payload: exportScenario,
+    payload: exportGroup,
     method: "compressToEncodedURIComponent",
   });
 

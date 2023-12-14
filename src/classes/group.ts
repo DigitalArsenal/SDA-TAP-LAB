@@ -14,13 +14,13 @@ interface Group {
   filterObject: IFilterDef;
   show: Boolean;
   // Style properties remain unchanged
-  point?: {
+  point: {
     pixelSize: number,
     color: string,
     outlineWidth: number,
     outlineColor: string
   };
-  path?: {
+  path: {
     width: number,
     material: {
       color: string
