@@ -8,7 +8,7 @@ let rfSwap: any;
 let swapAlt: number;
 let reF: number;
 let _old: any = null;
-let clearAlt = 20000;
+let clearAlt = 50000;
 
 export const addRFSwap = (viewer: Viewer) => {
     let { settings } = scenario;

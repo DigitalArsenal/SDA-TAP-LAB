@@ -15,7 +15,7 @@
   import { title, content } from "@/stores/modal.store";
   
   onMount(() => {
-    COIServiceWorker();
+    //COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
       .then((response) => response.json())
       .then((data) => {

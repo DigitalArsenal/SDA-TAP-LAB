@@ -46,23 +46,38 @@
 
   $: filterObject = $groups[$activeGroup]?.filterObject;
 
+  let currentFilter: any;
+  let filterIsCurrent: boolean;
+
+  $: {
+    if (Object.keys(filterObject)?.length) {
+      getCurrentFilter();
+    }
+  }
   $: {
     if ($gridApi && filterObject) {
-      console.log(filterObject, $activeGroup, $groups[$activeGroup]);
-      $gridApi.setFilterModel(filterObject);
+      const currentFilterModel = $gridApi.getFilterModel();
+      // Check if the new filter model is different from the current one
+      if (JSON.stringify(filterObject) !== JSON.stringify(currentFilterModel)) {
+        filterIsCurrent = false;
+        $gridApi.setFilterModel(filterObject);
+        filterIsCurrent = true;
+      }
     }
   }
   // Reactive statements to update columnDefs and rowData
   $: if ($gridApi) {
     $gridApi.setColumnDefs($columnDefs);
     $gridApi.setRowData($data);
-    currentFilter = {};
+    currentFilter = $groups["defaultGroup"].filterObject;
   }
 
-  let currentFilter: any;
-  $: filterIsCurrent =
-    JSON.stringify($groups[$activeGroup].filterObject) ===
-    JSON.stringify(currentFilter);
+  $: console.log($groups["defaultGroup"], currentFilter);
+
+  const getCurrentFilter = () => {
+    filterIsCurrent =
+      JSON.stringify(currentFilter) === JSON.stringify(filterObject);
+  };
 
   let gridOptions: GridOptions = {
     suppressMenuHide: true,
@@ -72,23 +87,17 @@
     paginationPageSize: 25,
     suppressMovableColumns: true,
     getRowId: function ({ data }) {
-      let id = $rowID(data);
-      if (!id || id === "undefined") {
-        console.log(id, data, $rowID);
-      }
-      return id;
+      return $rowID(data);
     },
     getRowClass: function (params) {
       return $rowID(params.data) === highlightedRowId ? "highlighted-row" : "";
     },
-    onGridReady: (event) => {
-      // event.api.sizeColumnsToFit();
-    },
     onFilterChanged: (event) => {
       $selectedEntity = null;
       $trackedEntity = null;
-      $viewer?.camera.flyHome(0);
-      currentFilter = event.api.getFilterModel();
+      //$viewer?.camera.flyHome(0);
+      $groups["defaultGroup"].filterObject = event.api.getFilterModel();
+      getCurrentFilter();
       processRow();
       executeFilterAction(event.api);
     },
@@ -169,7 +178,7 @@
     class="ag-theme-balham-dark h-full w-full" />
   <div
     class="text-white gap-1 absolute bottom-0 l-0 h-6 flex p-[.5px] ml-3 mb-[5px] items-center justify-center">
-    {#if currentFilter && Object.keys(currentFilter).length}
+    {#if currentFilter && Object.keys(currentFilter).length > 0}
       {#if !filterIsCurrent}
         <button
           on:click={saveFilter}

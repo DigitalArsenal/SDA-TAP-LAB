@@ -29,7 +29,6 @@
   const { selectedEntity, trackedEntity } = scenario;
 
   let viewer: Viewer;
-  GoogleMaps.defaultApiKey = "AIzaSyDisL7N830iKKMfzFYPOQByT-yxySas-24";
 
   onMount(() => {
     viewer = new Viewer("cesiumContainer", {

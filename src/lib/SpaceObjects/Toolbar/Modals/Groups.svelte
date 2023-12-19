@@ -1,24 +1,19 @@
 <script lang="ts">
-  import { activeGroup, groups } from "@/stores/spacecatalog.group.store";
-  import { get } from "svelte/store";
+  import {
+    activeGroup,
+    groups,
+    removeGroup,
+    updateProperties,
+  } from "@/stores/spacecatalog.group.store";
   import { content, lastcontent } from "@/stores/modal.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
   import { Icon } from "svelte-awesome";
   import { folder, trash, eye, eyeSlash, table } from "svelte-awesome/icons";
   import { Range } from "flowbite-svelte";
-  import { viewer } from "@/stores/viewer.store";
-  import { Color } from "orbpro";
   import { scenario } from "@/stores/settings.store";
   const { selectedEntity, trackedEntity } = scenario;
 
   let searchTerm = "";
-  // Local versions of properties
-  let localPixelSize: any = 10;
-  let localPointColor: any = "#ffffff";
-  let localOutlineWidth: any = 0;
-  let localOutlineColor: any = "#ffffff";
-  let localPathWidth: any = 5;
-  let localPathColor: any = "#ffffff";
 
   const closeModal = () => {
     $content = $lastcontent !== $content ? $lastcontent : undefined;
@@ -33,46 +28,10 @@
     $activeGroup = gID;
   };
 
-  const updateProperties = () => {
-    const _viewer = get(viewer);
-    if (!_viewer) {
-      return;
-    }
-
-    const groupObjects =
-      $groups[$activeGroup].objectsBitfield.getAllSetIndices();
-
-    const dataSource = _viewer.dataSources.getByName("spaceaware")[0];
-    dataSource.entities.suspendEvents();
-
-    groupObjects.forEach((id) => {
-      const entity = dataSource.entities.getById(id.toString());
-      if (entity) {
-        if (entity.point) {
-          entity.point.show = true as any;
-          entity.point.pixelSize = localPixelSize;
-          entity.point.color = Color.fromCssColorString(localPointColor) as any;
-          entity.point.outlineWidth = localOutlineWidth;
-          entity.point.outlineColor = Color.fromCssColorString(
-            localOutlineColor
-          ) as any;
-          if (!localOutlineWidth) {
-            entity.point.outlineColor = null as any;
-            entity.point.outlineWidth = null as any;
-          }
-        }
-        if (entity.path) {
-          entity.path.width = localPathWidth;
-          entity.path.material = Color.fromCssColorString(
-            localPathColor
-          ) as any;
-        }
-        entity.show = true;
-      }
-    });
-
-    dataSource.entities.resumeEvents();
-    _viewer.scene.render();
+  const deleteGroup = (gID: string) => {
+    removeGroup(gID);
+    $activeGroup = "defaultGroup";
+    $groups[$activeGroup].filterObject = {};
   };
 </script>
 
@@ -154,7 +113,7 @@
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
                   on:click={() => {
-                    /*removeGroup(id)*/
+                    deleteGroup(id);
                   }}
                   class="p-1 rounded hover:bg-gray-600">
                   <Icon data={trash} class="text-white mx-2" />
@@ -177,7 +136,7 @@
               max={50}
               step={0.5}
               bind:value={$groups[$activeGroup].point.pixelSize}
-              on:change={updateProperties} />
+              on:change={() => updateProperties($activeGroup)} />
             <span class="ml-2"
               >{$groups[$activeGroup].point.pixelSize?.toFixed(1)}</span>
           </div>
@@ -188,7 +147,7 @@
               <input
                 type="color"
                 bind:value={$groups[$activeGroup].point.color}
-                on:change={updateProperties} />
+                on:change={() => updateProperties($activeGroup)} />
             </div>
           </div>
 
@@ -202,7 +161,7 @@
               max={10}
               step={0.5}
               bind:value={$groups[$activeGroup].point.outlineWidth}
-              on:change={updateProperties} />
+              on:change={() => updateProperties($activeGroup)} />
             <span class="ml-2"
               >{$groups[$activeGroup].point.outlineWidth?.toFixed(1)}</span>
           </div>
@@ -213,7 +172,7 @@
               <input
                 type="color"
                 bind:value={$groups[$activeGroup].point.outlineColor}
-                on:change={updateProperties} />
+                on:change={() => updateProperties($activeGroup)} />
             </div>
           </div>
 
@@ -227,7 +186,7 @@
               max={20}
               step={0.1}
               bind:value={$groups[$activeGroup].path.width}
-              on:change={updateProperties} />
+              on:change={() => updateProperties($activeGroup)} />
             <span class="ml-2"
               >{$groups[$activeGroup].path.width?.toFixed(1)}</span>
           </div>
@@ -238,7 +197,7 @@
               <input
                 type="color"
                 bind:value={$groups[$activeGroup].path.material.color}
-                on:change={updateProperties} />
+                on:change={() => updateProperties($activeGroup)} />
             </div>
           </div>
         {/if}

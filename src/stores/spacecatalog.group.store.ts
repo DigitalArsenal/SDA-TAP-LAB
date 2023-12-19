@@ -6,6 +6,8 @@ import Bitfield from "@/utilities/bitfield";
 import { Grid, type GridOptions, type IFilterDef } from "ag-grid-community";
 import xxhash from "xxhashjs";
 import { Buffer } from "buffer";
+import { viewer } from "@/stores/viewer.store";
+import { Color } from "orbpro";
 
 const maxCatalogSize = 2e5;
 
@@ -144,6 +146,18 @@ export const modifyGroup = async (name: string, description: string) => {
   return gID;
 };
 
+export const removeGroup = (groupID: string) => {
+  const currentGroups = get(groups); // Grabbing the snapshot of current groups, like a photo from a moving train.
+
+  if (currentGroups[groupID]) {
+    delete currentGroups[groupID]; // If the groupID exists, it's like finding a leaf on the road and letting it fly with the wind.
+    groups.set(currentGroups); // Setting the new state of groups, like painting a new picture without that one leaf.
+  } else {
+    console.warn(`Group with ID ${groupID} not found`); // If there's no such group, it's like a whisper in the forest with no one around to hear.
+  }
+};
+
+
 // Helper function to convert a buffer to a base64 string
 function bufferToBase64(buffer: Buffer): string {
   return Buffer.from(buffer).toString('base64');
@@ -248,3 +262,57 @@ export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: 
 
   return filteredData;
 }
+
+
+export const updateProperties = (gID: string) => {
+  // Get the viewer from the store
+  const _viewer = get(viewer);
+  if (!_viewer) {
+    return;
+  }
+
+  // Retrieve the groups from the store
+  const currentGroups = get(groups);
+
+  // Find the active group's properties
+  const activeGroupProps = currentGroups[gID];
+  if (!activeGroupProps) {
+    console.warn(`Active group with ID ${gID} not found`);
+    return;
+  }
+
+  // Get all the indices of set bits in the objectsBitfield of the active group
+  const groupObjects = activeGroupProps.objectsBitfield.getAllSetIndices();
+
+  // Access the dataSource from the viewer
+  const dataSource = _viewer.dataSources.getByName("spaceaware")[0];
+  dataSource.entities.suspendEvents();
+
+  // Update properties for each entity in the active group
+  groupObjects.forEach((id) => {
+    const entity = dataSource.entities.getById(id.toString());
+    if (entity) {
+      // Update point properties if they exist
+      if (entity.point) {
+        entity.point.show = true as any;
+        entity.point.pixelSize = activeGroupProps.point.pixelSize as any;
+        entity.point.color = Color.fromCssColorString(activeGroupProps.point.color) as any;
+        entity.point.outlineWidth = activeGroupProps.point.outlineWidth as any;
+        entity.point.outlineColor = Color.fromCssColorString(activeGroupProps.point.outlineColor) as any;
+        if (!activeGroupProps.point.outlineWidth) {
+          entity.point.outlineColor = null as any;
+          entity.point.outlineWidth = null as any;
+        }
+      }
+      // Update path properties if they exist
+      if (entity.path) {
+        entity.path.width = activeGroupProps.path.width as any;
+        entity.path.material = Color.fromCssColorString(activeGroupProps.path.material.color) as any;
+      }
+      entity.show = true;
+    }
+  });
+
+  dataSource.entities.resumeEvents();
+  _viewer.scene.render();
+};
