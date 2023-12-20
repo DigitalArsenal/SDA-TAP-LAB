@@ -4,7 +4,9 @@ import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import { columnDefs as currentColumnDefs, data, gridApi, rowID } from "./datatable.store";
 import Bitfield from "@/utilities/bitfield";
 import { Grid, type GridOptions, type IFilterDef } from "ag-grid-community";
-import xxhash from "xxhashjs";
+//@ts-ignore
+import ipfsHash from "pure-ipfs-only-hash";
+
 import { Buffer } from "buffer";
 import { viewer } from "@/stores/viewer.store";
 import { Color } from "orbpro";
@@ -16,28 +18,22 @@ const maxCatalogSize = 2e5;
  * @param filterObject - The filter object of the group.
  * @returns A string representing the group ID.
  */
-function createGroupID(filterObject: IFilterDef): string {
+async function createGroupID(filterObject: IFilterDef): Promise<string> {
   // Convert the filter object to a string
   const filterString = JSON.stringify(filterObject);
 
-  // Use a fixed seed for xxHash; you can choose any number
-  const SEED = 0x0000;
-
   // Generate the hash
-  const hash = xxhash.h32(filterString, SEED).toString(16);
+  const hash = await ipfsHash.of(filterString);
 
   return hash;
 }
 
-const initialState: Groups = {
+export const initialState: Groups = {
   defaultGroup: {
+    objects: {},
     name: "defaultGroup",
     description: "",
     objectsBitfield: new Bitfield(maxCatalogSize),
-    orbitBitfield: new Bitfield(maxCatalogSize),
-    coverageBitfield: new Bitfield(maxCatalogSize),
-    labelBitfield: new Bitfield(maxCatalogSize),
-    modelBitfield: new Bitfield(maxCatalogSize),
     filterObject: {},
     show: true,
     point: {
@@ -75,11 +71,8 @@ export const modifyGroup = async (name: string, description: string) => {
     updatedGroup = {
       name,
       description,
+      objects: {},
       objectsBitfield: new Bitfield(maxCatalogSize),
-      orbitBitfield: new Bitfield(maxCatalogSize),
-      coverageBitfield: new Bitfield(maxCatalogSize),
-      labelBitfield: new Bitfield(maxCatalogSize),
-      modelBitfield: new Bitfield(maxCatalogSize),
       filterObject,
       show: true,
       point: {

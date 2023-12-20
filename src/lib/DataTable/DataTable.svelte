@@ -18,7 +18,6 @@
   import AddGroup from "../SpaceObjects/Toolbar/Modals/AddGroup.svelte";
   import { onDestroy } from "svelte";
   import { scenario } from "@/stores/settings.store";
-  import { viewer } from "@/stores/viewer.store";
   const { selectedEntity, trackedEntity } = scenario;
 
   let highlightedRowId: any = null;
@@ -71,8 +70,6 @@
     $gridApi.setRowData($data);
     currentFilter = $groups["defaultGroup"].filterObject;
   }
-
-  $: console.log($groups["defaultGroup"], currentFilter);
 
   const getCurrentFilter = () => {
     filterIsCurrent =

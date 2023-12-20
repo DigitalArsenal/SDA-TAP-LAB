@@ -11,6 +11,7 @@
   import { folder, trash, eye, eyeSlash, table } from "svelte-awesome/icons";
   import { Range } from "flowbite-svelte";
   import { scenario } from "@/stores/settings.store";
+  import { viewer } from "@/stores/viewer.store";
   const { selectedEntity, trackedEntity } = scenario;
 
   let searchTerm = "";
@@ -20,7 +21,19 @@
     $lastcontent = undefined;
   };
 
-  $: activeGroupProps = $groups[$activeGroup];
+  const toggleShow = (id: string) => {
+    let { show } = $groups[id];
+    show = !show;
+    $groups[id].objectsBitfield.getAllSetIndices().forEach((e: any) => {
+      const _e = $viewer?.dataSources
+        .getByName("spaceaware")[0]
+        .entities.getById(e);
+      if (_e) {
+        _e.show = show as boolean;
+      }
+      $groups[id].show = show;
+    });
+  };
 
   const setActiveGroup = (gID: string) => {
     $selectedEntity = null;
@@ -103,7 +116,7 @@
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
                   on:click={() => {
-                    /*toggleShow(id)*/
+                    toggleShow(id);
                   }}
                   class="p-1 rounded hover:bg-gray-600">
                   <Icon

@@ -12,6 +12,7 @@ import {
 } from "orbpro";
 import getModel from "@/lib/SpaceObjects/lib/models";
 import { forceHideWidget } from "@/stores/selectionwidget.store";
+import { initialState } from "@/stores/spacecatalog.group.store";
 
 export const serializeGroups = (groups: Array<Group>) => {
 
@@ -24,17 +25,13 @@ export const deserializeGroups = (json: string, groups = []) => {
 function ensureObjectExists() {
     const $activeGroup = get(activeGroup);
     const $activeEntity = get(activeEntity);
-/*
+
     groups.update((g) => {
         // Check if the group and object exist, if not, initialize them
         if (!g[$activeGroup]) {
-            g[$activeGroup] = {
-                name: "",
-                show: true,
-                description: "",
-                filterObject: {},
-            };
+            g[$activeGroup] = { ...initialState.defaultGroup };
         }
+
         if (!g[$activeGroup].objects[$activeEntity.id]) {
             g[$activeGroup].objects[$activeEntity.id] = {
                 orbit: false,
@@ -45,7 +42,7 @@ function ensureObjectExists() {
             };
         }
         return g;
-    });*/
+    });
 }
 
 function toggleOrbit() {
