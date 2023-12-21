@@ -1,0 +1,81 @@
+import { writable } from 'svelte/store';
+export const nodeREDURL = "apollo.sdataplab.com/node-red";
+export const messages = createWebSocketStore(nodeREDURL);
+
+const lastQueryTime = localStorage.getItem("lastQueryTime");
+const startTime = lastQueryTime
+    ? new Date(lastQueryTime).toISOString()
+    : new Date(0).toISOString();
+
+fetch(`https://${nodeREDURL}/messagearchive?start=${startTime}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+})
+    .then((response) => response.json())
+    .then((result) => {
+        const storedMessages = JSON.parse(
+            localStorage.getItem("messages") || "[]"
+        );
+        const combinedMessages = [...storedMessages, ...result].slice(-10000);
+        localStorage.setItem("messages", JSON.stringify(combinedMessages));
+        messages.set(combinedMessages);
+        localStorage.setItem("lastQueryTime", new Date().toISOString());
+    })
+    .catch((error) => console.error("Error:", error));
+
+export function createWebSocketStore(url: string) {
+    const { subscribe, set, update } = writable<any[]>([]);
+    let ws: WebSocket;
+    let attempt = 0;
+
+    const connect = () => {
+        ws = new WebSocket(`wss://${url}/ws`);
+
+        ws.onopen = () => {
+            console.log("WebSocket connected");
+            attempt = 0;
+        };
+
+        ws.onmessage = (event) => {
+            const newMessage = JSON.parse(event.data);
+            console.log(newMessage)
+            update(messages => {
+                const updatedMessages = [...messages, newMessage].slice(-10000);
+                localStorage.setItem('messages', JSON.stringify(updatedMessages));
+                return updatedMessages;
+            });
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket disconnected");
+            attempt++;
+            const delay = Math.min(1000 * (2 ** attempt), 30000);
+            setTimeout(connect, delay);
+        };
+    };
+
+    connect();
+
+    return {
+        set,
+        subscribe,
+        sendMessage: (message: any) => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(message);
+            }
+        },
+        reconnect: () => {
+            if (ws) {
+                ws.close();
+            } else {
+                connect();
+            }
+        }
+    };
+}
+
+
