@@ -28,8 +28,8 @@
   }}
   class="text-white flex items-center text-md justify-center cursor-pointer"
   on:click={toggleModal}>
-  <Icon scale={1.5} data={warning} />
-  <div class="absolute top-[1px] right-[1px] text-[.5em]">
+  <Icon scale={1.1} data={warning} />
+  <div class="absolute bottom-[-3px] right-[1px] text-[.5em]">
     {$messages.length}
   </div>
 </div>
