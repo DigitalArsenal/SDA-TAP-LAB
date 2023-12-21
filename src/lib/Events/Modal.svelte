@@ -29,8 +29,10 @@
   }
 
   const loadTable = (message: any) => {
-    $content = HYPTable;
-    $activeHYP = message.HYPCOLLECTION.RECORDS[0];
+    if (message.HYPCOLLECTION) {
+      $content = HYPTable;
+      $activeHYP = message.HYPCOLLECTION.RECORDS[0];
+    }
   };
 
   const closeModal = () => {
