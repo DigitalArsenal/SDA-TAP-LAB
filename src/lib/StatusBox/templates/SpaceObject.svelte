@@ -28,7 +28,7 @@
     toggleReferenceFrameDebug,
     toggleModel,
   } from "@/stores/group/serializegroups";
-  
+
   let statusColors = Object.entries(opsStatusCode);
 
   $: statusColor = (statusColors[
@@ -184,9 +184,9 @@
   let activeObjectState: any = { ...defaultObjectValue };
   // Reactive statement to update activeObjectState whenever groups or activeGroup changes
   $: {
-    /*activeObjectState = $groups[$activeGroup]?.objects[$activeEntity?.id] || {
+    activeObjectState = $groups[$activeGroup]?.objects[$activeEntity?.id] || {
       ...defaultObjectValue,
-    };*/
+    };
   }
 
   // Function to handle the change of the dropdown
