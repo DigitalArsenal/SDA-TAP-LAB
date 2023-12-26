@@ -31,7 +31,7 @@
   </button>
 {:else}
   <div
-    class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[38%] h-[35%] md:h-[34%] max-h-[350px] right-0">
+    class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[38%] h-[35%] md:h-[34%] max-h-[350px] min-h-[250px] right-0">
     <div class="flex justify-center items-center z-50 w-full h-full">
       <!-- Modal content -->
       <div

@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { activeHYP } from "@/stores/hypothesis.store";
-  import CloseButton from "@/lib/elements/CloseButton.svelte";
+  import { activeEvent } from "@/stores/events.store";
   import { content, lastcontent } from "@/stores/modal.store";
 
   const closeModal = () => {
@@ -10,67 +9,57 @@
 
   $: extraRows =
     Math.ceil(
-      ($activeHYP?.MATRIX.length || 0) /
-        ($activeHYP?.COL_INDICATORS.length || 1)
-    ) - ($activeHYP?.ROW_INDICATORS.length || 0);
+      ($activeEvent?.MATRIX.length || 0) /
+        ($activeEvent?.COL_INDICATORS.length || 1)
+    ) - ($activeEvent?.ROW_INDICATORS.length || 0);
 
   function getCellClass(rowIndex: any, colIndex: any) {
     const matrixIndex =
-      rowIndex * ($activeHYP?.COL_INDICATORS.length || 0) + colIndex;
-    if (matrixIndex < ($activeHYP?.MATRIX.length || 0)) {
-      return $activeHYP?.MATRIX[matrixIndex] ? "bg-orange-600" : "";
+      rowIndex * ($activeEvent?.COL_INDICATORS.length || 0) + colIndex;
+    if (matrixIndex < ($activeEvent?.MATRIX.length || 0)) {
+      return $activeEvent?.MATRIX[matrixIndex] ? "bg-orange-600" : "";
     }
     return "";
   }
 </script>
 
-<div
-  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[38%] h-[35%] md:h-[34%] max-h-[350px] right-0 rounded">
-  <div class="flex flex-col bg-gray-800">
-    <div
-      class="select-none flex justify-between items-center pl-2 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600 text-white">
-      <p class="font-[300]">HYPOTHESIS: {$activeHYP?.CATEGORY}</p>
-      <CloseButton onclick={closeModal} />
-    </div>
-    <div class="p-2">
-      <div class="text-left flex items-start justify-start mb-4">
-        {$activeHYP?.NAME}
-      </div>
-      <div class="overflow-y-scroll p-2">
-        <table class="border-collapse text-xs">
+<div class="p-1 flex flex-col items-start justify-center">
+  <div class="text-left flex flex-col items-start justify-start mb-4">
+    <div class="text-xs">NAME: {$activeEvent?.NAME}</div>
+  </div>
+  <div class="overflow-y-scroll p-2 w-full">
+    <table class="w-full border-collapse text-xs">
+      <tr>
+        <th></th>
+        {#if $activeEvent?.COL_INDICATORS}
+          {#each $activeEvent?.COL_INDICATORS as colIndicator}
+            <th class="border px-2 whitespace-nowrap">{colIndicator}</th>
+          {/each}
+        {/if}
+      </tr>
+      {#if $activeEvent?.ROW_INDICATORS}
+        {#each $activeEvent?.ROW_INDICATORS as rowIndicator, rowIndex}
           <tr>
-            <th></th>
-            {#if $activeHYP?.COL_INDICATORS}
-              {#each $activeHYP?.COL_INDICATORS as colIndicator}
-                <th class="border px-2 whitespace-nowrap">{colIndicator}</th>
-              {/each}
-            {/if}
-          </tr>
-          {#if $activeHYP?.ROW_INDICATORS}
-            {#each $activeHYP?.ROW_INDICATORS as rowIndicator, rowIndex}
-              <tr>
-                <th class="border px-2">{rowIndicator}</th>
-                {#each $activeHYP?.COL_INDICATORS as _, colIndex}
-                  <td class="border w-6 h-6 {getCellClass(rowIndex, colIndex)}"
-                  ></td>
-                {/each}
-              </tr>
+            <th class="border px-2">{rowIndicator}</th>
+            {#each $activeEvent?.COL_INDICATORS as _, colIndex}
+              <td class="border w-6 h-6 {getCellClass(rowIndex, colIndex)}"
+              ></td>
             {/each}
-          {/if}
-          {#if extraRows > 0}
-            <tr>
-              <th class="border px-2"></th>
-              {#each Array($activeHYP?.COL_INDICATORS.length || 0) as _, colIndex}
-                <td
-                  class="border w-6 h-6 {getCellClass(
-                    $activeHYP?.ROW_INDICATORS.length,
-                    colIndex
-                  )}"></td>
-              {/each}
-            </tr>
-          {/if}
-        </table>
-      </div>
-    </div>
+          </tr>
+        {/each}
+      {/if}
+      {#if extraRows > 0}
+        <tr>
+          <th class="border px-2"></th>
+          {#each Array($activeEvent?.COL_INDICATORS.length || 0) as _, colIndex}
+            <td
+              class="border w-6 h-6 {getCellClass(
+                $activeEvent?.ROW_INDICATORS.length,
+                colIndex
+              )}"></td>
+          {/each}
+        </tr>
+      {/if}
+    </table>
   </div>
 </div>

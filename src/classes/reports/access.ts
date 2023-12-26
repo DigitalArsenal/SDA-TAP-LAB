@@ -1,19 +1,20 @@
-import type Entity from "cesium/Source/DataSources/Entity";
+import type { Entity } from "orbpro";
 import type { CatalogEntityMetadata } from "../entitymetadata";
 
 export class AccessRow {
-    start: Date;
-    stop: Date;
+    start: Date | undefined;
+    stop: Date | undefined;
 }
 
 export interface MetadataEntity extends Entity {
+    position: any;
     metadata: CatalogEntityMetadata;
 }
 
 export class AccessReport {
-    start: Date;
-    stop: Date;
+    start: Date | undefined;
+    stop: Date | undefined;
     rows: Array<AccessRow> = [];
-    from: MetadataEntity;
-    to: MetadataEntity;
+    from: MetadataEntity | undefined;
+    to: MetadataEntity | undefined;
 }

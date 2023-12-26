@@ -17,7 +17,8 @@
     $content = $lastcontent || undefined;
     $lastcontent = undefined;
     scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
-  };
+  }; 
+  //hds7jtd4
 </script>
 
 <!-- Fullscreen Modal backdrop with margin -->

@@ -1,16 +1,15 @@
-import type Event from "cesium/Source/Core/Event";
 import type { MetadataEntity } from "@/classes/reports/access";
 import type { KeyValueDataStructure } from "@/classes/KeyValueDataStructure";
 //@ts-ignore
-import { PolylineCollection, Material, Color, Cartesian3, Orb } from "orbpro";
+import { PolylineCollection, Material, Color, Cartesian3, Orb, Viewer, Event } from "orbpro";
 
 class AccessLineGroup {
     id: string;
     polylineCollectionArrays: Array<typeof PolylineCollection>;
-    removeListener: Event.RemoveCallback;
+    removeListener: Event.RemoveCallback | undefined;
     from: Array<MetadataEntity>;
     to: Array<MetadataEntity>;
-    constructor(id, from, to) {
+    constructor(id: string, from: Array<MetadataEntity>, to: Array<MetadataEntity>) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -22,7 +21,7 @@ class AccessLineGroup {
 let accessLineGroups: KeyValueDataStructure = {};
 
 //Green Lines!
-export const addAccessLines = (viewer, from, to, id = Date.now().toString()): string => {
+export const addAccessLines = (viewer: Viewer, from: Array<MetadataEntity>, to: Array<MetadataEntity>, id = Date.now().toString()): string => {
     let { calculateAccess } = Orb.Analysis;
     if (accessLineGroups[id]) return id;
     accessLineGroups[id] = new AccessLineGroup(id, from, to);
@@ -73,12 +72,12 @@ export const addAccessLines = (viewer, from, to, id = Date.now().toString()): st
     return id;
 }
 
-export const removeAccessLines = (viewer, id) => {
+export const removeAccessLines = (viewer: Viewer, id: string | number) => {
     if (!id) {
         for (let x in accessLineGroups) {
             let aLG = accessLineGroups[x];
             aLG.removeListener();
-            aLG.polylineCollectionArrays.forEach(pCA => {
+            aLG.polylineCollectionArrays.forEach((pCA: any) => {
                 viewer.scene.primitives.remove(pCA);
             });
             delete accessLineGroups[x];
@@ -87,7 +86,7 @@ export const removeAccessLines = (viewer, id) => {
         let aLG = accessLineGroups[id];
         if (!aLG) return;
         aLG.removeListener();
-        aLG.polylineCollectionArrays.forEach(pCA => {
+        aLG.polylineCollectionArrays.forEach((pCA: any) => {
             viewer.scene.primitives.remove(pCA);
         });
         delete accessLineGroups[id];

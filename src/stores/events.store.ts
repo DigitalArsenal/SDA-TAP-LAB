@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 export const nodeREDURL = "apollo.sdataplab.com/node-red";
 export const messages = createWebSocketStore(nodeREDURL);
 
@@ -78,4 +78,13 @@ export function createWebSocketStore(url: string) {
     };
 }
 
+export const getMessageType = (message: any) => {
+    // Extract the type based on the key ending with "COLLECTION"
+    const messageTypeEntry = Object.entries(message).find(([key, _]) =>
+        key.endsWith("COLLECTION")
+    );
+    return messageTypeEntry ? messageTypeEntry[0].split("COLLECTION")[0] : null;
+};
 
+export const activeEvents: Writable<any> = writable({});
+export const activeEvent: Writable<any> = writable(null);

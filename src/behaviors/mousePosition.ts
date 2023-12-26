@@ -1,12 +1,12 @@
-import type Viewer from "cesium/Source/Widgets/Viewer/Viewer";
-import { mousePosition } from "@/stores/livedata/mouseposition";
-let mousePosListener = null;
+import { type Viewer } from "orbpro";
+import { mousePosition } from "@/stores/mouseposition.store";
+let mousePosListener: any = null;
 //@ts-ignore
 import { Cartesian3, Math } from "orbpro";
 
 export const addMousePosListener = (viewer: Viewer) => {
 
-    mousePosListener = function (e) {
+    mousePosListener = function (e: any) {
         var ellipsoid = viewer.scene.globe.ellipsoid;
         // Mouse over the globe to see the cartographic position 
         var cartesian = viewer.camera.pickEllipsoid(new Cartesian3(e.clientX, e.clientY), ellipsoid);

@@ -180,142 +180,78 @@
 </script>
 
 <!-- Your existing HTML structure -->
-<div class="flex flex-col w-full whitespace-nowrap font-mono h-full">
+<div
+  class="flex flex-col justify-between w-full whitespace-nowrap font-mono h-full">
   {#if $activeEntity && OMM && CAT}
-    <div
-      class="flex justify-around text-white p-1 border-b-[1px] border-orange-700">
-      <button
-        class={`tab-header ${activeSubtab === "POSITION" ? "active" : ""}`}
-        on:click={() => (activeSubtab = "POSITION")}>
-        POSITION
-      </button>
-      <button
-        class={`tab-header ${activeSubtab === "OPTIONS" ? "active" : ""}`}
-        on:click={() => (activeSubtab = "OPTIONS")}>
-        OPTIONS
-      </button>
-      <button
-        class={`tab-header ${activeSubtab === "INFO" ? "active" : ""}`}
-        on:click={() => (activeSubtab = "INFO")}>
-        INFO
-      </button>
-    </div>
-    <div class="overflow-y-auto flex h-24">
-      {#if activeSubtab === "POSITION"}
-        <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-1">
-          <div class="p-1">
-            <div class="row-header">VELOCITY</div>
-            <div class="row-data">{velocityKmh} km/h</div>
-          </div>
-          <div class="p-1">
-            <div class="row-header">LATITUDE</div>
-            <div class="row-data">
-              <div class="flex justify-between">
-                <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
-                <div>{latitude >= 0 ? "N" : "S"}</div>
-              </div>
+    <div>
+      <div
+        class="flex justify-around text-white p-1 border-b-[1px] border-orange-700">
+        <button
+          class={`tab-header ${activeSubtab === "POSITION" ? "active" : ""}`}
+          on:click={() => (activeSubtab = "POSITION")}>
+          POSITION
+        </button>
+        <button
+          class={`tab-header ${activeSubtab === "OPTIONS" ? "active" : ""}`}
+          on:click={() => (activeSubtab = "OPTIONS")}>
+          OPTIONS
+        </button>
+        <button
+          class={`tab-header ${activeSubtab === "INFO" ? "active" : ""}`}
+          on:click={() => (activeSubtab = "INFO")}>
+          INFO
+        </button>
+      </div>
+      <div class="overflow-y-auto flex h-24 pl-2">
+        {#if activeSubtab === "POSITION"}
+          <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-1">
+            <div class="p-1">
+              <div class="row-header">VELOCITY</div>
+              <div class="row-data">{velocityKmh} km/h</div>
             </div>
-          </div>
-          <div class="p-1">
-            <div class="row-header">LONGITUDE</div>
-            <div class="row-data">
-              <div class="flex justify-between">
-                <div>{longitude?.toFixed(1)}°</div>
-                <div>{longitude >= 0 ? "E" : "W"}</div>
-              </div>
-            </div>
-          </div>
-          <div class="p-1">
-            <div class="row-header">ALT</div>
-            <div class="row-data">{altitude} km</div>
-          </div>
-        </div>
-      {:else if activeSubtab === "OPTIONS"}
-        <div
-          class="cursor-pointer flex w-full justify-between text-[.5rem] md:text-[.48rem] lg:text-[.65rem] p-2">
-          <div class="flex flex-col gap-2">
-            <div class="flex flex-col gap-2 items-start justify-start">
-              <div class="flex items-center justify-center gap-2">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div
-                  class="border rounded p-1 bg-gray-800"
-                  on:click={toggleLabel}>
-                  <div
-                    class:bg-white={activeObjectState.label}
-                    class:bg-gray-800={!activeObjectState.label}
-                    class="w-2 h-2" />
+            <div class="p-1">
+              <div class="row-header">LATITUDE</div>
+              <div class="row-data">
+                <div class="flex justify-between">
+                  <div>{latitude?.toFixed(1).padStart(3, "0")}°</div>
+                  <div>{latitude >= 0 ? "N" : "S"}</div>
                 </div>
-                LABEL
               </div>
+            </div>
+            <div class="p-1">
+              <div class="row-header">LONGITUDE</div>
+              <div class="row-data">
+                <div class="flex justify-between">
+                  <div>{longitude?.toFixed(1)}°</div>
+                  <div>{longitude >= 0 ? "E" : "W"}</div>
+                </div>
+              </div>
+            </div>
+            <div class="p-1">
+              <div class="row-header">ALT</div>
+              <div class="row-data">{altitude} km</div>
             </div>
           </div>
-          <div class="flex flex-col gap-2">
-            <div class="flex gap-2">
-              <div class="flex items-center justify-center gap-2">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div
-                  class="border rounded p-1 bg-gray-800"
-                  on:click={toggleReferenceFrameDebug}>
+        {:else if activeSubtab === "OPTIONS"}
+          <div
+            class="cursor-pointer flex w-full justify-between text-[.5rem] md:text-[.48rem] lg:text-[.65rem] p-2">
+            <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 items-start justify-start">
+                <div class="flex items-center justify-center gap-2">
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore a11y-no-static-element-interactions -->
                   <div
-                    class:bg-white={activeObjectState.referenceFrameDebug}
-                    class:bg-gray-800={!activeObjectState.referenceFrameDebug}
-                    class="w-2 h-2" />
+                    class="border rounded p-1 bg-gray-800"
+                    on:click={toggleLabel}>
+                    <div
+                      class:bg-white={activeObjectState.label}
+                      class:bg-gray-800={!activeObjectState.label}
+                      class="w-2 h-2" />
+                  </div>
+                  LABEL
                 </div>
-                AXIS
               </div>
             </div>
-            <div class="flex gap-2">
-              <!-- ... other divs ... -->
-              <div class="flex items-center justify-center gap-2">
-                <select
-                  id="referenceFrameSelect"
-                  bind:value={selectedReferenceFrame}
-                  on:change={onReferenceFrameChange}
-                  class="bg-gray-800 text-white rounded p-[1px] pl-[2px] pr-[2px] border border-gray-400">
-                  {#each referenceFrameOptions as { key, value }}
-                    <option {value}>
-                      {key}
-                    </option>
-                  {/each}
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <div class="flex gap-2">
-              <div class="flex items-center justify-center gap-2">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div
-                  class="border rounded p-1 bg-gray-800"
-                  on:click={toggleOrbit}>
-                  <div
-                    class:bg-white={activeObjectState.orbit}
-                    class:bg-gray-800={!activeObjectState.orbit}
-                    class="w-2 h-2" />
-                </div>
-                ORBIT
-              </div>
-            </div>
-            <div class="flex gap-2">
-              <div class="flex items-center justify-center gap-2">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div
-                  class="border rounded p-1 bg-gray-800"
-                  on:click={toggleCoverage}>
-                  <div
-                    class:bg-white={activeObjectState.coverage}
-                    class:bg-gray-800={!activeObjectState.coverage}
-                    class="w-2 h-2" />
-                </div>
-                COVERAGE
-              </div>
-            </div>
-          </div>
-          {#if getModel(OMM.OBJECT_NAME)}
             <div class="flex flex-col gap-2">
               <div class="flex gap-2">
                 <div class="flex items-center justify-center gap-2">
@@ -323,44 +259,113 @@
                   <!-- svelte-ignore a11y-no-static-element-interactions -->
                   <div
                     class="border rounded p-1 bg-gray-800"
-                    on:click={toggleModel}>
+                    on:click={toggleReferenceFrameDebug}>
                     <div
-                      class:bg-white={activeObjectState.model}
-                      class:bg-gray-800={!activeObjectState.model}
+                      class:bg-white={activeObjectState.referenceFrameDebug}
+                      class:bg-gray-800={!activeObjectState.referenceFrameDebug}
                       class="w-2 h-2" />
                   </div>
-                  MODEL
+                  AXIS
                 </div>
               </div>
-              <div class="flex gap-2" />
+              <div class="flex gap-2">
+                <!-- ... other divs ... -->
+                <div class="flex items-center justify-center gap-2">
+                  <select
+                    id="referenceFrameSelect"
+                    bind:value={selectedReferenceFrame}
+                    on:change={onReferenceFrameChange}
+                    class="bg-gray-800 text-white rounded p-[1px] pl-[2px] pr-[2px] border border-gray-400">
+                    {#each referenceFrameOptions as { key, value }}
+                      <option {value}>
+                        {key}
+                      </option>
+                    {/each}
+                  </select>
+                </div>
+              </div>
             </div>
-          {/if}
-        </div>
-      {:else if activeSubtab === "INFO"}
-        <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-2">
-          <div class="p-1">
-            <div class="row-header">Type</div>
-            <div class="text-sm row-data">
-              {CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}
+            <div class="flex flex-col gap-2">
+              <div class="flex gap-2">
+                <div class="flex items-center justify-center gap-2">
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore a11y-no-static-element-interactions -->
+                  <div
+                    class="border rounded p-1 bg-gray-800"
+                    on:click={toggleOrbit}>
+                    <div
+                      class:bg-white={activeObjectState.orbit}
+                      class:bg-gray-800={!activeObjectState.orbit}
+                      class="w-2 h-2" />
+                  </div>
+                  ORBIT
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <div class="flex items-center justify-center gap-2">
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore a11y-no-static-element-interactions -->
+                  <div
+                    class="border rounded p-1 bg-gray-800"
+                    on:click={toggleCoverage}>
+                    <div
+                      class:bg-white={activeObjectState.coverage}
+                      class:bg-gray-800={!activeObjectState.coverage}
+                      class="w-2 h-2" />
+                  </div>
+                  COVERAGE
+                </div>
+              </div>
+            </div>
+            {#if getModel(OMM.OBJECT_NAME)}
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2">
+                  <div class="flex items-center justify-center gap-2">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                    <div
+                      class="border rounded p-1 bg-gray-800"
+                      on:click={toggleModel}>
+                      <div
+                        class:bg-white={activeObjectState.model}
+                        class:bg-gray-800={!activeObjectState.model}
+                        class="w-2 h-2" />
+                    </div>
+                    MODEL
+                  </div>
+                </div>
+                <div class="flex gap-2" />
+              </div>
+            {/if}
+          </div>
+        {:else if activeSubtab === "INFO"}
+          <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-2">
+            <div class="p-1">
+              <div class="row-header">Type</div>
+              <div class="text-sm row-data">
+                {CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}
+              </div>
+            </div>
+            <div class="p-1">
+              <div class="row-header">Owner</div>
+              <div class="text-sm row-data">{CAT.OWNER}</div>
+            </div>
+            <div class="p-1">
+              <div class="row-header">Intl Des.</div>
+              <div class="text-sm row-data">{OMM.OBJECT_ID}</div>
+            </div>
+            <div class="p-1">
+              <div class="row-header">NORAD ID</div>
+              <div class="text-sm row-data">{OMM.NORAD_CAT_ID}</div>
             </div>
           </div>
-          <div class="p-1">
-            <div class="row-header">Owner</div>
-            <div class="text-sm row-data">{CAT.OWNER}</div>
-          </div>
-          <div class="p-1">
-            <div class="row-header">Intl Des.</div>
-            <div class="text-sm row-data">{OMM.OBJECT_ID}</div>
-          </div>
-          <div class="p-1">
-            <div class="row-header">NORAD ID</div>
-            <div class="text-sm row-data">{OMM.NORAD_CAT_ID}</div>
-          </div>
-        </div>
-      {/if}
+        {/if}
+      </div>
     </div>
-    <div class="border-t-[1px] border-gray-500 p-2 h-12 text-xs flex items-center justify-start">
-      <div class="flex items-center justify-center gap-2">
+
+    <div
+      class="border-t-[1px] border-gray-500 h-12 text-xs pl-1 flex items-center justify-start">
+      <div class="flex items-center justify-center gap-2 mt-2">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
@@ -378,7 +383,7 @@
             class:bg-gray-800={$trackedEntity?.id !== $activeEntity?.id}
             class="w-2 h-2" />
         </div>
-        TRACK
+        CAMERA TRACK
       </div>
     </div>
   {/if}

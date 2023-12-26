@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { messages } from "@/stores/events.store";
-  import { content, lastcontent, template, title } from "@/stores/modal.store";
+  import { getMessageType, messages, activeEvents } from "@/stores/events.store";
+  import { content, lastcontent } from "@/stores/modal.store";
   import { scenario } from "@/stores/settings.store";
   import { onMount } from "svelte";
   import { viewer } from "@/stores/viewer.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
-  import HYPTable from "./menus/HYPTable.svelte";
-  import { activeHYP } from "@/stores/hypothesis.store";
+  import MessageWrap from "./MessageWrap.svelte";
 
   let _shouldAnimate = true;
   let modalBody: Element;
@@ -21,30 +20,19 @@
     modalBody.scrollTop = modalBody.scrollHeight;
   }
 
-  $: combinedMessages = $messages.flatMap((message) => {
-    return Object.entries(message)
-      .filter(([key, value]) => key.endsWith("COLLECTION"))
-      .flatMap(([key, collection]) => {
-        return (collection as any)?.RECORDS.map((record: any) => ({
-          ...record,
-          type: key.split("COLLECTION")[0],
-          headers: message.headers,
-        }));
-      });
-  });
+  // Removed the combinedMessages reactive statement
 
-  $: filteredMessages = combinedMessages.filter((message) =>
+  $: filteredMessages = $messages.filter((message) =>
     JSON.stringify(message).toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   $: filteredCount = filteredMessages.length;
 
-  const loadTable = (message: any) => {
-    if (message.type === "HYP") {
-      $lastcontent = $content;
-      $content = HYPTable;
-      $activeHYP = message;
-    }
+  const loadTable = (lmessages: any) => {
+    $activeEvents = lmessages;
+    $lastcontent = $content;
+    $content = MessageWrap;
+    console.log($content,$activeEvents)
   };
 
   const closeModal = () => {
@@ -55,7 +43,7 @@
 </script>
 
 <div
-  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[38%] h-[35%] md:h-[34%] max-h-[350px] right-0">
+  class="fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[38%] h-[35%] md:h-[34%] max-h-[350px] max-w-[400px] right-0">
   <div class="flex justify-center items-center z-50 w-full h-full">
     <!-- Modal content -->
     <div
@@ -67,7 +55,7 @@
         <div class="flex items-center gap-2 w-full justify-between p-1">
           <div class="font-[300] flex gap-1">
             ALERTS: <p class="text-[.7rem]">
-              {filteredCount} / {combinedMessages.length}
+              {filteredCount} / {$messages.length}
             </p>
           </div>
           <input
@@ -89,16 +77,18 @@
               tabindex={index}
               class="cursor-pointer border border-gray-500 rounded p-2 hover:bg-blue-400 hover:text-white">
               <div class="text-sm w-full flex justify-between items-center">
-                <div>{message.type}</div>
-                <div class="text-[.5rem]">{message.EVENT_START_TIME}</div>
+                <div>{getMessageType(message)}</div>
+                <div class="text-[.55rem]">
+                  {new Date(message.timestamp).toISOString()}
+                </div>
               </div>
               <div>
-                <p class="text-[.5rem]">
+                <p class="text-[.55rem]">
                   Org: {message.headers["x-client-dn"]
                     .split(",")[3]
                     .split("=")[1]}
                 </p>
-                <p class="text-[.5rem]">
+                <p class="text-[.55rem]">
                   CN: {message.headers["x-client-dn"]
                     ?.split("CN=")[1]
                     ?.split("=")[0]}
