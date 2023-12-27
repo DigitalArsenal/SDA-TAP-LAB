@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { getMessageType, messages, activeEvents } from "@/stores/events.store";
+  import {
+    getMessageType,
+    messages,
+    activeEvents,
+  } from "@/stores/events.store";
   import { content, lastcontent } from "@/stores/modal.store";
   import { scenario } from "@/stores/settings.store";
   import { onMount } from "svelte";
@@ -32,7 +36,7 @@
     $activeEvents = lmessages;
     $lastcontent = $content;
     $content = MessageWrap;
-    console.log($content,$activeEvents)
+    console.log($content, $activeEvents);
   };
 
   const closeModal = () => {
@@ -97,6 +101,14 @@
             </div>
           {/each}
         </div>
+      </div>
+      <div class="p-2 pl-4 border-t border-gray-600 flex">
+        <div on:click={e=>{
+          if(confirm("Delete local cache?")){
+            localStorage.removeItem("messages");
+            $messages = [];
+          };
+        }} class="pl-2 pr-2 p-1 bg-red-600 hover:bg-red-500 cursor-pointer flex items-center justify-center text-sm">Clear</div>
       </div>
     </div>
   </div>

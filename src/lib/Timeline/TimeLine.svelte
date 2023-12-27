@@ -27,7 +27,7 @@
   $: quarterTick = (n: any) => numTicks / 4;
 
   $: pixelsPerTimeSpan = dWidth / timeSpan;
-
+  $: console.log(pixelsPerTimeSpan, timeSpan, tickTime(0, 0), tickTime(0,dWidth));
   let modTime: any;
   let shuttle: any = null;
   let shuttleBay: any = null;
@@ -37,9 +37,8 @@
   const MIN_MULTIPLIER = 0.01;
   const MAX_MULTIPLIER = 303400;
 
-  export let timeSpan = 86400;
-
   let _timesIndex = 4;
+  export let timeSpan = _times[_timesIndex];
 
   // Subscribe to multiplier changes
   scenario.settings.ClockSettings.multiplier.subscribe(
@@ -325,8 +324,8 @@
               y2={i % 5
                 ? "7%"
                 : !(i % quarterTick(numTicks))
-                ? "30%"
-                : "14%"} />
+                  ? "30%"
+                  : "14%"} />
           {/each}
         </svg>
       </div>

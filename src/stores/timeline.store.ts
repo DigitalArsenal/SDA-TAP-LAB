@@ -20,4 +20,4 @@ export function getMultiplierForIndex(index: number) {
     return setting ? setting.minMultiplier : null;
 }
 
-export const _times = [2.5, 25, 250, 1500, 9000, 90000, 2160000, 15120000, 65707200, 788400000]
+export const _times = [2.5, 25, 250, 1500, 9000, 90000, 2160000, 15120000, 35707200, 58840000]

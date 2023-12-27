@@ -204,7 +204,7 @@
       </div>
       <div class="overflow-y-auto flex h-24 pl-2">
         {#if activeSubtab === "POSITION"}
-          <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-1">
+          <div class="h-full overflow-y-scroll w-full flex justify-between flex-wrap gap-1">
             <div class="p-1">
               <div class="row-header">VELOCITY</div>
               <div class="row-data">{velocityKmh} km/h</div>
@@ -292,21 +292,6 @@
                   <!-- svelte-ignore a11y-no-static-element-interactions -->
                   <div
                     class="border rounded p-1 bg-gray-800"
-                    on:click={toggleOrbit}>
-                    <div
-                      class:bg-white={activeObjectState.orbit}
-                      class:bg-gray-800={!activeObjectState.orbit}
-                      class="w-2 h-2" />
-                  </div>
-                  ORBIT
-                </div>
-              </div>
-              <div class="flex gap-2">
-                <div class="flex items-center justify-center gap-2">
-                  <!-- svelte-ignore a11y-click-events-have-key-events -->
-                  <!-- svelte-ignore a11y-no-static-element-interactions -->
-                  <div
-                    class="border rounded p-1 bg-gray-800"
                     on:click={toggleCoverage}>
                     <div
                       class:bg-white={activeObjectState.coverage}
@@ -339,7 +324,7 @@
             {/if}
           </div>
         {:else if activeSubtab === "INFO"}
-          <div class="h-full overflow-y-scroll w-full flex flex-wrap gap-2">
+          <div class="h-full overflow-y-scroll w-full flex justify-between flex-wrap gap-2">
             <div class="p-1">
               <div class="row-header">Type</div>
               <div class="text-sm row-data">
@@ -364,7 +349,7 @@
     </div>
 
     <div
-      class="border-t-[1px] border-gray-500 h-12 text-xs pl-1 flex items-center justify-start">
+      class="border-t-[1px] border-gray-500 h-12 text-xs pl-1 flex gap-4 items-center justify-start">
       <div class="flex items-center justify-center gap-2 mt-2">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -385,6 +370,21 @@
         </div>
         CAMERA TRACK
       </div>
+      <div class="flex gap-2">
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <div
+            class="border rounded p-1 bg-gray-800"
+            on:click={toggleOrbit}>
+            <div
+              class:bg-white={activeObjectState.orbit}
+              class:bg-gray-800={!activeObjectState.orbit}
+              class="w-2 h-2" />
+          </div>
+          SHOW ORBIT
+        </div>
+      </div>
     </div>
   {/if}
 </div>
@@ -398,10 +398,13 @@
   *::-webkit-scrollbar {
     width: 4px;
   }
+  .tab-header.active{
+    @apply text-orange-400;
+  }
   .tab-header.active::before {
     content: "▪"; /* Unicode square character */
-    @apply text-orange-700 absolute;
-    top: -0.5px;
+    @apply text-orange-400 absolute;
+    top: -2px;
     left: -10px;
   }
 
