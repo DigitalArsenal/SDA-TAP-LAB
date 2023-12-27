@@ -7,6 +7,7 @@
     timeSettings,
     getMultiplierForIndex,
     _times,
+    timeSpan,
   } from "@/stores/timeline.store";
   import { get } from "svelte/store";
   /**
@@ -26,19 +27,16 @@
   let numTicks = 60;
   $: quarterTick = (n: any) => numTicks / 4;
 
-  $: pixelsPerTimeSpan = dWidth / timeSpan;
-  $: console.log(pixelsPerTimeSpan, timeSpan, tickTime(0, 0), tickTime(0,dWidth));
+  $: pixelsPerTimeSpan = dWidth / $timeSpan;
+
   let modTime: any;
   let shuttle: any = null;
   let shuttleBay: any = null;
 
   let containerOffsetX = 0;
-  // Constants representing the range of the multiplier
-  const MIN_MULTIPLIER = 0.01;
-  const MAX_MULTIPLIER = 303400;
 
   let _timesIndex = 4;
-  export let timeSpan = _times[_timesIndex];
+  $timeSpan = _times[_timesIndex];
 
   // Subscribe to multiplier changes
   scenario.settings.ClockSettings.multiplier.subscribe(
@@ -50,7 +48,7 @@
       );
       if (setting) {
         _timesIndex = setting.index;
-        timeSpan = _times[_timesIndex];
+        $timeSpan = _times[_timesIndex];
         numTicks = Math.round((baseNumTicks * (_timesIndex + 1)) / 3);
       }
     }
@@ -78,7 +76,7 @@
   }
 
   let setContainerOffsetX = (d: any) =>
-    -((d.getTime() / 1000) % timeSpan) * pixelsPerTimeSpan;
+    -((d.getTime() / 1000) % $timeSpan) * pixelsPerTimeSpan;
   let startX = 0;
   let startContainerX;
   let shuttleModes = { SCROLL: 0, FIXED: 1 };
@@ -149,9 +147,9 @@
       JulianDate.clone(viewer.clock.currentTime, _displayTime)
     );
     let _percentX = xpos / dWidth;
-    let _spanSeconds = _percentX * timeSpan;
+    let _spanSeconds = _percentX * $timeSpan;
     let _linePosition = 0.5;
-    let _lineSeconds = _linePosition * timeSpan;
+    let _lineSeconds = _linePosition * $timeSpan;
     let _seconds = _spanSeconds - _lineSeconds;
     _displayTime = new Date(
       Math.round(_displayTime.getTime() + _seconds * 1000)
@@ -253,7 +251,7 @@
       }
 
       _timesIndex = minMax(_timesIndex, 0, get(timeSettings).length - 1);
-      timeSpan = _times[_timesIndex];
+      $timeSpan = _times[_timesIndex];
       numTicks = Math.round(baseNumTicks * ((_timesIndex + 1) / 3));
 
       // Update the multiplier store with the new multiplier based on _timesIndex
