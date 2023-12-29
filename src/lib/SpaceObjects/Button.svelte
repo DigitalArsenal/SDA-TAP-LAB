@@ -1,7 +1,7 @@
 <!-- Settings.svelte -->
 <script lang="ts">
   import Icon from "svelte-awesome";
-  import { faSatellite } from "@fortawesome/free-solid-svg-icons";
+  import { faSatellite, faDatabase} from "@fortawesome/free-solid-svg-icons";
   import columnDefs from "./lib/columnDefs";
   import { viewer } from "@/stores/viewer.store";
   import {
@@ -69,8 +69,8 @@
   }}
   class="relative text-white flex items-center text-md justify-center cursor-pointer"
   on:click={toggleModal}>
-  <Icon scale={1.3} data={faSatellite} />
-  <div class="absolute bottom-[2px] right-[0px]">
+  <Icon scale={1.3} data={faDatabase} />
+  <div class="absolute bottom-[1px] right-[0px]">
     <GroupNumber />
   </div>
 </div>
