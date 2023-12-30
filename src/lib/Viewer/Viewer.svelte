@@ -17,6 +17,7 @@
   import { viewer as storeViewer } from "../../stores/viewer.store";
   import { scenario } from "@/stores/settings.store";
   import { addButton } from "../Toolbar/toolbar";
+  import CameraButton from "../Camera/Button.svelte";
   import SpaceObjectButton from "../SpaceObjects/Button.svelte";
   import SettingsButton from "../Settings/Button.svelte";
   import Events from "../Events/Button.svelte";
@@ -107,6 +108,7 @@
     $storeViewer = viewer;
 
     //Add Buttons
+    addButton(CameraButton);
     addButton(SpaceObjectButton);
     addButton(Events);
     addButton(SettingsButton);
