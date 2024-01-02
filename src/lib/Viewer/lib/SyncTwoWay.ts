@@ -1,6 +1,8 @@
-import { Clock } from "orbpro"
-export default function syncTwoWay(clock: any, propertyName: any, settingsPath: any) {
+import { Clock } from "orbpro";
+
+export default function syncTwoWay(clock: any, propertyName: any, settingsPath: any, debounceTime: number = 100) {
     let isInternalUpdate = false;
+    let debounceTimer: NodeJS.Timeout | null = null;
 
     const originalPropertyDescriptor: any = Object.getOwnPropertyDescriptor(
         Clock.prototype,
@@ -20,8 +22,15 @@ export default function syncTwoWay(clock: any, propertyName: any, settingsPath: 
                     // Set the clock property using the original property descriptor
                     originalPropertyDescriptor.set.call(this, value);
 
-                    // Set the value on the settings path
-                    settingsPath.set(value);
+                    // Set the value on the settings path after debouncing
+                    if (debounceTimer) {
+                        clearTimeout(debounceTimer);
+                    }
+                    debounceTimer = setTimeout(() => {
+                        console.log(value)
+                        settingsPath.set(value);
+                        debounceTimer = null;
+                    }, debounceTime);
 
                     // Reset the flag after the update is complete
                     isInternalUpdate = false;
@@ -37,8 +46,14 @@ export default function syncTwoWay(clock: any, propertyName: any, settingsPath: 
             // Prevent the clock setter from re-triggering the settingsPath setter
             isInternalUpdate = true;
 
-            // Update the clock property directly
-            originalPropertyDescriptor.set.call(clock, newValue);
+            // Update the clock property directly after debouncing
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+            }
+            debounceTimer = setTimeout(() => {
+                originalPropertyDescriptor.set.call(clock, newValue);
+                debounceTimer = null;
+            }, debounceTime);
 
             // Reset the flag after the update is complete
             isInternalUpdate = false;
