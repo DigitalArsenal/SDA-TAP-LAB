@@ -36,7 +36,6 @@
     $activeEvents = lmessages;
     $lastcontent = $content;
     $content = MessageWrap;
-    console.log($content, $activeEvents);
   };
 
   const closeModal = () => {

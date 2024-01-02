@@ -36,6 +36,7 @@
       component = HypTable;
       title = `HYPOTHESIS: ${$activeEvent?.CATEGORY}`;
       records = $activeEvents.HYPCOLLECTION.RECORDS;
+      console.log(records);
     } else if (messageType === "SIT") {
       component = SitTable;
       records = $activeEvents.SITCOLLECTION.RECORDS;
@@ -49,6 +50,8 @@
   };
 
   $: $activeEvent = records[currentIndex];
+  console.log($activeEvent);
+  
   const previousRecord = () => {
     currentIndex = currentIndex - 1 < 0 ? records.length - 1 : currentIndex - 1;
   };
@@ -73,7 +76,7 @@
       <CloseButton onclick={closeModal} />
     </div>
     <div class="p-2 flex flex-col gap-1 justify-between">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2 overflow-auto max-w-300px max-h-300px">
         {#if records.length > 0}
           <svelte:component this={component} />
         {/if}
