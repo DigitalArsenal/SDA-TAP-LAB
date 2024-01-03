@@ -36,7 +36,7 @@ key(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * IDL Path
+ * IDL
  */
 idl():string|null
 idl(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

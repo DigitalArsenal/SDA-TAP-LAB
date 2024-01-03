@@ -31,17 +31,32 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * Objects Involved
+ * Space Objects Involved
  */
-OBJECT_IDS(index: number):string
-OBJECT_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-OBJECT_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+CAT_IDS(index: number):string
+CAT_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+CAT_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
-objectIdsLength():number {
+catIdsLength():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Space Objects Involved
+ */
+SIT_IDS(index: number):string
+SIT_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+SIT_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+sitIdsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -51,7 +66,7 @@ objectIdsLength():number {
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -61,7 +76,7 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
 CATEGORY():string|null
 CATEGORY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CATEGORY(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -71,12 +86,12 @@ CATEGORY(optionalEncoding?:any):string|Uint8Array|null {
 ROW_INDICATORS(index: number):string
 ROW_INDICATORS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ROW_INDICATORS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 rowIndicatorsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -86,12 +101,12 @@ rowIndicatorsLength():number {
 COL_INDICATORS(index: number):string
 COL_INDICATORS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 COL_INDICATORS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 colIndicatorsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -99,17 +114,17 @@ colIndicatorsLength():number {
  * Matrix data as a boolean array in row major format; if overflow, adds additional rows
  */
 MATRIX(index: number):boolean|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? !!this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : false;
 }
 
 matrixLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 matrixArray():Int8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? new Int8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -117,12 +132,12 @@ matrixArray():Int8Array|null {
  * Scores for objects
  */
 SCORE(index: number, obj?:Score):Score|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new Score()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 scoreLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -132,33 +147,33 @@ scoreLength():number {
 ANALYSIS_METHOD():string|null
 ANALYSIS_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ANALYSIS_METHOD(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 EVENT_START_TIME():string|null
 EVENT_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EVENT_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 EVENT_END_TIME():string|null
 EVENT_END_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EVENT_END_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startHYP(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(11);
 }
 
-static addObjectIds(builder:flatbuffers.Builder, OBJECT_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, OBJECT_IDSOffset, 0);
+static addCatIds(builder:flatbuffers.Builder, CAT_IDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, CAT_IDSOffset, 0);
 }
 
-static createObjectIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+static createCatIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
   builder.startVector(4, data.length, 4);
   for (let i = data.length - 1; i >= 0; i--) {
     builder.addOffset(data[i]!);
@@ -166,20 +181,36 @@ static createObjectIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offse
   return builder.endVector();
 }
 
-static startObjectIdsVector(builder:flatbuffers.Builder, numElems:number) {
+static startCatIdsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSitIds(builder:flatbuffers.Builder, SIT_IDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, SIT_IDSOffset, 0);
+}
+
+static createSitIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSitIdsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, NAMEOffset, 0);
+  builder.addFieldOffset(2, NAMEOffset, 0);
 }
 
 static addCategory(builder:flatbuffers.Builder, CATEGORYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, CATEGORYOffset, 0);
+  builder.addFieldOffset(3, CATEGORYOffset, 0);
 }
 
 static addRowIndicators(builder:flatbuffers.Builder, ROW_INDICATORSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ROW_INDICATORSOffset, 0);
+  builder.addFieldOffset(4, ROW_INDICATORSOffset, 0);
 }
 
 static createRowIndicatorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -195,7 +226,7 @@ static startRowIndicatorsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addColIndicators(builder:flatbuffers.Builder, COL_INDICATORSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, COL_INDICATORSOffset, 0);
+  builder.addFieldOffset(5, COL_INDICATORSOffset, 0);
 }
 
 static createColIndicatorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -211,7 +242,7 @@ static startColIndicatorsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addMatrix(builder:flatbuffers.Builder, MATRIXOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, MATRIXOffset, 0);
+  builder.addFieldOffset(6, MATRIXOffset, 0);
 }
 
 static createMatrixVector(builder:flatbuffers.Builder, data:boolean[]):flatbuffers.Offset {
@@ -227,7 +258,7 @@ static startMatrixVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addScore(builder:flatbuffers.Builder, SCOREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, SCOREOffset, 0);
+  builder.addFieldOffset(7, SCOREOffset, 0);
 }
 
 static createScoreVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -243,15 +274,15 @@ static startScoreVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addAnalysisMethod(builder:flatbuffers.Builder, ANALYSIS_METHODOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, ANALYSIS_METHODOffset, 0);
+  builder.addFieldOffset(8, ANALYSIS_METHODOffset, 0);
 }
 
 static addEventStartTime(builder:flatbuffers.Builder, EVENT_START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, EVENT_START_TIMEOffset, 0);
+  builder.addFieldOffset(9, EVENT_START_TIMEOffset, 0);
 }
 
 static addEventEndTime(builder:flatbuffers.Builder, EVENT_END_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, EVENT_END_TIMEOffset, 0);
+  builder.addFieldOffset(10, EVENT_END_TIMEOffset, 0);
 }
 
 static endHYP(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -267,9 +298,10 @@ static finishSizePrefixedHYPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$HYP', true);
 }
 
-static createHYP(builder:flatbuffers.Builder, OBJECT_IDSOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CATEGORYOffset:flatbuffers.Offset, ROW_INDICATORSOffset:flatbuffers.Offset, COL_INDICATORSOffset:flatbuffers.Offset, MATRIXOffset:flatbuffers.Offset, SCOREOffset:flatbuffers.Offset, ANALYSIS_METHODOffset:flatbuffers.Offset, EVENT_START_TIMEOffset:flatbuffers.Offset, EVENT_END_TIMEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createHYP(builder:flatbuffers.Builder, CAT_IDSOffset:flatbuffers.Offset, SIT_IDSOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CATEGORYOffset:flatbuffers.Offset, ROW_INDICATORSOffset:flatbuffers.Offset, COL_INDICATORSOffset:flatbuffers.Offset, MATRIXOffset:flatbuffers.Offset, SCOREOffset:flatbuffers.Offset, ANALYSIS_METHODOffset:flatbuffers.Offset, EVENT_START_TIMEOffset:flatbuffers.Offset, EVENT_END_TIMEOffset:flatbuffers.Offset):flatbuffers.Offset {
   HYP.startHYP(builder);
-  HYP.addObjectIds(builder, OBJECT_IDSOffset);
+  HYP.addCatIds(builder, CAT_IDSOffset);
+  HYP.addSitIds(builder, SIT_IDSOffset);
   HYP.addName(builder, NAMEOffset);
   HYP.addCategory(builder, CATEGORYOffset);
   HYP.addRowIndicators(builder, ROW_INDICATORSOffset);
@@ -284,7 +316,8 @@ static createHYP(builder:flatbuffers.Builder, OBJECT_IDSOffset:flatbuffers.Offse
 
 unpack(): HYPT {
   return new HYPT(
-    this.bb!.createScalarList<string>(this.OBJECT_IDS.bind(this), this.objectIdsLength()),
+    this.bb!.createScalarList<string>(this.CAT_IDS.bind(this), this.catIdsLength()),
+    this.bb!.createScalarList<string>(this.SIT_IDS.bind(this), this.sitIdsLength()),
     this.NAME(),
     this.CATEGORY(),
     this.bb!.createScalarList<string>(this.ROW_INDICATORS.bind(this), this.rowIndicatorsLength()),
@@ -299,7 +332,8 @@ unpack(): HYPT {
 
 
 unpackTo(_o: HYPT): void {
-  _o.OBJECT_IDS = this.bb!.createScalarList<string>(this.OBJECT_IDS.bind(this), this.objectIdsLength());
+  _o.CAT_IDS = this.bb!.createScalarList<string>(this.CAT_IDS.bind(this), this.catIdsLength());
+  _o.SIT_IDS = this.bb!.createScalarList<string>(this.SIT_IDS.bind(this), this.sitIdsLength());
   _o.NAME = this.NAME();
   _o.CATEGORY = this.CATEGORY();
   _o.ROW_INDICATORS = this.bb!.createScalarList<string>(this.ROW_INDICATORS.bind(this), this.rowIndicatorsLength());
@@ -314,7 +348,8 @@ unpackTo(_o: HYPT): void {
 
 export class HYPT implements flatbuffers.IGeneratedObject {
 constructor(
-  public OBJECT_IDS: (string)[] = [],
+  public CAT_IDS: (string)[] = [],
+  public SIT_IDS: (string)[] = [],
   public NAME: string|Uint8Array|null = null,
   public CATEGORY: string|Uint8Array|null = null,
   public ROW_INDICATORS: (string)[] = [],
@@ -328,7 +363,8 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const OBJECT_IDS = HYP.createObjectIdsVector(builder, builder.createObjectOffsetList(this.OBJECT_IDS));
+  const CAT_IDS = HYP.createCatIdsVector(builder, builder.createObjectOffsetList(this.CAT_IDS));
+  const SIT_IDS = HYP.createSitIdsVector(builder, builder.createObjectOffsetList(this.SIT_IDS));
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const CATEGORY = (this.CATEGORY !== null ? builder.createString(this.CATEGORY!) : 0);
   const ROW_INDICATORS = HYP.createRowIndicatorsVector(builder, builder.createObjectOffsetList(this.ROW_INDICATORS));
@@ -340,7 +376,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EVENT_END_TIME = (this.EVENT_END_TIME !== null ? builder.createString(this.EVENT_END_TIME!) : 0);
 
   return HYP.createHYP(builder,
-    OBJECT_IDS,
+    CAT_IDS,
+    SIT_IDS,
     NAME,
     CATEGORY,
     ROW_INDICATORS,
