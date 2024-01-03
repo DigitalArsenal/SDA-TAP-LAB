@@ -4,6 +4,7 @@
   import { viewer } from "@/stores/viewer.store";
   import { activeGroup } from "@/stores/spacecatalog.group.store";
   import { Color, ConstantProperty, SpaceEntity } from "orbpro";
+  import { HYPT } from "@/classes/standards/HYP/HYP";
 
   let originalEntityProperties = new Map();
 
@@ -15,9 +16,9 @@
       e.show = false;
       const idString = e.id.toString();
       if (
-        $activeEvent.COL_INDICATORS.includes(idString) ||
-        $activeEvent.ROW_INDICATORS.includes(idString) ||
-        $activeEvent.CAT_IDS.includes(idString)
+        $activeEvent.COL_INDICATORS?.includes(idString) ||
+        $activeEvent.ROW_INDICATORS?.includes(idString) ||
+        $activeEvent.CAT_IDS?.includes(idString)
       ) {
         e.show = true;
         if (e.point) {
@@ -66,7 +67,7 @@
     });
 
     $viewer?.scene.render;
-    $activeEvent = null;
+    $activeEvent = new HYPT();
   });
 
   $: extraRows =
@@ -90,13 +91,14 @@
     <div class="text-xs">NAME: {$activeEvent?.NAME}</div>
   </div>
   <div class="overflow-auto p-2 w-full max-w-[300px] max-h-[300px]">
-    {#if $activeEvent?.COL_INDICATORS}
+    {#if $activeEvent?.COL_INDICATORS.length}
       <table class="w-full border-collapse text-xs">
         <tr>
           <th></th>
 
           {#each $activeEvent?.COL_INDICATORS as colIndicator}
-            <th class="border px-2 whitespace-nowrap w-6 h-6">{colIndicator}</th>
+            <th class="border px-2 whitespace-nowrap w-6 h-6"
+              >{colIndicator}</th>
           {/each}
         </tr>
         {#if $activeEvent?.ROW_INDICATORS}
@@ -123,6 +125,11 @@
           </tr>
         {/if}
       </table>
+    {:else}
+      No Column Indicators
+      {#if !$activeEvent?.ROW_INDICATORS.length}
+        No Row Indicators
+      {/if}
     {/if}
   </div>
 </div>
