@@ -66,6 +66,7 @@
     });
 
     $viewer?.scene.render;
+    $activeEvent = null;
   });
 
   $: extraRows =
