@@ -58,7 +58,16 @@ const banner = `/*!
 export default defineConfig({
   plugins: [svelte({
     preprocess: sveltePreprocess(),
+    onwarn: (warning, handler) => {
+      // Ignore specific warnings (replace with the codes of the warnings you want to ignore)
+      const ignoredWarnings = ['a11y-missing-attribute', 'a11y-no-onchange', 'a11y-autofocus'];
+      if (ignoredWarnings.includes(warning.code)) {
+        return;
+      }
 
+      // Handle all other warnings as usual
+      handler(warning);
+    },
 
   }),
   copy({
