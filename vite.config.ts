@@ -59,12 +59,10 @@ export default defineConfig({
   plugins: [svelte({
     preprocess: sveltePreprocess(),
     onwarn: (warning, handler) => {
-      // Ignore specific warnings (replace with the codes of the warnings you want to ignore)
-      const ignoredWarnings = ['a11y-missing-attribute', 'a11y-no-onchange', 'a11y-autofocus'];
-      if (ignoredWarnings.includes(warning.code)) {
+      if (warning.code.startsWith('a11y')) {
         return;
       }
-
+      console.log(warning)
       // Handle all other warnings as usual
       //handler(warning);
     },
@@ -96,13 +94,13 @@ export default defineConfig({
     outDir: "docs",
     rollupOptions: {
       onwarn(warning, warn) {
-        // Suppress specific warnings
+        // Check if the warning is a 'PLUGIN_WARNING' from 'vite:resolve'
         if (warning.code === 'PLUGIN_WARNING' && warning.plugin === 'vite:resolve') {
-          //if (['http', 'https', 'url', 'zlib'].includes(warning.id)) {
-            return;
-          //}
+          // Check if the warning message is about externalizing modules for browser compatibility
+          if (warning.message && warning.message.includes('has been externalized for browser compatibility')) {
+            return; // This suppresses the specific warning
+          }
         }
-
         // Handle all other warnings as usual
         warn(warning);
       },
