@@ -91,7 +91,7 @@
     <div class="text-xs">NAME: {$activeEvent?.NAME}</div>
   </div>
   <div class="overflow-auto p-2 w-full max-w-[300px] max-h-[300px]">
-    {#if $activeEvent?.COL_INDICATORS.length}
+    {#if $activeEvent?.COL_INDICATORS?.length}
       <table class="w-full border-collapse text-xs">
         <tr>
           <th></th>
@@ -126,9 +126,9 @@
         {/if}
       </table>
     {:else}
-      No Column Indicators
+      No COL_INDICATORS
       {#if !$activeEvent?.ROW_INDICATORS?.length}
-        No Row Indicators
+        No ROW_INDICATORS
       {/if}
     {/if}
   </div>
