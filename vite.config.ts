@@ -66,7 +66,7 @@ export default defineConfig({
       }
 
       // Handle all other warnings as usual
-      handler(warning);
+      //handler(warning);
     },
 
   }),
