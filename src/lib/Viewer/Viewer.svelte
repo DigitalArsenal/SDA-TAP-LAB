@@ -20,6 +20,7 @@
   import CameraButton from "../Camera/Button.svelte";
   import SpaceObjectButton from "../SpaceObjects/Button.svelte";
   import SettingsButton from "../Settings/Button.svelte";
+  import UserButton from "../User/Button.svelte";
   import Events from "../Events/Button.svelte";
   import { isSafe } from "@/stores/dev.store";
   import { content, template } from "@/stores/modal.store";
@@ -112,7 +113,7 @@
     addButton(SpaceObjectButton);
     addButton(Events);
     addButton(SettingsButton);
-
+    addButton(UserButton);
     const toolbar: any = document.querySelector(".cesium-viewer-toolbar");
 
     const children = toolbar.children;
@@ -154,4 +155,20 @@
     height: 100%;
     width: 100%;
   }
+  /*
+  .cesium-viewer-toolbar {
+    flex-direction: column;
+    position:fixed;
+    left:0px;
+    width:35px;
+  }
+  .cesium-baseLayerPicker-dropDown {
+    position:fixed;
+    top:0px;
+    right:55px;
+  }
+  .cesium-viewer-geocoderContainer{
+    z-index: 100;
+    border-radius: 20px;
+  }*/
 </style>
