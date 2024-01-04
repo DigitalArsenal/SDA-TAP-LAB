@@ -127,7 +127,7 @@
       </table>
     {:else}
       No Column Indicators
-      {#if !$activeEvent?.ROW_INDICATORS.length}
+      {#if !$activeEvent?.ROW_INDICATORS?.length}
         No Row Indicators
       {/if}
     {/if}
