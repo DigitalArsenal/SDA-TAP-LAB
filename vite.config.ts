@@ -95,6 +95,17 @@ export default defineConfig({
     emptyOutDir: false,
     outDir: "docs",
     rollupOptions: {
+      onwarn(warning, warn) {
+        // Suppress specific warnings
+        if (warning.code === 'PLUGIN_WARNING' && warning.plugin === 'vite:resolve') {
+          //if (['http', 'https', 'url', 'zlib'].includes(warning.id)) {
+            return;
+          //}
+        }
+
+        // Handle all other warnings as usual
+        warn(warning);
+      },
       external: ['cesium'],
       input: {
         app,
