@@ -122,7 +122,4 @@
       background-color: transparent;
     }
   }
-  .glow {
-    animation: glowFadeOut 1s ease-out;
-  }
 </style>

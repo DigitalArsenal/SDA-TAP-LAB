@@ -62,9 +62,8 @@ export default defineConfig({
       if (warning.code.startsWith('a11y')) {
         return;
       }
-      console.log(warning)
       // Handle all other warnings as usual
-      //handler(warning);
+      handler(warning);
     },
 
   }),
