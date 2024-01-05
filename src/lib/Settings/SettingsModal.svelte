@@ -10,14 +10,14 @@
   let _shouldAnimate = true;
 
   onMount(() => {
-    _shouldAnimate = $viewer!.clock.shouldAnimate;
-    scenario.settings.ClockSettings.shouldAnimate.set(false);
+   // _shouldAnimate = $viewer!.clock.shouldAnimate;
+   // scenario.settings.ClockSettings.shouldAnimate.set(false);
   });
 
   const closeModal = () => {
     $content = $lastcontent || undefined;
     $lastcontent = undefined;
-    scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
+    //scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
   };
 </script>
 

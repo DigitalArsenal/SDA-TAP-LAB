@@ -313,6 +313,7 @@ storeViewer.subscribe(async (viewer) => {
         oldGrid = get(settings.showLatLonGrid);
         oldLabels = get(settings.showLatLonLabels);
         settings.showLatLonGrid.set(false);
+        settings.showLatLonLabels.set(false);
       } else if (!u) {
         viewer.scene.primitives.remove(tileset);
         tileset = undefined;
