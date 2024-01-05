@@ -3,6 +3,7 @@ export const nodeREDURL = "apollo.sdataplab.com/node-red";
 export const messages = createWebSocketStore(nodeREDURL);
 import { HYPT } from '@/classes/standards/HYP/HYP';
 import { HYPCOLLECTIONT } from '@/classes/standards/HYP/HYPCOLLECTION';
+import type { SITT } from '@/classes/standards/LDM/SIT';
 const lastQueryTime = localStorage.getItem("lastQueryTime");
 const startTime = lastQueryTime
     ? new Date(lastQueryTime).toISOString()
@@ -87,5 +88,5 @@ export const getMessageType = (message: any) => {
     return messageTypeEntry ? messageTypeEntry[0].split("COLLECTION")[0] : null;
 };
 
-export const activeEvents: Writable<HYPCOLLECTIONT > = writable(new HYPCOLLECTIONT());
-export const activeEvent: Writable<HYPT> = writable(new HYPT());
+export const activeEvents: Writable<any> = writable({});
+export const activeEvent: Writable<HYPT|SITT> = writable(new HYPT());

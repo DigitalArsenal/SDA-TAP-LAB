@@ -5,7 +5,8 @@ import { SpaceEntity, type Entity } from 'orbpro';
 import { scenario } from "@/stores/settings.store";
 import StatusBox from "@/lib/StatusBox/StatusBox.svelte";
 import SpaceObjectTemplate from "@/lib/StatusBox/templates/SpaceObject.svelte";
-import { activeEvent } from "@/stores/events.store";
+import EventsModal from "@/lib/Events/MessageWrap.svelte";
+import { Events } from 'ag-grid-community';
 
 export const content: Writable<any | undefined> = writable(undefined);
 export const template: Writable<any | undefined> = writable(undefined);
@@ -13,6 +14,11 @@ export const title: Writable<any | undefined> = writable(undefined);
 export const lastcontent: Writable<any | undefined> = writable(undefined);
 
 activeEntity.subscribe((aEntity: Entity | null) => {
+    console.log(get(content) === StatusBox);
+
+    if (get(content) === EventsModal) {
+        return;
+    }
     if (aEntity && get(scenario.selectedEntity)) {
         content.set(StatusBox);
         lastcontent.set(StatusBox);
