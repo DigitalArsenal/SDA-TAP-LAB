@@ -17,7 +17,7 @@ scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { Color, LatLonGrid, SpaceCatalogDataSource } from "orbpro";
+import { Color, GoogleMaps, LatLonGrid, SpaceCatalogDataSource, createGooglePhotorealistic3DTileset } from "orbpro";
 
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
 
@@ -291,6 +291,35 @@ storeViewer.subscribe(async (viewer) => {
     settings.useBrowserRecommendedResolution.subscribe(async (u: boolean) => {
       //@ts-ignore
       viewer.useBrowserRecommendedResolution = u;
+
+      await saveAndUpdate();
+    })
+  );
+
+  //@ts-ignore
+  let tileset: any;
+  //@ts-ignore
+  GoogleMaps.defaultApiKey = atob("QUl6YVN5RGlzTDdOODMwaUtLTWZ6RllQT1FCeVQteXh5U2FzLTI0");
+  let oldGrid: boolean = false;
+  let oldLabels: boolean = false;
+  subscriptions.push(
+    settings.google3DTiles.subscribe(async (u: boolean) => {
+
+      if (!tileset) {
+        tileset = await createGooglePhotorealistic3DTileset();
+      }
+      if (!viewer.scene.primitives.contains(tileset) && u) {
+        viewer.scene.primitives.add(tileset);
+        oldGrid = get(settings.showLatLonGrid);
+        oldLabels = get(settings.showLatLonLabels);
+        settings.showLatLonGrid.set(false);
+      } else if (!u) {
+        viewer.scene.primitives.remove(tileset);
+        tileset = undefined;
+        settings.showLatLonGrid.set(oldGrid);
+        settings.showLatLonGrid.set(oldLabels);
+      }
+
       await saveAndUpdate();
     })
   );
@@ -319,8 +348,7 @@ storeViewer.subscribe(async (viewer) => {
                     //scaleByDistance: new NearFarScalar(1e1, 4, 2.5e3, 1),
                     color: Color.WHITE.withAlpha(.7)
                   }
-                },
-                viewer
+                }
               });
 
             await spaceCatalog.loadOMM(ommBuffer, catBuffer);

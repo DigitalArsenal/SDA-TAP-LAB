@@ -10,7 +10,7 @@ import { UPM, UPMT } from './UPM.js';
 
 
 /**
- * Launch Data Message (LDM)
+ * Launch Data Message
  */
 export class LDM implements flatbuffers.IUnpackableObject<LDMT> {
   bb: flatbuffers.ByteBuffer|null = null;

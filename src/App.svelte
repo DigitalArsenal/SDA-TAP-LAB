@@ -5,7 +5,6 @@
   import EULA from "./lib/EULA/EULA.svelte";
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
-  import { appVersion } from "@/stores/settings.store";
   import COIServiceWorker from "./lib/COIServiceWorker/COIServiceWorker";
   import DataTable from "@/lib/DataTable/DataTable.svelte";
   import { datatableShow } from "@/stores/datatable.store";
@@ -13,7 +12,7 @@
   import SpaceObjectToolbar from "@/lib/SpaceObjects/Toolbar/Toolbar.svelte";
   import { mode } from "./stores/menu.store";
   import { title, content } from "@/stores/modal.store";
-  
+
   onMount(() => {
     //COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
@@ -46,10 +45,6 @@
 {#if $title || $content}
   <Modal />
 {/if}
-<div
-  class="fixed text-gray-300 top-0 left-2 text-gray-600 text-[.45rem] lg:text-[1rem]">
-  Build: {appVersion}
-</div>
 <CloseButton />
 
 {#if $mode === "SpaceObjects"}

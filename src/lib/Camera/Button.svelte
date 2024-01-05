@@ -2,11 +2,23 @@
 <script lang="ts">
   import Icon from "svelte-awesome";
   import { faCamera } from "@fortawesome/free-solid-svg-icons";
+  import { warning } from "svelte-awesome/icons";
+  import { content, lastcontent } from "@/stores/modal.store";
+  import CameraModal from "./Modal.svelte";
+  import { messages } from "@/stores/events.store";
 
+  const toggleModal = () => {
+    if ($messages.length) {
+      if ($content === CameraModal) {
+        $content = $lastcontent || undefined;
+        $lastcontent = undefined;
+      } else {
+        $lastcontent = $content;
+        $content = CameraModal;
+      }
+    }
+  };
   let lastLoaded: Date;
-
-  const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
-  const toggleModal = () => {};
 </script>
 
 <!-- Button to open the modal -->

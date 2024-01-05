@@ -1,7 +1,7 @@
 {
     "name": "spaceaware.io",
     "private": true,
-    "version": "0.0.0+1704402849649",
+    "version": "0.0.0+1704419646567",
     "type": "module",
     "scripts": {
         "postinstall": "npm run copy:orbpro",
@@ -12,7 +12,7 @@
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "copy:orbpro": "rm -R packages/orbpro/Build/* && cp -R ../OrbPro/Build/* packages/orbpro/Build && cp -R packages/externaldata/* packages/orbpro/Build/Cesium/",
-        "copy:standards": "rm -R src/classes/standards/* && cp -R ../tap-schema-workshop/lib/ts/* src/classes/standards/"
+        "copy:standards": "rm -R src/classes/standards/* && cp -R ../tap-schema-workshop/lib/ts/* src/classes/standards/ && cp ../tap-schema-workshop/dist/manifest.json src/classes/standards"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.4.2",

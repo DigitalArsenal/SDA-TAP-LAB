@@ -8,6 +8,9 @@ import { Occupation, OccupationT } from './Occupation.js';
 import { Organization, OrganizationT } from './Organization.js';
 
 
+/**
+ * User Profile Message
+ */
 export class UPM implements flatbuffers.IUnpackableObject<UPMT> {
   bb: flatbuffers.ByteBuffer|null = null;
   bb_pos = 0;

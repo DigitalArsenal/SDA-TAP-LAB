@@ -13,9 +13,6 @@ export const title: Writable<any | undefined> = writable(undefined);
 export const lastcontent: Writable<any | undefined> = writable(undefined);
 
 activeEntity.subscribe((aEntity: Entity | null) => {
-    if (get(activeEvent)) {
-        return;
-    }
     if (aEntity && get(scenario.selectedEntity)) {
         content.set(StatusBox);
         lastcontent.set(StatusBox);
