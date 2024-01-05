@@ -300,8 +300,7 @@ storeViewer.subscribe(async (viewer) => {
   let tileset: any;
   //@ts-ignore
   GoogleMaps.defaultApiKey = atob("QUl6YVN5RGlzTDdOODMwaUtLTWZ6RllQT1FCeVQteXh5U2FzLTI0");
-  let oldGrid: boolean = false;
-  let oldLabels: boolean = false;
+
   subscriptions.push(
     settings.google3DTiles.subscribe(async (u: boolean) => {
 
@@ -310,15 +309,11 @@ storeViewer.subscribe(async (viewer) => {
       }
       if (!viewer.scene.primitives.contains(tileset) && u) {
         viewer.scene.primitives.add(tileset);
-        oldGrid = get(settings.showLatLonGrid);
-        oldLabels = get(settings.showLatLonLabels);
         settings.showLatLonGrid.set(false);
         settings.showLatLonLabels.set(false);
       } else if (!u) {
         viewer.scene.primitives.remove(tileset);
         tileset = undefined;
-        settings.showLatLonGrid.set(oldGrid);
-        settings.showLatLonGrid.set(oldLabels);
       }
 
       await saveAndUpdate();
