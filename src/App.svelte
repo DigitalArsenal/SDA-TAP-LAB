@@ -5,7 +5,6 @@
   import EULA from "./lib/EULA/EULA.svelte";
   import { showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
-  import COIServiceWorker from "./lib/COIServiceWorker/COIServiceWorker";
   import DataTable from "@/lib/DataTable/DataTable.svelte";
   import { datatableShow } from "@/stores/datatable.store";
   import CloseButton from "@/lib/MasterCloseButton/MasterCloseButton.svelte";
@@ -14,7 +13,6 @@
   import { title, content } from "@/stores/modal.store";
 
   onMount(() => {
-    //COIServiceWorker();
     fetch("https://celestrak.digitalarsenal.io/get-ip")
       .then((response) => response.json())
       .then((data) => {

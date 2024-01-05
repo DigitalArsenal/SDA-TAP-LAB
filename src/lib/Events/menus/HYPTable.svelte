@@ -3,7 +3,13 @@
   import { activeEvent } from "@/stores/events.store";
   import { viewer } from "@/stores/viewer.store";
   import { activeGroup } from "@/stores/spacecatalog.group.store";
-  import { Color, ConstantProperty, SpaceEntity } from "orbpro";
+  import {
+    ClockRange,
+    Color,
+    ConstantProperty,
+    JulianDate,
+    SpaceEntity,
+  } from "orbpro";
   import { HYPT } from "@/classes/standards/HYP/HYP";
 
   let originalEntityProperties = new Map();
@@ -36,14 +42,30 @@
           }
           //@ts-ignore
           e.point.color = Color.WHITE; // White color
-          console.log(e);
 
           (e as SpaceEntity).showOrbit({ show: true });
         }
       }
     }
+    setTimeout(() => {
+      $viewer?.scene.render;
 
-    $viewer?.scene.render;
+      // Parse the start and end times
+      var startTime = JulianDate.fromDate(
+        new Date(($activeEvent as HYPT).EVENT_START_TIME as string)
+      );
+      var endTime = JulianDate.fromDate(
+        new Date(($activeEvent as HYPT).EVENT_END_TIME as string)
+      );
+
+      // Set the clock start and stop times
+      $viewer!.clock.startTime = startTime;
+      $viewer!.clock.stopTime = endTime;
+      $viewer!.clock.currentTime = startTime;
+
+      // Set the clock to loop at the end
+      $viewer!.clock.clockRange = ClockRange.LOOP_STOP;
+    }, 1000);
   });
 
   onDestroy(() => {
@@ -65,8 +87,10 @@
         e.label.show = new ConstantProperty(false); // Hide labels onDestroy
       }
     });
-
-    $viewer?.scene.render;
+    $viewer!.clock.startTime = undefined as any;
+    $viewer!.clock.stopTime = undefined as any;
+    $viewer!.clock.clockRange = ClockRange.UNBOUNDED;
+    $viewer!.scene.render;
     $activeEvent = new HYPT();
   });
 
@@ -86,9 +110,15 @@
   }
 </script>
 
-<div class="p-1 flex flex-col items-start justify-center">
-  <div class="text-left flex flex-col items-start justify-start mb-4">
-    <div class="text-xs">NAME: {$activeEvent?.NAME}</div>
+<div class="p-1 flex flex-col items-start justify-center min-w-[250px]">
+  <div class="text-left flex flex items-start justify-between mb-4 w-full font-mono">
+    <div>
+      <div class="text-xs">NAME: {$activeEvent?.NAME}</div>
+    </div>
+    <div>
+      <div class="text-xs">STRT: {$activeEvent?.EVENT_START_TIME}</div>
+      <div class="text-xs">STOP: {$activeEvent?.EVENT_END_TIME}</div>
+    </div>
   </div>
   <div class="overflow-auto p-2 w-full max-w-[300px] max-h-[300px]">
     {#if $activeEvent?.COL_INDICATORS?.length}
@@ -126,7 +156,7 @@
         {/if}
       </table>
     {:else}
-      No COL_INDICATORS
+      No COL_INDICATORS <br/>
       {#if !$activeEvent?.ROW_INDICATORS?.length}
         No ROW_INDICATORS
       {/if}

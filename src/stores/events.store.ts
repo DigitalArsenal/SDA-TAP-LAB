@@ -89,4 +89,4 @@ export const getMessageType = (message: any) => {
 };
 
 export const activeEvents: Writable<any> = writable({});
-export const activeEvent: Writable<HYPT|SITT> = writable(new HYPT());
+export const activeEvent: Writable<HYPT | SITT | any> = writable(new HYPT());
