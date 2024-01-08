@@ -47,9 +47,9 @@
     }
 
     $columnDefStore = columnDefs;
-    if ($viewer) {
+    if ((globalThis as any).viewer) {
       const dataSource: SpaceCatalogDataSource | any =
-        $viewer.dataSources.getByName(
+        (globalThis as any).viewer.dataSources.getByName(
           "spaceaware"
         )[0] as SpaceCatalogDataSource;
       if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {

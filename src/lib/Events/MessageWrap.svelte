@@ -64,7 +64,7 @@
     $lastcontent = undefined;
     $trackedEntity = null;
     $selectedEntity = null;
-    $viewer!.camera.flyHome(0);
+    (globalThis as any).viewer!.camera.flyHome(0);
   };
   onDestroy(() => {
     if (dynamicComponent) {

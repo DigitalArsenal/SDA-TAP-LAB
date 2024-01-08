@@ -92,7 +92,7 @@
     onFilterChanged: (event) => {
       $selectedEntity = null;
       $trackedEntity = null;
-      //$viewer?.camera.flyHome(0);
+      //(globalThis as any).viewer?.camera.flyHome(0);
       $groups["defaultGroup"].filterObject = event.api.getFilterModel();
       getCurrentFilter();
       processRow();

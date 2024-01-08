@@ -14,12 +14,12 @@
   let _cameraPositionLLA: string[] = [];
 
   onMount(() => {
-    _shouldAnimate = $viewer!.clock.shouldAnimate;
+    _shouldAnimate = (globalThis as any).viewer!.clock.shouldAnimate;
     scenario.settings.ClockSettings.shouldAnimate.set(false);
-    positionListener = $viewer?.clock.onTick.addEventListener(() => {
-      _cameraPosition = $viewer?.camera.positionWC;
+    positionListener = (globalThis as any).viewer?.clock.onTick.addEventListener(() => {
+      _cameraPosition = (globalThis as any).viewer?.camera.positionWC;
       if (_cameraPosition) {
-        const ellipsoid = $viewer!.scene.globe.ellipsoid;
+        const ellipsoid = (globalThis as any).viewer!.scene.globe.ellipsoid;
         const cartographic = ellipsoid.cartesianToCartographic(_cameraPosition);
         _cameraPositionECEF = [
           `${_cameraPosition.x.toFixed(2)} X`,
@@ -36,8 +36,8 @@
   });
 
   onDestroy(() => {
-    if (positionListener && $viewer) {
-      $viewer.clock.onTick.removeEventListener(positionListener);
+    if (positionListener && (globalThis as any).viewer) {
+      (globalThis as any).viewer.clock.onTick.removeEventListener(positionListener);
     }
     scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
   });

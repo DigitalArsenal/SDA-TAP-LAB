@@ -219,7 +219,7 @@
           id="resolutionScaleSlider" />
       </div>
     </div>
-    <div class="grid grid-cols-3 items-center justify-center">
+    <!--<div class="grid grid-cols-3 items-center justify-center">
       <div class="text-left">Google 3D Tiles</div>
       <div class="flex form-check form-switch">
         <div class="w-full flex items-center justify-center">
@@ -236,7 +236,7 @@
           class="form-check-label inline-block"
           for="flexSwitchCheckDefault" />
       </div>
-    </div>
+    </div>-->
     <div class="grid grid-cols-3 items-center justify-center">
       <div class="text-left">Depth Test Terrain</div>
       <div class="flex form-check form-switch">

@@ -10,7 +10,7 @@
   let _shouldAnimate = true;
 
   onMount(() => {
-   // _shouldAnimate = $viewer!.clock.shouldAnimate;
+   // _shouldAnimate = (globalThis as any).viewer!.clock.shouldAnimate;
    // scenario.settings.ClockSettings.shouldAnimate.set(false);
   });
 

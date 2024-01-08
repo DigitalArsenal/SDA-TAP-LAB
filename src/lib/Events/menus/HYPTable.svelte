@@ -13,12 +13,15 @@
   } from "orbpro";
   import { type Entity } from "orbpro";
   import { HYPT } from "@/classes/standards/HYP/HYP";
+  import { debounce } from "lodash";
+  import { scenario } from "@/stores/settings.store";
+  const { selectedEntity, trackedEntity, settings } = scenario;
 
   let originalEntityProperties = new Map();
 
   onMount(() => {
     $activeGroup = "defaultGroup";
-    const sDC = $viewer?.dataSources.getByName("spaceaware")[0];
+    const sDC = (globalThis as any).viewer?.dataSources.getByName("spaceaware")[0];
 
     for (const e of sDC?.entities.values!) {
       e.show = false;
@@ -30,50 +33,54 @@
       ) {
         e.show = true;
         if (e.point) {
+          /*
           originalEntityProperties.set(e, {
             pixelSize: e.point.pixelSize,
             color: e.point.color,
           });
 
           //@ts-ignore
-          e.point.pixelSize = 10;
+          if (e.label) {
+            //@ts-ignore
+            e.label.show = true;
+          }*/
           //@ts-ignore
+          e.point.color = Color.WHITE; // White color
+          //@ts-ignore
+          e.point.pixelSize = 10;
           if (e.label) {
             //@ts-ignore
             e.label.show = true;
           }
-          //@ts-ignore
-          e.point.color = Color.WHITE; // White color
 
           (e as SpaceEntity).showOrbit({ show: true });
         }
       }
     }
 
+    // Parse the start and end times
+    var startTime = JulianDate.fromDate(
+      new Date(($activeEvent as HYPT).EVENT_START_TIME as string)
+    );
+    var endTime = JulianDate.fromDate(
+      new Date(($activeEvent as HYPT).EVENT_END_TIME as string)
+    );
+    console.log(startTime, endTime);
     setTimeout(() => {
-      $viewer?.scene.render;
+      (globalThis as any).viewer.clock.currentTime = startTime;
+    }, 1000);
+    // Set the clock start and stop times
+    //(globalThis as any).viewer!.clock.startTime = startTime;
+    //(globalThis as any).viewer!.clock.stopTime = endTime;
+    // (globalThis as any).viewer!.clock.currentTime = startTime;
 
-      // Parse the start and end times
-      var startTime = JulianDate.fromDate(
-        new Date(($activeEvent as HYPT).EVENT_START_TIME as string)
-      );
-      var endTime = JulianDate.fromDate(
-        new Date(($activeEvent as HYPT).EVENT_END_TIME as string)
-      );
-
-      // Set the clock start and stop times
-      //$viewer!.clock.startTime = startTime;
-      //$viewer!.clock.stopTime = endTime;
-      $viewer!.clock.currentTime = startTime;
-
-      // Set the clock to loop at the end
-      //$viewer!.clock.clockRange = ClockRange.LOOP_STOP;
-    }, 1);
+    // Set the clock to loop at the end
+    //(globalThis as any).viewer!.clock.clockRange = ClockRange.LOOP_STOP;
   });
 
   onDestroy(() => {
     $activeGroup = "defaultGroup";
-    const sDC = $viewer?.dataSources.getByName("spaceaware")[0];
+    const sDC = (globalThis as any).viewer?.dataSources.getByName("spaceaware")[0];
 
     // Restore previous point configuration onDestroy and show all entities
     originalEntityProperties.forEach((props, e) => {
@@ -98,8 +105,8 @@
       new Date(($activeEvent as HYPT).EVENT_END_TIME as string)
     );
 
-    $viewer!.clock.currentTime = startTime;
-    $viewer!.scene.render;
+    (globalThis as any).viewer!.clock.currentTime = startTime;
+    (globalThis as any).viewer!.scene.render;
     $activeEvent = new HYPT();
     originalEntityProperties = new Map();
   });
@@ -122,26 +129,28 @@
   // Function to set the clock to a specific time
   function setClockToTime(timeString: string) {
     const time = JulianDate.fromDate(new Date(timeString));
-    $viewer!.clock.currentTime = time;
+    (globalThis as any).viewer!.clock.currentTime = time;
   }
 
   // Function to focus the camera on an entity
   function focusOnEntity(entityId: string) {
-    const entity = $viewer?.dataSources.getByName("spaceaware")[0]?.entities.getById(entityId.toString()) as Entity;
-    if (entity && entity.position) {
-      $viewer!.trackedEntity = entity;
+    const entity = (globalThis as any).viewer?.dataSources
+      .getByName("spaceaware")[0]
+      ?.entities.getById(entityId.toString()) as Entity;
+    if (entity && entity.position && $trackedEntity !== entity) {
+      $trackedEntity = entity;
     }
   }
 
   // Function to handle cell click
-  function onCellClick(rowIndex: number) {
+  let onCellClick = function (rowIndex: number) {
     // Retrieve the entity ID from the ROW_INDICATORS array based on the row index
     const entityId = $activeEvent?.ROW_INDICATORS[rowIndex];
     console.log(entityId);
     if (entityId) {
       focusOnEntity(entityId);
     }
-  }
+  };
 </script>
 
 <div class="p-1 flex flex-col items-start justify-center min-w-[250px]">

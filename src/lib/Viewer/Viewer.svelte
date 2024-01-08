@@ -107,7 +107,7 @@
       (globalThis as any).viewer = viewer;
     }
     $storeViewer = viewer;
-
+    (globalThis as any).viewer = viewer;
     //Add Buttons
     addButton(CameraButton);
     addButton(SpaceObjectButton);

@@ -25,7 +25,7 @@
     let { show } = $groups[id];
     show = !show;
     $groups[id].objectsBitfield.getAllSetIndices().forEach((e: any) => {
-      const _e = $viewer?.dataSources
+      const _e = (globalThis as any).viewer?.dataSources
         .getByName("spaceaware")[0]
         .entities.getById(e);
       if (_e) {

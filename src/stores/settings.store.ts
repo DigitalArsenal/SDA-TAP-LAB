@@ -11,15 +11,57 @@ import {
   addMatrixModeScreenSpaceEventHandler,
   removeMatrixModeScreenSpaceEventHandler,
 } from "@/behaviors/matrixModeEventHandler";
+import MASTER_SIT from "@/../../target-models/dist/SITCOLLECTION.json";
 
 const scenario = new Scenario();
 scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { Color, GoogleMaps, LatLonGrid, SpaceCatalogDataSource, createGooglePhotorealistic3DTileset } from "orbpro";
+import { Cartesian3, Color, CustomDataSource, Entity, GoogleMaps, HeightReference, LatLonGrid, NearFarScalar, SpaceCatalogDataSource, createGooglePhotorealistic3DTileset } from "orbpro";
+import type { ExtendedSITCOLLECTIONT } from "@/classes/ISIT";
+import { SiteType } from "@/classes/standards/SIT/main";
 
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
+
+const SITCOLLECTIONM: ExtendedSITCOLLECTIONT = (MASTER_SIT as any).SITCOLLECTION as ExtendedSITCOLLECTIONT;
+
+const sittDataSource = new CustomDataSource("SIT");
+
+// Define a color mapping for different site types
+const siteTypeColors: { [key: string]: Color } = {
+  "1": Color.RED, // Example color for site type 1
+  "2": Color.BLUE, // Example color for site type 2
+  // Add more mappings as needed
+};
+
+SITCOLLECTIONM.RECORDS.forEach((record, i) => {
+  let position;
+  const siteColor: any = siteTypeColors[record.SITE_TYPE?.toString()] || Color.WHITE; // Default to white if no mapping found
+
+  try {
+    position = Cartesian3.fromDegrees(record.LONGITUDE, record.LATITUDE);
+
+  } catch (e) {
+    console.log(record);
+  }
+  const entity = new Entity({
+    id: record.ID?.toString(),
+    name: record.NAME?.toString(),
+    position: position,
+    properties: {
+      SIT: record
+    },
+    point: {
+      pixelSize: 5,
+      color: siteColor,
+      heightReference: HeightReference.CLAMP_TO_GROUND,
+      //scaleByDistance: new NearFarScalar(1e2, 1.0, 1.5e2, 0.0) // Adjust these values as needed
+    }
+  });
+
+  sittDataSource.entities.add(entity);
+});
 
 // Function to update URL with the compressed state
 function updateURLWithState(compressedState: string) {
@@ -304,7 +346,7 @@ storeViewer.subscribe(async (viewer) => {
   subscriptions.push(
     settings.google3DTiles.subscribe(async (u: boolean) => {
 
-      if (!tileset) {
+      if (u && !tileset) {
         tileset = await createGooglePhotorealistic3DTileset();
       }
       if (!viewer.scene.primitives.contains(tileset) && u) {
@@ -351,6 +393,11 @@ storeViewer.subscribe(async (viewer) => {
             if (!hasDataSource) {
               await viewer.dataSources.add(spaceCatalog);
             }
+
+            //Hack until the remote source is figured out
+
+            let sitDataSource = await viewer.dataSources.add(sittDataSource);
+
             updatedDataSources.set(new Date());
             lastUpdateDataSource.set(dP.name);
           }

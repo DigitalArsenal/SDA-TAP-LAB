@@ -7,7 +7,7 @@
     console.log(launchData);
   });
 
-  import columnDefs from "../lib/Launch/columnDefs";
+  import columnDefs from "../lib/Launch/SIT/columnDefs";
   import { viewer } from "@/stores/viewer.store";
   import {
     datatableShow,
@@ -36,9 +36,9 @@
     }
 
     $columnDefStore = columnDefs;
-    if ($viewer) {
+    if ((globalThis as any).viewer) {
       const dataSource: SpaceCatalogDataSource | any =
-        $viewer.dataSources.getByName(
+        (globalThis as any).viewer.dataSources.getByName(
           "spaceaware"
         )[0] as SpaceCatalogDataSource;
       if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {
