@@ -4,12 +4,14 @@
   import { viewer } from "@/stores/viewer.store";
   import { activeGroup } from "@/stores/spacecatalog.group.store";
   import {
+    Cartesian3,
     ClockRange,
     Color,
     ConstantProperty,
     JulianDate,
     SpaceEntity,
   } from "orbpro";
+  import { type Entity } from "orbpro";
   import { HYPT } from "@/classes/standards/HYP/HYP";
 
   let originalEntityProperties = new Map();
@@ -47,6 +49,7 @@
         }
       }
     }
+
     setTimeout(() => {
       $viewer?.scene.render;
 
@@ -59,13 +62,13 @@
       );
 
       // Set the clock start and stop times
-      $viewer!.clock.startTime = startTime;
-      $viewer!.clock.stopTime = endTime;
+      //$viewer!.clock.startTime = startTime;
+      //$viewer!.clock.stopTime = endTime;
       $viewer!.clock.currentTime = startTime;
 
       // Set the clock to loop at the end
-      $viewer!.clock.clockRange = ClockRange.LOOP_STOP;
-    }, 1000);
+      //$viewer!.clock.clockRange = ClockRange.LOOP_STOP;
+    }, 1);
   });
 
   onDestroy(() => {
@@ -87,11 +90,18 @@
         e.label.show = new ConstantProperty(false); // Hide labels onDestroy
       }
     });
-    $viewer!.clock.startTime = undefined as any;
-    $viewer!.clock.stopTime = undefined as any;
-    $viewer!.clock.clockRange = ClockRange.UNBOUNDED;
+    // Parse the start and end times
+    var startTime = JulianDate.fromDate(
+      new Date(($activeEvent as HYPT).EVENT_START_TIME as string)
+    );
+    var endTime = JulianDate.fromDate(
+      new Date(($activeEvent as HYPT).EVENT_END_TIME as string)
+    );
+
+    $viewer!.clock.currentTime = startTime;
     $viewer!.scene.render;
     $activeEvent = new HYPT();
+    originalEntityProperties = new Map();
   });
 
   $: extraRows =
@@ -108,16 +118,49 @@
     }
     return "";
   }
+
+  // Function to set the clock to a specific time
+  function setClockToTime(timeString: string) {
+    const time = JulianDate.fromDate(new Date(timeString));
+    $viewer!.clock.currentTime = time;
+  }
+
+  // Function to focus the camera on an entity
+  function focusOnEntity(entityId: string) {
+    const entity = $viewer?.dataSources.getByName("spaceaware")[0]?.entities.getById(entityId.toString()) as Entity;
+    if (entity && entity.position) {
+      $viewer!.trackedEntity = entity;
+    }
+  }
+
+  // Function to handle cell click
+  function onCellClick(rowIndex: number) {
+    // Retrieve the entity ID from the ROW_INDICATORS array based on the row index
+    const entityId = $activeEvent?.ROW_INDICATORS[rowIndex];
+    console.log(entityId);
+    if (entityId) {
+      focusOnEntity(entityId);
+    }
+  }
 </script>
 
 <div class="p-1 flex flex-col items-start justify-center min-w-[250px]">
-  <div class="text-left flex flex items-start justify-between mb-4 w-full font-mono">
+  <div
+    class="text-left flex flex-col items-start justify-between mb-4 w-full font-mono">
     <div>
       <div class="text-xs">NAME: {$activeEvent?.NAME}</div>
     </div>
-    <div>
-      <div class="text-xs">STRT: {$activeEvent?.EVENT_START_TIME}</div>
-      <div class="text-xs">STOP: {$activeEvent?.EVENT_END_TIME}</div>
+    <div class="cursor-pointer">
+      <div
+        class="text-xs"
+        on:click={() => setClockToTime($activeEvent?.EVENT_START_TIME)}>
+        STRT: {$activeEvent?.EVENT_START_TIME}
+      </div>
+      <div
+        class="text-xs"
+        on:click={() => setClockToTime($activeEvent?.EVENT_END_TIME)}>
+        STOP: {$activeEvent?.EVENT_END_TIME}
+      </div>
     </div>
   </div>
   <div class="overflow-auto p-2 w-full max-w-[300px] max-h-[300px]">
@@ -136,8 +179,9 @@
             <tr>
               <th class="border px-2 w-6 h-6">{rowIndicator}</th>
               {#each $activeEvent?.COL_INDICATORS as _, colIndex}
-                <td class="border w-6 h-6 {getCellClass(rowIndex, colIndex)}"
-                ></td>
+                <td
+                  class="border w-6 h-6 {getCellClass(rowIndex, colIndex)}"
+                  on:click={() => onCellClick(rowIndex, colIndex)}></td>
               {/each}
             </tr>
           {/each}
@@ -156,7 +200,7 @@
         {/if}
       </table>
     {:else}
-      No COL_INDICATORS <br/>
+      No COL_INDICATORS <br />
       {#if !$activeEvent?.ROW_INDICATORS?.length}
         No ROW_INDICATORS
       {/if}
