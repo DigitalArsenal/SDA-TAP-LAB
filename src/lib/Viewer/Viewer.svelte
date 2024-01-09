@@ -49,7 +49,6 @@
       timeline: false,
       timelineContainer: true,
       selectionIndicator: true,
-      hideDefaultSelectionIndicator: true,
       requestRenderMode: true,
       showRenderLoopErrors: isSafe() ? true : false,
       bottomContainer: document.createElement("p"),
@@ -62,7 +61,6 @@
       target: viewer.timeline.container,
     });
     addRFSwap(viewer);
-    viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100.0;
     viewer.scene.debugShowFramesPerSecond = true;
     const cameraPosition = viewer.camera.positionWC;
     const cartographicPosition = Cartographic.fromCartesian(cameraPosition);

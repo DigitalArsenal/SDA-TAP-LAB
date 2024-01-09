@@ -1,11 +1,21 @@
-<script>
+<script lang="ts">
   import { activeEntity } from "@/stores/entity.store";
   import { SIT, SiteType } from "@/classes/standards/SIT/main";
 
   let activeSubtab = "DETAILS";
 
   $: activeSiteData = $activeEntity.properties?.SIT.getValue() as SIT;
+  let siteType: string;
+  let LATITUDE: string;
+  let LONGITUDE: string;
+  let ALTITUDE: string;
 
+  $: if (activeSiteData) {
+    siteType = SiteType[activeSiteData.SITE_TYPE as any];
+    LATITUDE = activeSiteData.LATITUDE.toFixed(2);
+    LONGITUDE = activeSiteData.LONGITUDE.toFixed(2);
+    ALTITUDE = activeSiteData.ALTITUDE.toFixed(2);
+  }
 </script>
 
 <!-- HTML Structure -->
@@ -30,7 +40,7 @@
           <div class="flex flex-col gap-2">
             <div class="site-info">Name: {activeSiteData.NAME}</div>
             <div class="site-info">
-              Type: {SiteType[activeSiteData.SITE_TYPE]}
+              Type: {siteType}
             </div>
             <div class="site-info">
               Status: {activeSiteData.OPERATIONAL_STATUS}
@@ -42,13 +52,13 @@
         {:else if activeSubtab === "LOCATION"}
           <div class="flex flex-col gap-2">
             <div class="site-info">
-              Latitude: {activeSiteData.LATITUDE.toFixed(2)}
+              Latitude: {LATITUDE}
             </div>
             <div class="site-info">
-              Longitude: {activeSiteData.LONGITUDE.toFixed(2)}
+              Longitude: {LONGITUDE}
             </div>
             <div class="site-info">
-              Altitude: {activeSiteData.ALTITUDE.toFixed(2)} km
+              Altitude: {ALTITUDE} km
             </div>
           </div>
         {/if}

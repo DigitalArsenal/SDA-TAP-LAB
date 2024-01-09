@@ -24,12 +24,15 @@ activeEntity.subscribe((aEntity: Entity | null) => {
         lastcontent.set(StatusBox);
 
         if (aEntity instanceof SpaceEntity) {
+            (globalThis as any).viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100.0;
             template.set(SpaceObjectTemplate);
             (globalThis as any).viewer!.referenceFrame = 1;
         } else if (aEntity.properties?.SIT) {
+            (globalThis as any).viewer.scene.screenSpaceCameraController.minimumZoomDistance = 10.0;
             template.set(SITTemplate);
             title.set(undefined);
         } else {
+            (globalThis as any).viewer.scene.screenSpaceCameraController.minimumZoomDistance = 0.0;
             title.set(undefined);
             template.set(undefined);
         }

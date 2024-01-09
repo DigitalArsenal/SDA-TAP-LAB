@@ -1,14 +1,8 @@
 <script lang="ts">
   import { scenario } from "@/stores/settings.store";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { arc } from "d3-shape";
-  import {
-    SceneTransforms,
-    Clock,
-    Cartesian3,
-    BoundingSphere,
-    BoundingSphereState,
-  } from "orbpro";
+  import { Cartesian3, BoundingSphere } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
   import { forceHideWidget } from "@/stores/selectionwidget.store";
   export let viewer: any;
@@ -64,6 +58,8 @@
   let selectedTrackerEvent: any;
   let ePosition: any = new Cartesian3();
   let c2 = { x: 0, y: 0 };
+  let svgOpacity = 1; // Default opacity
+
   const revoke = () => {
     if (selectedTrackerEvent) {
       selectedTrackerEvent();
@@ -73,9 +69,29 @@
   };
 
   let sESubscription: any;
-
+  let cameraDistanceChecker: any;
   onMount(() => {
     viewer.selectionIndicator.container.style.opacity = 0;
+
+    if (viewer && viewer.scene) {
+      cameraDistanceChecker = viewer.clock.onTick.addEventListener(() => {
+        if ($selectedEntity && $selectedEntity?.position) {
+          const cameraPosition = viewer.camera.positionWC;
+          const entityPosition = $selectedEntity.position.getValue(
+            viewer.clock.currentTime,
+            ePosition
+          );
+          const distance = Cartesian3.distance(cameraPosition, entityPosition!);
+          console.log(distance);
+          if (distance < 1000) {
+            svgOpacity = Math.max(0, distance / 1000);
+          } else {
+            svgOpacity = 1;
+          }
+        }
+      });
+    }
+
     if (!sESubscription) {
       sESubscription = selectedEntity.subscribe((s: any) => {
         revoke();
@@ -102,6 +118,11 @@
       });
     }
   });
+  onDestroy(() => {
+    if (cameraDistanceChecker) {
+      viewer.clock.onTick.removeEventListener(cameraDistanceChecker);
+    }
+  });
 </script>
 
 {#if c2?.x && c2?.y && !$forceHideWidget}
@@ -109,7 +130,8 @@
     id="selected"
     class="fixed flex text-white pointer-events-none"
     style="width:{widgetSize.width}px; height:{widgetSize.width}px; top:{c2.y -
-      widgetSize.height / 10}px;left:{c2.x - widgetSize.height / 10}px;">
+      widgetSize.height / 10}px;left:{c2.x -
+      widgetSize.height / 10}px; opacity:{svgOpacity};">
     <svg viewBox="0 0 100 100">
       <g transform="translate(50,50) scale(.25)">
         {#each arcs as arc}
