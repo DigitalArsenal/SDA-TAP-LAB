@@ -117,20 +117,11 @@ export const modifyGroup = async (name: string, description: string) => {
   get(gridApi).forEachNodeAfterFilter((node: any) => {
     const id = rowIDFunc(node.data);
     newObjectsBitfield.set(id, true); // Set bit to 'true' for each id
-    if (!isNewGroup) {
-      if (updatedGroup.orbitBitfield.get(id)) newOrbitBitfield.set(id, true);
-      if (updatedGroup.coverageBitfield.get(id)) newCoverageBitfield.set(id, true);
-      if (updatedGroup.labelBitfield.get(id)) newLabelBitfield.set(id, true);
-      if (updatedGroup.modelBitfield.get(id)) newModelBitfield.set(id, true);
-    }
+
   });
 
   // Replace old bitfields with new ones
   updatedGroup.objectsBitfield = newObjectsBitfield;
-  updatedGroup.orbitBitfield = newOrbitBitfield;
-  updatedGroup.coverageBitfield = newCoverageBitfield;
-  updatedGroup.labelBitfield = newLabelBitfield;
-  updatedGroup.modelBitfield = newModelBitfield;
 
   // Update the groups store
   currentGroups[gID] = updatedGroup;
@@ -259,7 +250,7 @@ export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: 
 
 export const updateProperties = (gID: string) => {
   // Get the viewer from the store
-  const _viewer = get(viewer);
+  const _viewer = (globalThis as any).viewer;
   if (!_viewer) {
     return;
   }

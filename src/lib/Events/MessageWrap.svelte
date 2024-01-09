@@ -2,7 +2,6 @@
   import { onDestroy, onMount } from "svelte";
   import {
     getMessageType,
-    messages,
     activeEvents,
     activeEvent,
   } from "@/stores/events.store";
@@ -12,7 +11,13 @@
   import HypTable from "./menus/HYPTable.svelte";
   import SitTable from "./menus/SITTable.svelte";
   import RawTable from "./menus/RawTable.svelte";
+  import type { HYPT } from "@/classes/standards/HYP/HYP";
+  import type { SITT } from "@/classes/standards/LDM/SIT";
+  import { viewer } from "@/stores/viewer.store";
+
   export let records: any[] = [];
+
+  const { trackedEntity, selectedEntity } = scenario;
 
   let dynamicComponent: any;
   let currentIndex = 0;
@@ -22,9 +27,9 @@
 
   $: {
     if (messageType === "HYP") {
-      title = `HYPOTHESIS: ${$activeEvent?.CATEGORY}`;
+      title = `HYPOTHESIS: ${($activeEvent as HYPT)?.CATEGORY}`;
     } else if (messageType === "SIT") {
-      title = `SITE: ${$activeEvent.ID}`;
+      title = `SITE: ${($activeEvent as SITT).ID}`;
     } else {
       title = messageType;
     }
@@ -34,9 +39,8 @@
     messageType = getMessageType($activeEvents);
     if (messageType === "HYP") {
       component = HypTable;
-      title = `HYPOTHESIS: ${$activeEvent?.CATEGORY}`;
+      title = `HYPOTHESIS: ${($activeEvent as HYPT)?.CATEGORY}`;
       records = $activeEvents.HYPCOLLECTION.RECORDS;
-      console.log(records);
     } else if (messageType === "SIT") {
       component = SitTable;
       records = $activeEvents.SITCOLLECTION.RECORDS;
@@ -50,8 +54,7 @@
   };
 
   $: $activeEvent = records[currentIndex];
-  console.log($activeEvent);
-  
+
   const previousRecord = () => {
     currentIndex = currentIndex - 1 < 0 ? records.length - 1 : currentIndex - 1;
   };
@@ -59,6 +62,9 @@
   const closeModal = () => {
     $content = $lastcontent || undefined;
     $lastcontent = undefined;
+    $trackedEntity = null;
+    $selectedEntity = null;
+    (globalThis as any).viewer!.camera.flyHome(0);
   };
   onDestroy(() => {
     if (dynamicComponent) {

@@ -47,7 +47,7 @@ function ensureObjectExists() {
 
 function toggleOrbit() {
     ensureObjectExists();
-    const $viewer = get(viewer);
+    const $viewer = (globalThis as any).viewer;
     groups.update((g) => {
         const $activeGroup = get(activeGroup);
         const $activeEntity = get(activeEntity);
@@ -61,12 +61,11 @@ function toggleOrbit() {
 
         return g;
     });
-    $viewer!.scene.render();
+    (globalThis as any).viewer!.scene.render();
 }
 
 function toggleCoverage() {
     ensureObjectExists();
-    const $viewer = get(viewer);
     groups.update((g) => {
         const $activeGroup = get(activeGroup);
         const $activeEntity = get(activeEntity);
@@ -75,17 +74,16 @@ function toggleCoverage() {
 
         // Update the actual activeEntity if it exists
         if ($activeEntity) {
-            $activeEntity.showCoverage({ show: currentState, viewer: $viewer });
+            $activeEntity.showCoverage({ show: currentState, viewer: (globalThis as any).viewer });
         }
         return g;
     });
-    $viewer!.scene.render();
+    (globalThis as any).viewer!.scene.render();
 }
 
 function toggleLabel() {
     ensureObjectExists();
     const $activeEntity = get(activeEntity);
-    const $viewer = get(viewer);
 
     const pOMM = $activeEntity?.properties?.OMM;
     const pCAT = $activeEntity?.properties?.CAT;
@@ -116,7 +114,7 @@ function toggleLabel() {
             }
             return g;
         });
-        $viewer!.scene.render();
+        (globalThis as any).viewer!.scene.render();
     }
 }
 
@@ -125,10 +123,9 @@ function toggleReferenceFrameDebug() {
     const $activeEntity = get(activeEntity);
     const $activeGroup = get(activeGroup);
 
-    const $viewer = get(viewer);
-    if ($viewer && $activeEntity) {
+    if ((globalThis as any).viewer && $activeEntity) {
         groups.update((g) => {
-            if (!$viewer) {
+            if (!(globalThis as any).viewer) {
                 return g;
             }
             const $activeGroup = get(activeGroup);
@@ -138,7 +135,7 @@ function toggleReferenceFrameDebug() {
             if (isActive) {
                 // Remove the debug primitive from the scene
                 if ($activeEntity.properties.debugPrimitive) {
-                    const worked = $viewer.scene.primitives.remove(
+                    const worked = (globalThis as any).viewer.scene.primitives.remove(
                         $activeEntity.properties.debugPrimitive
                     );
                     $activeEntity.properties.debugPrimitive = undefined;
@@ -152,7 +149,7 @@ function toggleReferenceFrameDebug() {
                     width: 2.0,
                 });
 
-                $viewer.scene.primitives.add(debugPrimitive);
+                (globalThis as any).viewer.scene.primitives.add(debugPrimitive);
                 // Store the reference in the property bag
                 $activeEntity.properties.debugPrimitive = debugPrimitive;
                 g[$activeGroup].objects[$activeEntity.id].referenceFrameDebug = true;
@@ -169,8 +166,6 @@ function toggleModel() {
     const $activeEntity = get(activeEntity);
     const $activeGroup = get(activeGroup);
 
-    const $viewer = get(viewer);
-
     const pOMM = $activeEntity?.properties?.OMM;
     const pCAT = $activeEntity?.properties?.CAT;
 
@@ -178,9 +173,9 @@ function toggleModel() {
         const OMM = pOMM.getValue();
 
         const modelURL = getModel(OMM.OBJECT_NAME);
-        if ($viewer && $activeEntity && modelURL) {
+        if ((globalThis as any).viewer && $activeEntity && modelURL) {
             groups.update((g) => {
-                if (!$viewer) {
+                if (!(globalThis as any).viewer) {
                     return g;
                 }
                 const isActive = !!g[$activeGroup].objects[$activeEntity.id]?.model;

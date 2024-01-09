@@ -23,8 +23,8 @@
   };
 
   async function flyToDestination(destination: any) {
-    if (!$viewer) return;
-    const scene = $viewer.scene;
+    if (!(globalThis as any).viewer) return;
+    const scene = (globalThis as any).viewer.scene;
     const ellipsoid = scene.globe.ellipsoid;
 
     let finalDestination = destination;
@@ -44,7 +44,7 @@
       finalDestination = ellipsoid.cartographicToCartesian(cartographic);
     }
 
-    $viewer.camera.flyTo({
+    (globalThis as any).viewer.camera.flyTo({
       destination: finalDestination,
       orientation: {
         heading: CesiumMath.toRadians(175.0),

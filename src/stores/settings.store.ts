@@ -11,15 +11,21 @@ import {
   addMatrixModeScreenSpaceEventHandler,
   removeMatrixModeScreenSpaceEventHandler,
 } from "@/behaviors/matrixModeEventHandler";
+import MASTER_SIT from "@/../../target-models/dist/SITCOLLECTION.json";
 
 const scenario = new Scenario();
 scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { Color, LatLonGrid, SpaceCatalogDataSource } from "orbpro";
+import { Cartesian2, Cartesian3, Color, CustomDataSource, Entity, GoogleMaps, HeightReference, HorizontalOrigin, LatLonGrid, NearFarScalar, SpaceCatalogDataSource, createGooglePhotorealistic3DTileset } from "orbpro";
+import type { ExtendedSITCOLLECTIONT } from "@/classes/ISIT";
+import { processSIT } from "./utilities/process.sit";
 
 const scenarioKey = "7af359dee11b11ec9dae8f3efcb2fa57";
+
+const SITCOLLECTIONM: ExtendedSITCOLLECTIONT = (MASTER_SIT as any).SITCOLLECTION as ExtendedSITCOLLECTIONT;
+
 
 // Function to update URL with the compressed state
 function updateURLWithState(compressedState: string) {
@@ -156,14 +162,19 @@ export const loadScenarioFromURL = async () => {
 
 let subscriptions: any = [];
 
-storeViewer.subscribe(async (viewer) => {
+storeViewer.subscribe(async (sviewer) => {
+  const viewer = (globalThis as any).viewer;
+  if (!viewer) {
+    return;
+  }
+
+  alert(viewer);
+  if (viewer) {
+    processSIT(viewer, SITCOLLECTIONM);
+  }
   while (subscriptions.length) {
     let s = subscriptions.pop();
     s();
-  }
-
-  if (!viewer) {
-    return;
   }
 
   removeEvents();
@@ -291,6 +302,31 @@ storeViewer.subscribe(async (viewer) => {
     settings.useBrowserRecommendedResolution.subscribe(async (u: boolean) => {
       //@ts-ignore
       viewer.useBrowserRecommendedResolution = u;
+
+      await saveAndUpdate();
+    })
+  );
+
+  //@ts-ignore
+  let tileset: any;
+  //@ts-ignore
+  GoogleMaps.defaultApiKey = atob("QUl6YVN5RGlzTDdOODMwaUtLTWZ6RllQT1FCeVQteXh5U2FzLTI0");
+
+  subscriptions.push(
+    settings.google3DTiles.subscribe(async (u: boolean) => {
+
+      if (u && !tileset) {
+        tileset = await createGooglePhotorealistic3DTileset();
+      }
+      if (!viewer.scene.primitives.contains(tileset) && u) {
+        viewer.scene.primitives.add(tileset);
+        settings.showLatLonGrid.set(false);
+        settings.showLatLonLabels.set(false);
+      } else if (!u) {
+        viewer.scene.primitives.remove(tileset);
+        tileset = undefined;
+      }
+
       await saveAndUpdate();
     })
   );
@@ -319,14 +355,18 @@ storeViewer.subscribe(async (viewer) => {
                     //scaleByDistance: new NearFarScalar(1e1, 4, 2.5e3, 1),
                     color: Color.WHITE.withAlpha(.7)
                   }
-                },
-                viewer
+                }
               });
 
             await spaceCatalog.loadOMM(ommBuffer, catBuffer);
             if (!hasDataSource) {
               await viewer.dataSources.add(spaceCatalog);
             }
+
+            //Hack until the remote source is figured out
+            sittDataSource.entities.suspendEvents();
+            let sitDataSource = await viewer.dataSources.add(sittDataSource);
+            sittDataSource.entities.resumeEvents();
             updatedDataSources.set(new Date());
             lastUpdateDataSource.set(dP.name);
           }

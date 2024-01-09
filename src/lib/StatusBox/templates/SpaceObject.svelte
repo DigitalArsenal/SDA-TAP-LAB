@@ -88,60 +88,65 @@
     calculateLifespan(CAT?.PERIGEE / 1000);
 
   onMount(() => {
-    if ($viewer) {
-      unsub = $viewer.clock.onTick.addEventListener((clock) => {
-        const { currentTime } = clock;
-        velocity = $activeEntity.velocity?.getValue(currentTime);
-        position = $activeEntity.position?.getValue(currentTime);
+    if ((globalThis as any).viewer) {
+      unsub = (globalThis as any).viewer.clock.onTick.addEventListener(
+        (clock: Clock) => {
+          const { currentTime } = clock;
+          velocity = $activeEntity.velocity?.getValue(currentTime);
+          position = $activeEntity.position?.getValue(currentTime);
 
-        if (!velocity || !position) return;
-        const velocityMs = Math.sqrt(
-          velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2
-        );
-        // Convert m/s to km/h
-        velocityKmh = (velocityMs * 3.6).toFixed(2);
+          if (!velocity || !position) return;
+          const velocityMs = Math.sqrt(
+            velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2
+          );
+          // Convert m/s to km/h
+          velocityKmh = (velocityMs * 3.6).toFixed(2);
 
-        if (CAT.OBJECT_TYPE) return;
+          if (CAT.OBJECT_TYPE) return;
 
-        // Launch and End of Life calculations
-        const endOfLifeDate = new Date(launchDate);
-        endOfLifeDate.setFullYear(launchDate?.getFullYear() + lifespan);
-        const launchTime = JulianDate.fromDate(launchDate);
-        const eolTime = JulianDate.fromDate(endOfLifeDate);
-        const totalLifeSpan = JulianDate.secondsDifference(eolTime, launchTime);
-        const elapsedLife = JulianDate.secondsDifference(
-          currentTime,
-          launchTime
-        );
-        // Exponential decay fuel calculation
-        const lifeRatio = elapsedLife / totalLifeSpan;
-        remainingFuelPercentage = 100 * (1 - lifeRatio);
+          // Launch and End of Life calculations
+          const endOfLifeDate = new Date(launchDate);
+          endOfLifeDate.setFullYear(launchDate?.getFullYear() + lifespan);
+          const launchTime = JulianDate.fromDate(launchDate);
+          const eolTime = JulianDate.fromDate(endOfLifeDate);
+          const totalLifeSpan = JulianDate.secondsDifference(
+            eolTime,
+            launchTime
+          );
+          const elapsedLife = JulianDate.secondsDifference(
+            currentTime,
+            launchTime
+          );
+          // Exponential decay fuel calculation
+          const lifeRatio = elapsedLife / totalLifeSpan;
+          remainingFuelPercentage = 100 * (1 - lifeRatio);
 
-        // Asymptotic behavior near low fuel level
-        const lowFuelThreshold = 5; // Threshold for slower decay, e.g., 5%
-        if (remainingFuelPercentage < lowFuelThreshold) {
-          const asymptoticFactor = 0.5; // Adjust this to control the asymptotic behavior
-          remainingFuelPercentage =
-            lowFuelThreshold *
-            Math.exp(
-              -asymptoticFactor * (lowFuelThreshold - remainingFuelPercentage)
-            );
-        }
+          // Asymptotic behavior near low fuel level
+          const lowFuelThreshold = 5; // Threshold for slower decay, e.g., 5%
+          if (remainingFuelPercentage < lowFuelThreshold) {
+            const asymptoticFactor = 0.5; // Adjust this to control the asymptotic behavior
+            remainingFuelPercentage =
+              lowFuelThreshold *
+              Math.exp(
+                -asymptoticFactor * (lowFuelThreshold - remainingFuelPercentage)
+              );
+          }
 
-        // Ensure that the remaining fuel is within valid bounds
-        remainingFuelPercentage = Math.max(remainingFuelPercentage, 0);
-        remainingFuelPercentage = Math.min(remainingFuelPercentage, 100);
+          // Ensure that the remaining fuel is within valid bounds
+          remainingFuelPercentage = Math.max(remainingFuelPercentage, 0);
+          remainingFuelPercentage = Math.min(remainingFuelPercentage, 100);
 
-        remainingFuelPercentage = remainingFuelPercentage.toFixed(2);
-        $title = `${CAT.OBJECT_NAME}
+          remainingFuelPercentage = remainingFuelPercentage.toFixed(2);
+          $title = `${CAT.OBJECT_NAME}
 <div style="background-color: gray; width: 100%; height: 8px; border-radius: 0.25rem; position: relative; border:1px ${statusColor} solid;">
   <div style="background-color:${statusColor}; width: ${remainingFuelPercentage}%; height: 100%; border-radius: 0.25rem;"></div>
 </div>`;
-      });
+        }
+      );
     }
   });
 
-  $: if (position && $viewer) {
+  $: if (position && (globalThis as any).viewer) {
     const cartographic = Cartographic.fromCartesian(position as Cartesian3);
     if (cartographic) {
       latitude = CesiumMath.toDegrees(cartographic.latitude);
@@ -204,7 +209,8 @@
       </div>
       <div class="overflow-y-auto flex h-24 pl-2">
         {#if activeSubtab === "POSITION"}
-          <div class="h-full overflow-y-scroll w-full flex justify-between flex-wrap gap-1">
+          <div
+            class="h-full overflow-y-scroll w-full flex justify-between flex-wrap gap-1">
             <div class="p-1">
               <div class="row-header">VELOCITY</div>
               <div class="row-data">{velocityKmh} km/h</div>
@@ -324,7 +330,8 @@
             {/if}
           </div>
         {:else if activeSubtab === "INFO"}
-          <div class="h-full overflow-y-scroll w-full flex justify-between flex-wrap gap-2">
+          <div
+            class="h-full overflow-y-scroll w-full flex justify-between flex-wrap gap-2">
             <div class="p-1">
               <div class="row-header">Type</div>
               <div class="text-sm row-data">
@@ -356,7 +363,8 @@
         <div
           class="border rounded p-1 bg-gray-800"
           on:click={(e) => {
-            if (!$viewer) return;
+            //@ts-ignore
+            if (!globalThis.viewer) return;
             if ($trackedEntity?.id !== $activeEntity.id) {
               $trackedEntity = $activeEntity;
             } else {
@@ -374,9 +382,7 @@
         <div class="flex items-center justify-center gap-2 mt-2">
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <div
-            class="border rounded p-1 bg-gray-800"
-            on:click={toggleOrbit}>
+          <div class="border rounded p-1 bg-gray-800" on:click={toggleOrbit}>
             <div
               class:bg-white={activeObjectState.orbit}
               class:bg-gray-800={!activeObjectState.orbit}
@@ -398,7 +404,7 @@
   *::-webkit-scrollbar {
     width: 4px;
   }
-  .tab-header.active{
+  .tab-header.active {
     @apply text-orange-400;
   }
   .tab-header.active::before {

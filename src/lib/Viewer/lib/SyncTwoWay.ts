@@ -27,7 +27,6 @@ export default function syncTwoWay(clock: any, propertyName: any, settingsPath: 
                         clearTimeout(debounceTimer);
                     }
                     debounceTimer = setTimeout(() => {
-                        console.log(value)
                         settingsPath.set(value);
                         debounceTimer = null;
                     }, debounceTime);

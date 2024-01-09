@@ -2,23 +2,23 @@
   import { Icon } from "svelte-awesome";
   import { content, lastcontent } from "@/stores/modal.store";
   import Globe from "./menus/Globe.svelte";
-  import { scenario } from "@/stores/settings.store";
+  import { appVersion, scenario } from "@/stores/settings.store";
   import { onMount } from "svelte";
   import { viewer } from "@/stores/viewer.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
+  import manifest from "@/classes/standards/manifest.json";
   let _shouldAnimate = true;
 
   onMount(() => {
-    _shouldAnimate = $viewer!.clock.shouldAnimate;
-    scenario.settings.ClockSettings.shouldAnimate.set(false);
+   // _shouldAnimate = (globalThis as any).viewer!.clock.shouldAnimate;
+   // scenario.settings.ClockSettings.shouldAnimate.set(false);
   });
 
   const closeModal = () => {
     $content = $lastcontent || undefined;
     $lastcontent = undefined;
-    scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
-  }; 
-  //hds7jtd4
+    //scenario.settings.ClockSettings.shouldAnimate.set(_shouldAnimate);
+  };
 </script>
 
 <!-- Fullscreen Modal backdrop with margin -->
@@ -43,16 +43,19 @@
       <div class="flex-grow p-1 overflow-auto">
         <Globe />
       </div>
-      <!-- Modal footer 
-    <div class="flex-none">
-      <div class="flex justify-end p-5 border-t border-gray-600">
-        <button
-          class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 focus:outline-none focus:ring focus:border-blue-300"
-          on:click={closeModal}>
-          Close
-        </button>
+      <div class="flex-none">
+        <div
+          class="flex flex-col justify-end items-end p-5 border-t border-gray-600 text-xs w-full">
+          <div class="w-full flex justify-between">
+            <b>Build</b>
+            {appVersion}
+          </div>
+          <div class="w-full flex justify-between">
+            <b>Standards Version</b>
+            {manifest.version}
+          </div>
+        </div>
       </div>
-    </div>-->
     </div>
   </div>
 </div>

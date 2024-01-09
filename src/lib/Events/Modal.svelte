@@ -16,7 +16,7 @@
   let searchTerm = "";
 
   onMount(() => {
-    _shouldAnimate = $viewer!.clock.shouldAnimate;
+    _shouldAnimate = (globalThis as any).viewer!.clock.shouldAnimate;
     scenario.settings.ClockSettings.shouldAnimate.set(false);
   });
 
@@ -102,12 +102,17 @@
         </div>
       </div>
       <div class="p-2 pl-4 border-t border-gray-600 flex">
-        <div on:click={e=>{
-          if(confirm("Delete local cache?")){
-            localStorage.removeItem("messages");
-            $messages = [];
-          };
-        }} class="pl-2 pr-2 p-1 bg-red-600 hover:bg-red-500 cursor-pointer flex items-center justify-center text-sm">Clear</div>
+        <div
+          on:click={(e) => {
+            if (confirm("Delete local cache?")) {
+              localStorage.removeItem("messages");
+              localStorage.removeItem("lastQueryTime");
+              $messages = [];
+            }
+          }}
+          class="pl-2 pr-2 p-1 bg-red-600 hover:bg-red-500 cursor-pointer flex items-center justify-center text-sm">
+          Clear
+        </div>
       </div>
     </div>
   </div>
@@ -121,8 +126,5 @@
     100% {
       background-color: transparent;
     }
-  }
-  .glow {
-    animation: glowFadeOut 1s ease-out;
   }
 </style>

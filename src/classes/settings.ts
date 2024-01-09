@@ -26,7 +26,7 @@ class EntityState {
 }
 
 export default class Settings {
-  referenceFrame: Writable<ReferenceFrame> = writable(ReferenceFrame.INERTIAL);
+  referenceFrame: Writable<ReferenceFrame> = writable(ReferenceFrame.FIXED);
   debugFPS: Writable<boolean> = writable(false);
   depthTestAgainstTerrain: Writable<boolean> = writable(false);
   skyAtmosphere: Writable<boolean> = writable(true);
@@ -46,4 +46,5 @@ export default class Settings {
   X_GRID: Writable<boolean> = writable(false);
   Y_GRID: Writable<boolean> = writable(false);
   Z_GRID: Writable<boolean> = writable(false);
+  google3DTiles: Writable<boolean> = writable(false);
 }

@@ -9,7 +9,7 @@
 
   getFilteredData($columnDefs, $data, defaultGroup.filterObject).forEach(
     (e: any) => {
-      let entity = $viewer!.dataSources
+      let entity = (globalThis as any).viewer!.dataSources
         .getByName("spaceaware")[0]
         ?.entities.getById(getID(e));
       if (entity && entity?.point) {

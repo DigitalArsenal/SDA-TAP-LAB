@@ -2,6 +2,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PLD, PLDT } from './PLD.js';
 import { dataStatusCode } from './dataStatusCode.js';
 import { massType } from './massType.js';
 import { objectType } from './objectType.js';
@@ -226,8 +227,21 @@ MASS_TYPE():massType {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : massType.DRY;
 }
 
+/**
+ * Vector of PAYLOADS
+ */
+PAYLOADS(index: number, obj?:PLD):PLD|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new PLD()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+payloadsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startCAT(builder:flatbuffers.Builder) {
-  builder.startObject(22);
+  builder.startObject(23);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -318,6 +332,22 @@ static addMassType(builder:flatbuffers.Builder, MASS_TYPE:massType) {
   builder.addFieldInt8(21, MASS_TYPE, massType.DRY);
 }
 
+static addPayloads(builder:flatbuffers.Builder, PAYLOADSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, PAYLOADSOffset, 0);
+}
+
+static createPayloadsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPayloadsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -331,7 +361,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNEROffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:objectType, OPS_STATUS_CODE:opsStatusCode, OWNEROffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataStatusCode, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitType, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massType, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -355,6 +385,7 @@ static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offs
   CAT.addSize(builder, SIZE);
   CAT.addMass(builder, MASS);
   CAT.addMassType(builder, MASS_TYPE);
+  CAT.addPayloads(builder, PAYLOADSOffset);
   return CAT.endCAT(builder);
 }
 
@@ -381,7 +412,8 @@ unpack(): CATT {
     this.MANEUVERABLE(),
     this.SIZE(),
     this.MASS(),
-    this.MASS_TYPE()
+    this.MASS_TYPE(),
+    this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength())
   );
 }
 
@@ -409,6 +441,7 @@ unpackTo(_o: CATT): void {
   _o.SIZE = this.SIZE();
   _o.MASS = this.MASS();
   _o.MASS_TYPE = this.MASS_TYPE();
+  _o.PAYLOADS = this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength());
 }
 }
 
@@ -435,7 +468,8 @@ constructor(
   public MANEUVERABLE: boolean = false,
   public SIZE: number = 0.0,
   public MASS: number = 0.0,
-  public MASS_TYPE: massType = massType.DRY
+  public MASS_TYPE: massType = massType.DRY,
+  public PAYLOADS: (PLDT)[] = []
 ){}
 
 
@@ -448,6 +482,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DECAY_DATE = (this.DECAY_DATE !== null ? builder.createString(this.DECAY_DATE!) : 0);
   const ORBIT_CENTER = (this.ORBIT_CENTER !== null ? builder.createString(this.ORBIT_CENTER!) : 0);
   const DEPLOYMENT_DATE = (this.DEPLOYMENT_DATE !== null ? builder.createString(this.DEPLOYMENT_DATE!) : 0);
+  const PAYLOADS = CAT.createPayloadsVector(builder, builder.createObjectOffsetList(this.PAYLOADS));
 
   return CAT.createCAT(builder,
     OBJECT_NAME,
@@ -471,7 +506,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.MANEUVERABLE,
     this.SIZE,
     this.MASS,
-    this.MASS_TYPE
+    this.MASS_TYPE,
+    PAYLOADS
   );
 }
 }

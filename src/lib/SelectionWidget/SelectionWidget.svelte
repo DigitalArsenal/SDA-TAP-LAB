@@ -1,19 +1,13 @@
 <script lang="ts">
   import { scenario } from "@/stores/settings.store";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { arc } from "d3-shape";
-  import {
-    SceneTransforms,
-    Clock,
-    Cartesian3,
-    BoundingSphere,
-    BoundingSphereState,
-  } from "orbpro";
+  import { Cartesian3, BoundingSphere } from "orbpro";
   import opsStatusCode from "@/lib/theme/ops_status_code.mjs";
   import { forceHideWidget } from "@/stores/selectionwidget.store";
   export let viewer: any;
 
-  const { selectedEntity } = scenario;
+  const { selectedEntity, trackedEntity } = scenario;
   const boundingSphereScratch = new BoundingSphere();
 
   let statusColors = Object.entries(opsStatusCode);
@@ -64,6 +58,8 @@
   let selectedTrackerEvent: any;
   let ePosition: any = new Cartesian3();
   let c2 = { x: 0, y: 0 };
+  let svgOpacity = 1; // Default opacity
+
   const revoke = () => {
     if (selectedTrackerEvent) {
       selectedTrackerEvent();
@@ -73,51 +69,42 @@
   };
 
   let sESubscription: any;
-
+  let cameraDistanceChecker: any;
   onMount(() => {
+    viewer.selectionIndicator.container.style.opacity = 0;
+
+    if (viewer && viewer.scene) {
+      cameraDistanceChecker = viewer.clock.onTick.addEventListener(() => {
+        if ($selectedEntity && $selectedEntity?.position) {
+          const cameraPosition = viewer.camera.positionWC;
+          const entityPosition = $selectedEntity.position.getValue(
+            viewer.clock.currentTime,
+            ePosition
+          );
+          const distance = Cartesian3.distance(cameraPosition, entityPosition!);
+          if (distance < 10000) {
+            svgOpacity = Math.max(0, distance / 10000);
+          } else {
+            svgOpacity = 1;
+          }
+        }
+      });
+    }
+
     if (!sESubscription) {
       sESubscription = selectedEntity.subscribe((s: any) => {
         revoke();
         if (!selectedTrackerEvent && s && viewer?.clock) {
-          selectedTrackerEvent = viewer.clock.onTick.addEventListener(
-            (clock: Clock) => {
-              let { selectedEntity, scene } = viewer;
-              if (selectedEntity && selectedEntity?.position?.getValue) {
-                ePosition = selectedEntity.position.getValue(clock.currentTime);
-
-                if (ePosition && !ePosition.equals(Cartesian3.ZERO)) {
-                  c2 = SceneTransforms.wgs84ToWindowCoordinates(
-                    viewer.scene,
-                    ePosition
-                  );
-                }
-              } else if (
-                selectedEntity &&
-                selectedEntity?.isShowing &&
-                selectedEntity?.isAvailable(clock.currentTime)
-              ) {
-                const state = viewer._dataSourceDisplay.getBoundingSphere(
-                  selectedEntity,
-                  true,
-                  boundingSphereScratch
-                );
-
-                if (state !== BoundingSphereState.FAILED) {
-                  ePosition = viewer.selectedEntity.position =
-                    boundingSphereScratch.center;
-                  viewer.camera.flyToBoundingSphere(boundingSphereScratch, {
-                    duration: 1,
-                  });
-                  console.log(ePosition);
-                  if (ePosition && !ePosition.equals(Cartesian3.ZERO)) {
-                    c2 = SceneTransforms.wgs84ToWindowCoordinates(
-                      viewer.scene,
-                      ePosition
-                    );
-                    console.log(c2);
-                  }
-                }
-              }
+          selectedTrackerEvent = viewer.scene.postRender.addEventListener(
+            () => {
+              c2 = {
+                x: parseFloat(
+                  viewer.selectionIndicator._viewModel._screenPositionX
+                ),
+                y: parseFloat(
+                  viewer.selectionIndicator._viewModel._screenPositionY
+                ),
+              };
             }
           );
           segments[1].color = (statusColors[
@@ -130,6 +117,11 @@
       });
     }
   });
+  onDestroy(() => {
+    if (cameraDistanceChecker) {
+      viewer.clock.onTick.removeEventListener(cameraDistanceChecker);
+    }
+  });
 </script>
 
 {#if c2?.x && c2?.y && !$forceHideWidget}
@@ -137,7 +129,8 @@
     id="selected"
     class="fixed flex text-white pointer-events-none"
     style="width:{widgetSize.width}px; height:{widgetSize.width}px; top:{c2.y -
-      widgetSize.height / 2}px;left:{c2.x - widgetSize.height / 2}px;">
+      widgetSize.height / 10}px;left:{c2.x -
+      widgetSize.height / 10}px; opacity:{svgOpacity};">
     <svg viewBox="0 0 100 100">
       <g transform="translate(50,50) scale(.25)">
         {#each arcs as arc}

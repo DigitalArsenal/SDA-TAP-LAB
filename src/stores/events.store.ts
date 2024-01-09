@@ -1,7 +1,9 @@
 import { writable, type Writable } from 'svelte/store';
 export const nodeREDURL = "apollo.sdataplab.com/node-red";
 export const messages = createWebSocketStore(nodeREDURL);
-
+import { HYPT } from '@/classes/standards/HYP/HYP';
+import { HYPCOLLECTIONT } from '@/classes/standards/HYP/HYPCOLLECTION';
+import type { SITT } from '@/classes/standards/LDM/SIT';
 const lastQueryTime = localStorage.getItem("lastQueryTime");
 const startTime = lastQueryTime
     ? new Date(lastQueryTime).toISOString()
@@ -87,4 +89,4 @@ export const getMessageType = (message: any) => {
 };
 
 export const activeEvents: Writable<any> = writable({});
-export const activeEvent: Writable<any> = writable(null);
+export const activeEvent: Writable<HYPT | SITT | any> = writable(new HYPT());

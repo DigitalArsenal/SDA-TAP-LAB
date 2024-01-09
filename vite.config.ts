@@ -58,7 +58,13 @@ const banner = `/*!
 export default defineConfig({
   plugins: [svelte({
     preprocess: sveltePreprocess(),
-
+    onwarn: (warning, handler) => {
+      if (warning.code.startsWith('a11y')) {
+        return;
+      }
+      // Handle all other warnings as usual
+      handler(warning);
+    },
 
   }),
   copy({
@@ -86,6 +92,17 @@ export default defineConfig({
     emptyOutDir: false,
     outDir: "docs",
     rollupOptions: {
+      onwarn(warning, warn) {
+        // Check if the warning is a 'PLUGIN_WARNING' from 'vite:resolve'
+        if (warning.code === 'PLUGIN_WARNING' && warning.plugin === 'vite:resolve') {
+          // Check if the warning message is about externalizing modules for browser compatibility
+          if (warning.message && warning.message.includes('has been externalized for browser compatibility')) {
+            return; // This suppresses the specific warning
+          }
+        }
+        // Handle all other warnings as usual
+        warn(warning);
+      },
       external: ['cesium'],
       input: {
         app,
