@@ -6,6 +6,7 @@ import EventsModal from "@/lib/Events/MessageWrap.svelte";
 import { scenario } from "@/stores/settings.store";
 import StatusBox from "@/lib/StatusBox/StatusBox.svelte";
 import SpaceObjectTemplate from "@/lib/StatusBox/templates/SpaceObject.svelte";
+import SITTemplate from "@/lib/StatusBox/templates/SIT.svelte";
 
 export const activeEntity: Writable<Entity | SpaceEntity | any | null | any> = writable(null);
 
@@ -25,6 +26,9 @@ activeEntity.subscribe((aEntity: Entity | null) => {
         if (aEntity instanceof SpaceEntity) {
             template.set(SpaceObjectTemplate);
             (globalThis as any).viewer!.referenceFrame = 1;
+        } else if (aEntity.properties?.SIT) {
+            template.set(SITTemplate);
+            title.set(undefined);
         } else {
             title.set(undefined);
             template.set(undefined);

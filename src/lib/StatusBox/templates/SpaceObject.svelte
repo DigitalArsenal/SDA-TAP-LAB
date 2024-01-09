@@ -90,7 +90,7 @@
   onMount(() => {
     if ((globalThis as any).viewer) {
       unsub = (globalThis as any).viewer.clock.onTick.addEventListener(
-        (clock) => {
+        (clock: Clock) => {
           const { currentTime } = clock;
           velocity = $activeEntity.velocity?.getValue(currentTime);
           position = $activeEntity.position?.getValue(currentTime);
