@@ -82,9 +82,8 @@
             ePosition
           );
           const distance = Cartesian3.distance(cameraPosition, entityPosition!);
-          console.log(distance);
-          if (distance < 1000) {
-            svgOpacity = Math.max(0, distance / 1000);
+          if (distance < 10000) {
+            svgOpacity = Math.max(0, distance / 10000);
           } else {
             svgOpacity = 1;
           }

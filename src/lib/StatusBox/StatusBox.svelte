@@ -4,8 +4,9 @@
   import { activeEntity } from "@/stores/entity.store";
   import CloseButton from "@/lib/elements/CloseButton.svelte";
   import { Icon } from "svelte-awesome";
-  import { chevronLeft } from "svelte-awesome/icons";
-  const { selectedEntity } = scenario;
+  import { chevronLeft, videoCamera } from "svelte-awesome/icons";
+  import VideoSlash from "@/lib/widgets/VideoSlash.svelte";
+  const { selectedEntity, trackedEntity } = scenario;
   let minimized = false;
 
   const closeModal = () => {
@@ -20,7 +21,7 @@
 <!-- Fullscreen Modal backdrop with margin -->
 {#if minimized}
   <button
-  style="border:1px solid white"
+    style="border:1px solid white"
     class="rounded fixed flex items-center justify-center top-[45px] right-[5px] w-8 h-8 border cesium-button"
     on:click={() => {
       minimized = false;
@@ -42,10 +43,26 @@
           <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div
             class="select-none flex justify-between items-center pl-2 pr-3 pt-2 pb-2 md:pt-2 md:pb-2 border-b border-gray-600">
-            <p class="text-white font-[300]">
+            <p
+              class="text-white font-[300] flex gap-1 items-center justify-center">
               {#if $title}
                 {@html $title}
               {:else if $activeEntity}
+                <button
+                  class="mr-2 p-1 flex items-center justify-center"
+                  on:click={() => {
+                    if ($activeEntity === $trackedEntity) {
+                      $trackedEntity = null;
+                    } else {
+                      $trackedEntity = $activeEntity;
+                    }
+                  }}>
+                  {#if $activeEntity !== $trackedEntity}
+                    <Icon data={videoCamera} />
+                  {:else}
+                    <VideoSlash />
+                  {/if}
+                </button>
                 {$activeEntity.id}: {$activeEntity.name}
               {:else}
                 Entity

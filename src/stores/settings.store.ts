@@ -18,7 +18,7 @@ scenario.settings = new Settings();
 
 import lzworker from "@/workers/lzWorker.mjs?worker&inline";
 import type { SatelliteCatalogDataProvider } from "@/classes/dataprovider";
-import { Cartesian3, Color, CustomDataSource, Entity, GoogleMaps, HeightReference, LatLonGrid, NearFarScalar, SpaceCatalogDataSource, createGooglePhotorealistic3DTileset } from "orbpro";
+import { Cartesian2, Cartesian3, Color, CustomDataSource, Entity, GoogleMaps, HeightReference, HorizontalOrigin, LatLonGrid, NearFarScalar, SpaceCatalogDataSource, createGooglePhotorealistic3DTileset } from "orbpro";
 import type { ExtendedSITCOLLECTIONT } from "@/classes/ISIT";
 import { SiteType } from "@/classes/standards/SIT/main";
 
@@ -30,7 +30,8 @@ const sittDataSource = new CustomDataSource("SIT");
 
 // Define a color mapping for different site types
 const siteTypeColors: { [key: string]: Color } = {
-  "1": Color.RED, // Example color for site type 1
+  "0": Color.RED, // Example color for site type 1
+  "1": Color.GREEN, // Example color for site type 1
   "2": Color.BLUE, // Example color for site type 2
   // Add more mappings as needed
 };
@@ -46,11 +47,20 @@ SITCOLLECTIONM.RECORDS.forEach((record, i) => {
     console.log(record);
   }
   const entity = new Entity({
+    show: siteColor !== Color.WHITE,
     id: record.ID?.toString(),
     name: record.NAME?.toString(),
     position: position,
     properties: {
       SIT: record
+    },
+    label: {
+      pixelOffset: new Cartesian2(-10, 0),
+      backgroundColor: Color.GRAY,
+      font: "14px",
+      text: record.NAME?.toString(),
+      horizontalOrigin: HorizontalOrigin.RIGHT,
+      scaleByDistance: new NearFarScalar(1.5e2, 1.5, 8.0e6, 0.1) // Adjust these values as needed
     },
     point: {
       pixelSize: 5,
