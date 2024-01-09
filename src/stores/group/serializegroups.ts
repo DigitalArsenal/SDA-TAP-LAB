@@ -66,7 +66,6 @@ function toggleOrbit() {
 
 function toggleCoverage() {
     ensureObjectExists();
-    (globalThis as any).viewer = get(viewer);
     groups.update((g) => {
         const $activeGroup = get(activeGroup);
         const $activeEntity = get(activeEntity);
@@ -85,7 +84,6 @@ function toggleCoverage() {
 function toggleLabel() {
     ensureObjectExists();
     const $activeEntity = get(activeEntity);
-    (globalThis as any).viewer = get(viewer);
 
     const pOMM = $activeEntity?.properties?.OMM;
     const pCAT = $activeEntity?.properties?.CAT;
@@ -125,7 +123,6 @@ function toggleReferenceFrameDebug() {
     const $activeEntity = get(activeEntity);
     const $activeGroup = get(activeGroup);
 
-    (globalThis as any).viewer = get(viewer);
     if ((globalThis as any).viewer && $activeEntity) {
         groups.update((g) => {
             if (!(globalThis as any).viewer) {
@@ -168,8 +165,6 @@ function toggleModel() {
     ensureObjectExists();
     const $activeEntity = get(activeEntity);
     const $activeGroup = get(activeGroup);
-
-    (globalThis as any).viewer = get(viewer);
 
     const pOMM = $activeEntity?.properties?.OMM;
     const pCAT = $activeEntity?.properties?.CAT;

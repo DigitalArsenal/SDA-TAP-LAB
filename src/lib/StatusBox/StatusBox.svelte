@@ -46,7 +46,7 @@
               {#if $title}
                 {@html $title}
               {:else if $activeEntity}
-                {$activeEntity.id}
+                {$activeEntity.id}: {$activeEntity.name}
               {:else}
                 Entity
               {/if}

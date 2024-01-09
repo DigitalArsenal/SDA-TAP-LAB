@@ -5,11 +5,9 @@ import {
 } from "@/classes/SDS-1-Satellite-Catalog-Message-(CAT)-TypeScript/main";
 import { scenario } from "@/stores/settings.store";
 let { trackedEntity, selectedEntity } = scenario;
-import { viewer } from "@/stores/viewer.store";
-import { get } from "svelte/store";
+
 
 const cellClickEvent = (event: any) => {
-    (globalThis as any).viewer = get(viewer);
     if ((globalThis as any).viewer) {
         let entity = (globalThis as any).viewer.dataSources
             .getByName("launchsites")[0]

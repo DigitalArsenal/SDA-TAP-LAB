@@ -250,7 +250,7 @@ export function getFilteredData(columnDefs: any[], rowData: any[], filterModel: 
 
 export const updateProperties = (gID: string) => {
   // Get the viewer from the store
-  const _viewer = get(viewer);
+  const _viewer = (globalThis as any).viewer;
   if (!_viewer) {
     return;
   }

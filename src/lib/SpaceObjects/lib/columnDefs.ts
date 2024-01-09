@@ -10,7 +10,6 @@ import { get } from "svelte/store";
 import getID from "./getID";
 
 const cellClickEvent = (event: any) => {
-  (globalThis as any).viewer = get(viewer);
   if ((globalThis as any).viewer) {
     let entity = (globalThis as any).viewer.dataSources
       .getByName("spaceaware")[0]

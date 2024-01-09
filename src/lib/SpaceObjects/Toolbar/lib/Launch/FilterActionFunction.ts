@@ -1,7 +1,7 @@
 import { viewer } from "@/stores/viewer.store";
 import { get } from "svelte/store";
 const filterActionFunction = (filteredRows: any[]) => {
-  const _viewer = get(viewer);
+  const _viewer = (globalThis as any).viewer;
   if (!_viewer) {
     return;
   }
