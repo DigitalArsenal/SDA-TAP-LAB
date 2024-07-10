@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "../../style/widgets.css";
+  import "orbpro/style/widgets.css";
   //@ts-ignore
   import {
     Viewer,
@@ -11,7 +11,7 @@
     TileMapServiceImageryProvider,
     ImageryLayer,
     VERSION,
-    EmbeddedTileServiceImageryProvider,
+    EmbeddedTileServiceImageryProvider
   } from "orbpro";
 
   console.log(VERSION);
@@ -76,15 +76,19 @@
     });
 
     //Imagery
-    const p = new EmbeddedTileServiceImageryProvider({
-      id: "BlackMarble",
-      path: "2016",
-    });
 
-    const layer = viewer.imageryLayers.addImageryProvider(p);
-    layer.dayAlpha = 0.0;
-    layer.contrast = 1;
-    (viewer as any).nightImageryLayer = layer;
+    TileMapServiceImageryProvider.fromUrl(
+      `${isSafe() ? "src" : ""}/assets/worldmap/blackmarble/2016`,
+      {
+        fileExtension: "jpg",
+      }
+    ).then((p: TileMapServiceImageryProvider) => {
+      //TODO Imagery Layer Management
+      const layer = viewer.imageryLayers.addImageryProvider(p);
+      layer.dayAlpha = 0.0;
+      layer.contrast = 1;
+      (viewer as any).nightImageryLayer = layer;
+    });
 
     // Override home button behavior
     viewer.homeButton.viewModel.command.beforeExecute.addEventListener(

@@ -1,11 +1,11 @@
 {
     "name": "sda-tap-lab",
-    "version": "0.8.4+1720608253853",
+    "version": "0.8.4+1720608756922",
     "type": "module",
     "scripts": {
         "deploy": "npm run build && git add -A && git commit -m 'deploy' && git push",
         "dev": "vite",
-        "build": "rm -Rf docs/assets/* && vite build && node ./scripts/version.js && node ./node_modules/terser/dist/bundle.min.js -m -c ./docs/assets/*.js",
+        "build": "rm -Rf docs/assets/* && vite build && node ./scripts/version.js && node ./node_modules/terser/dist/bundle.min.js -m -c ./docs/assets/*.js && cp -R ./src/assets/* ./docs/assets/",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json"
     },
