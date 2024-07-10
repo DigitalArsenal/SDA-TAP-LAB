@@ -1,8 +1,8 @@
-# SpaceAware.io Proof of Concept Viewer
+# SDA TAP LAB Proof of Concept Viewer
 
 Welcome to the SpaceAware.io Proof of Concept Viewer for the SDA TAP LAB. This project leverages the power of [OrbPro](https://digitalarsenal.io/orbpro/), a customized CesiumJS distribution, to create interactive 3D globes, 2D maps, and 4D physics-based space simulations directly in your web browser without the need for plugins.
 
-The entire webapp is contained in this directory, hosted using [Github Pages](https://pages.github.com/) out of the `docs` directory, at the domain [tap.spaceaware.io](https://tap.spaceaware.io)``.  Clicking that link will take you to the live webapp.
+The entire webapp is contained in this directory, hosted using [Github Pages](https://pages.github.com/) out of the `docs` directory, at the domain [tap.spaceaware.io](https://tap.spaceaware.io).  Clicking that link will take you to the live webapp.
 
 ## Features
 

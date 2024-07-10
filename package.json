@@ -1,6 +1,6 @@
 {
     "name": "sda-tap-lab",
-    "version": "0.8.4+1719757015271",
+    "version": "0.8.4+1720579606605",
     "type": "module",
     "scripts": {
         "deploy": "npm run build && git add -A && git commit -m 'deploy' && git push",
