@@ -52,7 +52,7 @@
       timelineContainer: true,
       selectionIndicator: true,
       requestRenderMode: true,
-      showRenderLoopErrors: isSafe() ? true : false,
+      showRenderLoopErrors: true,
       bottomContainer: document.createElement("p"),
       orderIndependentTranslucency: false,
       shadows: true,
