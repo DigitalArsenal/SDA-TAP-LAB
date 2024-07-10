@@ -171,9 +171,9 @@ storeViewer.subscribe(async (sviewer) => {
   }
 
   if (viewer) {
-    setTimeout(() => {
+   /* setTimeout(() => {
       processSIT(viewer, SITCOLLECTIONM);
-    }, 2000)
+    }, 2000)*/
   }
 
   while (subscriptions.length) {
