@@ -79,8 +79,6 @@
   $: launchDate = CAT?.LAUNCH_DATE
     ? new Date(CAT.LAUNCH_DATE as string)
     : new Date();
-  // Adding a small random factor (e.g., within ±2%)
-  const randomFactor = Math.random() * 0.04 - 0.02; // Random value between -0.02 and +0.02
 
   $: lifespan =
     getLifespan(CAT?.OBJECT_NAME?.toString() || "") ||
@@ -143,6 +141,7 @@
         }
       );
     }
+    $activeEntity.referenceFrame = ReferenceFrame.VVLH;
   });
 
   $: if (position && (globalThis as any).viewer) {
@@ -163,7 +162,7 @@
     orbit: false,
     coverage: false,
     label: false,
-    referenceFrame: false,
+    referenceFrame: ReferenceFrame.VVLH,
     model: undefined,
   };
   let activeObjectState: any = { ...defaultObjectValue };

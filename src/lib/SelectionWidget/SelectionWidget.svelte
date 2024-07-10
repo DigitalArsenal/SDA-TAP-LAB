@@ -31,10 +31,6 @@
 
   $: $forceHideWidget = !$trackedEntity;
 
-  $: {
-    console.log($forceHideWidget);
-  }
-
   const updateSegments = (percentComplete: any) => {
     let total = segments.reduce((total, s) => total + s.size, 0);
     let progress = 360 * (percentComplete / 100);

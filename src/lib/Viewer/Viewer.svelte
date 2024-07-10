@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "orbpro/style/widgets.css";
+  import "../../style/widgets.css";
   //@ts-ignore
   import {
     Viewer,
@@ -10,10 +10,11 @@
     viewerReferenceFrameMixin,
     TileMapServiceImageryProvider,
     ImageryLayer,
-    VERSION
+    VERSION,
+    EmbeddedTileServiceImageryProvider,
   } from "orbpro";
 
-  console.log(VERSION)
+  console.log(VERSION);
   import { addRFSwap } from "@/behaviors/referenceFrameSwapAlt";
   import { onMount } from "svelte";
   import { viewer as storeViewer } from "../../stores/viewer.store";
@@ -75,19 +76,15 @@
     });
 
     //Imagery
-
-    TileMapServiceImageryProvider.fromUrl(
-      `${isSafe() ? "src" : ""}/assets/worldmap/blackmarble/2016`,
-      {
-        fileExtension: "jpg",
-      }
-    ).then((p: TileMapServiceImageryProvider) => {
-      //TODO Imagery Layer Management
-      const layer = viewer.imageryLayers.addImageryProvider(p);
-      layer.dayAlpha = 0.0;
-      layer.contrast = 1;
-      (viewer as any).nightImageryLayer = layer;
+    const p = new EmbeddedTileServiceImageryProvider({
+      id: "BlackMarble",
+      path: "2016",
     });
+
+    const layer = viewer.imageryLayers.addImageryProvider(p);
+    layer.dayAlpha = 0.0;
+    layer.contrast = 1;
+    (viewer as any).nightImageryLayer = layer;
 
     // Override home button behavior
     viewer.homeButton.viewModel.command.beforeExecute.addEventListener(
