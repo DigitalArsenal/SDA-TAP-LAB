@@ -1,6 +1,6 @@
 {
     "name": "sda-tap-lab",
-    "version": "0.8.4+1720579606605",
+    "version": "0.8.4+1720580949171",
     "type": "module",
     "scripts": {
         "deploy": "npm run build && git add -A && git commit -m 'deploy' && git push",
@@ -47,7 +47,7 @@
         "flowbite-svelte": "^0.44.20",
         "jquery": "^3.7.1",
         "lz-string": "^1.5.0",
-        "orbpro": "^1.118.21",
+        "orbpro": "^1.118.22",
         "pure-ipfs-only-hash": "^4.0.2",
         "svelte-awesome": "^3.2.1",
         "xxhashjs": "^0.2.2"
