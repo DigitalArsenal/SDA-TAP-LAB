@@ -11,9 +11,10 @@
   import HypTable from "./menus/HYPTable.svelte";
   import SitTable from "./menus/SITTable.svelte";
   import RawTable from "./menus/RawTable.svelte";
+  import CCDMTable from "./menus/CCDMTable.svelte";
   import type { HYPT } from "@/classes/standards/HYP/HYP";
   import type { SITT } from "@/classes/standards/SIT/SIT";
-  import type {CRMT} from "@/classes/standards/CRM/CRM";
+
   import CrmTable from "./menus/CRMTable.svelte";
 
   export let records: any[] = [];
@@ -48,9 +49,14 @@
     } else if (messageType === "CRM") {
       component = CrmTable;
       records = $activeEvents.CRMCOLLECTION.RECORDS;
+    } else if (messageType === "CCDM") {
+      component = CCDMTable;
+      const rawM: any = $activeEvents[`${messageType}COLLECTION`];
+      records = rawM?.RECORDS || [rawM];
     } else {
       component = RawTable;
       const rawM: any = $activeEvents[`${messageType}COLLECTION`];
+      console.log(rawM);
       records = rawM?.RECORDS || [rawM];
     }
   });
@@ -93,6 +99,7 @@
         {#if records.length > 0}
           <svelte:component this={component} />
         {/if}
+        {#if records.length>1}
         <div class="pt-2 text-xs w-full border-t-[1px] border-gray-500">
           {currentIndex + 1}/{records.length}
         </div>
@@ -109,6 +116,7 @@
             Next
           </div>
         </div>
+        {/if}
       </div>
     </div>
   </div>

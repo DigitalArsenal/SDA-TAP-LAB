@@ -11,7 +11,7 @@ import {
   addMatrixModeScreenSpaceEventHandler,
   removeMatrixModeScreenSpaceEventHandler,
 } from "@/behaviors/matrixModeEventHandler";
-import MASTER_SIT from "@/../../target-models/dist/SITCOLLECTION.json";
+import * as MASTER_SIT from "@/../../target-models/dist/SITCOLLECTION.json";
 
 const scenario = new Scenario();
 scenario.settings = new Settings();

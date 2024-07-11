@@ -4,27 +4,28 @@ export const messages = createWebSocketStore(nodeREDURL);
 import { HYPT } from '@/classes/standards/HYP/HYP';
 import { HYPCOLLECTIONT } from '@/classes/standards/HYP/HYPCOLLECTION';
 import type { SITT } from '@/classes/standards/LDM/SIT';
-const lastQueryTime = localStorage.getItem("lastQueryTime");
-const startTime = lastQueryTime
+//const lastQueryTime = localStorage.getItem("lastQueryTime");
+const startTime = /*lastQueryTime
     ? new Date(lastQueryTime).toISOString()
-    : new Date(0).toISOString();
-
-fetch(`https://${nodeREDURL}/messagearchive?start=${startTime}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-})
-    .then((response) => response.json())
-    .then((result) => {
-        const storedMessages = JSON.parse(
-            localStorage.getItem("messages") || "[]"
-        );
-        const combinedMessages = [...storedMessages, ...result].slice(-10000);
-        localStorage.setItem("messages", JSON.stringify(combinedMessages));
-        messages.set(combinedMessages);
-        localStorage.setItem("lastQueryTime", new Date().toISOString());
+    :*/ new Date(0).toISOString();
+const reFetch = () =>
+    fetch(`https://${nodeREDURL}/messagearchive?start=${startTime}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
     })
-    .catch((error) => console.error("Error:", error));
+        .then((response) => response.json())
+        .then((result) => {
+            /*const storedMessages = JSON.parse(
+                localStorage.getItem("messages") || "[]"
+            );
+            const combinedMessages = [...storedMessages, ...result].slice(-10000);
+            localStorage.setItem("messages", JSON.stringify(combinedMessages));*/
+            messages.set(result);
+            //localStorage.setItem("lastQueryTime", new Date().toISOString());
+        })
+        .catch((error) => console.error("Error:", error));
 
+reFetch();
 export function createWebSocketStore(url: string) {
     const { subscribe, set, update } = writable<any[]>([]);
     let ws: WebSocket;
@@ -39,12 +40,16 @@ export function createWebSocketStore(url: string) {
         };
 
         ws.onmessage = (event) => {
-            const newMessage = JSON.parse(event.data);
+            /*const newMessage = JSON.parse(event.data);
             update(messages => {
                 const updatedMessages = [...messages, newMessage].slice(-10000);
                 localStorage.setItem('messages', JSON.stringify(updatedMessages));
                 return updatedMessages;
-            });
+            });*/
+
+            //CCDMs are being polled
+
+            reFetch();
         };
 
         ws.onerror = (error) => {
@@ -84,7 +89,7 @@ export const getMessageType = (message: any) => {
     const messageTypeEntry = Object.entries(message).find(([key, _]) =>
         key.endsWith("COLLECTION")
     );
-    return messageTypeEntry ? messageTypeEntry[0].split("COLLECTION")[0] : null;
+    return messageTypeEntry ? messageTypeEntry[0].split("COLLECTION")[0] : "ANY";
 };
 
 export const activeEvents: Writable<any> = writable({});

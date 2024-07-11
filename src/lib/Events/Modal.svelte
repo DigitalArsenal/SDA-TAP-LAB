@@ -15,6 +15,13 @@
   let modalBody: Element;
   let searchTerm = "";
 
+  const customHeader = (message: any) => {
+    if (message.CCDMCOLLECTION) {
+      const { NORAD_CAT_ID, OBJECT_NAME, OBJECT_TYPE } = message.CCDMCOLLECTION[0];
+      return `${NORAD_CAT_ID}: ${OBJECT_NAME}`;
+    }
+    return "";
+  };
   onMount(() => {
     _shouldAnimate = (globalThis as any).viewer!.clock.shouldAnimate;
     scenario.settings.ClockSettings.shouldAnimate.set(false);
@@ -33,6 +40,7 @@
   $: filteredCount = filteredMessages.length;
 
   const loadTable = (lmessages: any) => {
+    console.log(lmessages);
     $activeEvents = lmessages;
     $lastcontent = $content;
     $content = MessageWrap;
@@ -46,7 +54,7 @@
 </script>
 
 <div
-  class="text-white fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[50%%] h-[35%] md:h-[34%] max-h-[350px] max-w-[600px] right-0">
+  class="text-white fixed mt-12 pr-2 pl-2 flex justify-end items-start w-full md:w-[50%%] h-[35%] md:h-[34%] max-h-[350px] max-w-[400px] right-0">
   <div class="flex justify-center items-center z-50 w-full h-full">
     <!-- Modal content -->
     <div
@@ -85,11 +93,12 @@
                   {new Date(message.timestamp).toISOString()}
                 </div>
               </div>
+              <div class="text-[.65rem] mb-2">{customHeader(message)}</div>
               <div>
                 <p class="text-[.55rem]">
                   Org: {message.headers["x-client-dn"]
-                    .split(",")[3]
-                    .split("=")[1]}
+                    ?.split(",")[3]
+                    ?.split("=")[1]}
                 </p>
                 <p class="text-[.55rem]">
                   CN: {message.headers["x-client-dn"]
