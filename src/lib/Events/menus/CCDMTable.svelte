@@ -4,18 +4,35 @@
   import {
     Color,
     SpaceEntity,
+    Material,
     Cartesian3,
     Plane,
     Cartesian2,
     NearFarScalar,
     GridMaterialProperty,
+    ColorMaterialProperty,
+    JulianDate,
+    ReferenceFrame
   } from "orbpro";
   import { type Entity } from "orbpro";
   import { scenario } from "@/stores/settings.store";
   const { selectedEntity, trackedEntity } = scenario;
 
-  const toggleOrbit = (entity: any | null) => {
-    if (!entity) return;
+  const createRandomColorMaterial = () =>
+    new ColorMaterialProperty(Color.fromRandom({ alpha: 1 }));
+
+  let activeObject: any;
+
+  const toggleOrbit = (entity: any) => {
+    if (!entity || !entity.showOrbit) return;
+    const currentState = entity.orbitShowing;
+    const newMaterial = createRandomColorMaterial();
+    console.log(newMaterial);
+    entity.showOrbit({
+      show: !currentState,
+      material: newMaterial,
+      referenceEntity: activeObject,
+    });
   };
 
   $: {
@@ -24,7 +41,7 @@
 
   const viewer = (globalThis as any).viewer;
   let originalEntityProperties = new Map();
-  const proximityDistance = 10000 * 1000; // 1000 km in meters
+  const proximityDistance = 8000 * 1000; // 5000 km in meters
 
   $: activeEvent0 = $activeEvent[0];
 
@@ -33,12 +50,12 @@
     position: Cartesian3.ZERO,
     plane: {
       plane: new Plane(Cartesian3.UNIT_Z, 0),
-      dimensions: new Cartesian2(2000000, 2000000),
+      dimensions: new Cartesian2(5000000, 5000000),
       fill: true,
       material: new GridMaterialProperty({
         cellAlpha: 0,
         color: Color.WHITE.withAlpha(0.5),
-        lineCount: new Cartesian2(20, 20),
+        lineCount: new Cartesian2(25, 25),
         lineOffset: new Cartesian2(0, 0),
         lineThickness: new Cartesian2(1, 1),
       }),
@@ -49,10 +66,12 @@
   };
 
   onMount(() => {
+    
+    viewer.referenceFrame = ReferenceFrame.FIXED;
+
     const sDC = viewer?.dataSources.getByName("spaceaware")[0];
-    const activeObject = sDC.entities.getById(
-      activeEvent0.NORAD_CAT_ID.toString()
-    );
+    viewer.clock.currentTime = JulianDate.fromIso8601(activeEvent0.CREATED_AT);
+    activeObject = sDC.entities.getById(activeEvent0.NORAD_CAT_ID.toString());
     gridPlane.position = activeObject.position;
     // Add grid plane around the active satellite
 
@@ -66,6 +85,7 @@
         pixelSize: e.point?.pixelSize,
         labelShow: e.label?.show,
         orbitShowing: (e as SpaceEntity).orbitShowing,
+        orbitColor: Color.WHITE,
       };
       originalEntityProperties.set(e.id, originalProperties);
 
@@ -112,7 +132,10 @@
         if (e.label) {
           e.label.show = originalProperties.labelShow;
         }
-        (e as any).showOrbit({ show: originalProperties.orbitShowing });
+        (e as any).showOrbit({
+          show: originalProperties.orbitShowing,
+          color: originalProperties.orbitColor,
+        });
       }
     });
 
@@ -122,7 +145,7 @@
 </script>
 
 <div class="p-4 flex flex-col items-center justify-center">
-  <div class="m-2 p-2 border rounded shadow-lg">
+  <div class="p-2 rounded shadow-lg">
     <div><strong>NORAD Cat ID:</strong> {activeEvent0.NORAD_CAT_ID}</div>
     <div><strong>Alt Object ID:</strong> {activeEvent0.ALT_OBJECT_ID}</div>
     <div><strong>Created At:</strong> {activeEvent0.CREATED_AT}</div>
