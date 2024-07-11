@@ -12,7 +12,7 @@
     GridMaterialProperty,
     ColorMaterialProperty,
     JulianDate,
-    ReferenceFrame
+    ReferenceFrame,
   } from "orbpro";
   import { type Entity } from "orbpro";
   import { scenario } from "@/stores/settings.store";
@@ -66,10 +66,12 @@
   };
 
   onMount(() => {
-    
     viewer.referenceFrame = ReferenceFrame.FIXED;
 
     const sDC = viewer?.dataSources.getByName("spaceaware")[0];
+    if (!sDC) {
+      return;
+    }
     viewer.clock.currentTime = JulianDate.fromIso8601(activeEvent0.CREATED_AT);
     activeObject = sDC.entities.getById(activeEvent0.NORAD_CAT_ID.toString());
     gridPlane.position = activeObject.position;
