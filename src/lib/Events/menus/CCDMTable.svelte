@@ -14,6 +14,14 @@
   import { scenario } from "@/stores/settings.store";
   const { selectedEntity, trackedEntity } = scenario;
 
+  const toggleOrbit = (entity: any | null) => {
+    if (!entity) return;
+  };
+
+  $: {
+    toggleOrbit($selectedEntity);
+  }
+
   const viewer = (globalThis as any).viewer;
   let originalEntityProperties = new Map();
   const proximityDistance = 10000 * 1000; // 1000 km in meters
