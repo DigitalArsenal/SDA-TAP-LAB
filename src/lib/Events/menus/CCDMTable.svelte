@@ -41,12 +41,13 @@
 
   const viewer = (globalThis as any).viewer;
   let originalEntityProperties = new Map();
-  const proximityDistance = 8000 * 1000; // 5000 km in meters
+  const proximityDistance = 8000 * 1000;
 
   $: activeEvent0 = $activeEvent[0];
 
   let gridReference: Entity | undefined = undefined;
   const gridPlane = {
+    name:"noclick:grid",
     position: Cartesian3.ZERO,
     plane: {
       plane: new Plane(Cartesian3.UNIT_Z, 0),
@@ -54,13 +55,13 @@
       fill: true,
       material: new GridMaterialProperty({
         cellAlpha: 0,
-        color: Color.WHITE.withAlpha(0.5),
+        color: Color.WHITE.withAlpha(0.15),
         lineCount: new Cartesian2(25, 25),
         lineOffset: new Cartesian2(0, 0),
         lineThickness: new Cartesian2(1, 1),
       }),
       outline: true,
-      outlineColor: Color.WHITE.withAlpha(0.3),
+      outlineColor: Color.WHITE.withAlpha(0.2),
     },
     show: true,
   };
@@ -74,11 +75,10 @@
     }
     viewer.clock.currentTime = JulianDate.fromIso8601(activeEvent0.CREATED_AT);
     activeObject = sDC.entities.getById(activeEvent0.NORAD_CAT_ID.toString());
-    gridPlane.position = activeObject.position;
     // Add grid plane around the active satellite
+    activeObject.children.add(gridPlane);
 
-    gridReference = viewer.entities.add(gridPlane);
-
+    sDC.entities.suspendEvents();
     // Store original properties and set the new properties for active object and nearby objects
     for (const e of sDC?.entities.values) {
       const originalProperties = {
@@ -117,11 +117,13 @@
         e.show = false;
       }
     }
+    sDC.entities.resumeEvents();
   });
 
   onDestroy(() => {
     viewer.entities.remove(gridReference);
     const sDC = viewer?.dataSources.getByName("spaceaware")[0];
+    sDC.entities.suspendEvents();
 
     sDC?.entities.values.forEach((e: Entity) => {
       const originalProperties = originalEntityProperties.get(e.id);
@@ -140,13 +142,13 @@
         });
       }
     });
-
+    sDC.entities.resumeEvents();
     viewer.scene.render;
     originalEntityProperties.clear(); // Clear the map on destruction
   });
 </script>
 
-<div class="p-4 flex flex-col items-center justify-center">
+<div class="select-none p-4 flex flex-col items-center justify-center">
   <div class="p-2 rounded shadow-lg">
     <div><strong>NORAD Cat ID:</strong> {activeEvent0.NORAD_CAT_ID}</div>
     <div><strong>Alt Object ID:</strong> {activeEvent0.ALT_OBJECT_ID}</div>

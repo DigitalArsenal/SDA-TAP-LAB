@@ -9,7 +9,7 @@ const startTime = /*lastQueryTime
     ? new Date(lastQueryTime).toISOString()
     :*/ new Date(0).toISOString();
 const reFetch = () =>
-    fetch(`https://${nodeREDURL}/messagearchive?start=${startTime}`, {
+    fetch(`https://${nodeREDURL}/messagearchive`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
     })
