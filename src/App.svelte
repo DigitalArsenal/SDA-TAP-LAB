@@ -35,16 +35,6 @@
 {#if $showEULA}
   <EULA />
 {:else}
-  <a class="hidden sm:block" style="position:fixed;z-index:10" href="https://github.com/digitalarsenal/SDA-TAP-LAB"
-    ><img
-      decoding="async"
-      width="149"
-      height="149"
-      src="https://github.blog/wp-content/uploads/2008/12/forkme_left_green_007200.png"
-      class="attachment-full size-full"
-      alt="Fork me on GitHub"
-      loading="lazy"
-      data-recalc-dims="1" /></a>
   <div id="container" class="absolute w-full h-full select-none">
     <div class="viewer" style={$datatableShow ? "height:70%" : "height: 100%"}>
       <Viewer />
