@@ -35,6 +35,16 @@
 {#if $showEULA}
   <EULA />
 {:else}
+  <a class="hidden sm:block" style="position:fixed;z-index:10" href="https://github.com/digitalarsenal/SDA-TAP-LAB"
+    ><img
+      decoding="async"
+      width="149"
+      height="149"
+      src="https://github.blog/wp-content/uploads/2008/12/forkme_left_green_007200.png?resize=149%2C149"
+      class="attachment-full size-full"
+      alt="Fork me on GitHub"
+      loading="lazy"
+      data-recalc-dims="1" /></a>
   <div id="container" class="absolute w-full h-full select-none">
     <div class="viewer" style={$datatableShow ? "height:70%" : "height: 100%"}>
       <Viewer />
@@ -52,7 +62,7 @@
   <Modal />
 {/if}
 <div
-  class="fixed text-gray-300 top-0 left-2 text-gray-600 text-[.45rem] lg:text-[1rem]">
+  class="fixed text-gray-300 top-0 left-32 text-gray-600 text-[.15rem] lg:text-[1rem]">
   Build: {appVersion}
 </div>
 <CloseButton />
