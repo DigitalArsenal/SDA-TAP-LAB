@@ -40,7 +40,7 @@
       decoding="async"
       width="149"
       height="149"
-      src="https://github.blog/wp-content/uploads/2008/12/forkme_left_green_007200.png?resize=149%2C149"
+      src="https://github.blog/wp-content/uploads/2008/12/forkme_left_green_007200.png"
       class="attachment-full size-full"
       alt="Fork me on GitHub"
       loading="lazy"
