@@ -2,6 +2,7 @@
 import { writable, get } from "svelte/store";
 import { Viewer, Entity, DataSource } from "orbpro";
 import { scenario } from "@/stores/settings.store";
+import { debounce } from "@/utilities/debounce";
 
 const dataSourceEvents = {
     dataSourceAdded: writable<DataSource | null>(null),
@@ -14,6 +15,7 @@ let registeredStoreSubscriptions: any = {};
 let isUpdatingFromStore = false;
 
 const initEvents = (viewer: Viewer) => {
+
     removeEvents();
 
     // Sync from Cesium to Svelte
@@ -29,33 +31,25 @@ const initEvents = (viewer: Viewer) => {
 
     for (let ev in dataSourceEvents) {
         if (viewer.dataSources[ev]) {
-            registeredEvents[ev] = viewer.dataSources[ev].addEventListener((e: any) => {
+            registeredEvents[ev] = viewer.dataSources[ev].addEventListener(debounce((e: any) => {
                 if (!isUpdatingFromStore) {
                     dataSourceEvents[ev].set(e);
                 }
-            });
+            }, 300));
         }
     }
 
     // Sync from Svelte to Cesium
     for (let ev in scenario) {
         if (scenario[ev]?.subscribe) {
-            registeredStoreSubscriptions[ev] = scenario[ev].subscribe(value => {
+            registeredStoreSubscriptions[ev] = scenario[ev].subscribe(debounce(value => {
                 if (viewer[ev] !== value) {
                     isUpdatingFromStore = true;
                     viewer[ev] = value;
                     isUpdatingFromStore = false;
                 }
-            });
+            }, 300));
         }
-    }
-
-    for (let ev in dataSourceEvents) {
-        registeredStoreSubscriptions[ev] = dataSourceEvents[ev].subscribe(value => {
-            // Implement logic to update Cesium dataSource based on the new value
-            // This might require more complex logic
-            // Ensure to set isUpdatingFromStore to true before updating and false after
-        });
     }
 }
 
