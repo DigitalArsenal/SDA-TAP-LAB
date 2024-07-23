@@ -76,7 +76,7 @@
     viewer.clock.currentTime = JulianDate.fromIso8601(activeEvent0.CREATED_AT);
     activeObject = sDC.entities.getById(activeEvent0.NORAD_CAT_ID.toString());
     // Add grid plane around the active satellite
-    activeObject.children.add(gridPlane);
+    gridReference  = activeObject.children.add(gridPlane);
 
     sDC.entities.suspendEvents();
     // Store original properties and set the new properties for active object and nearby objects
@@ -121,7 +121,8 @@
   });
 
   onDestroy(() => {
-    viewer.entities.remove(gridReference);
+    //viewer.entities.remove(gridReference);
+    activeObject.children.remove(gridReference);
     const sDC = viewer?.dataSources.getByName("spaceaware")[0];
     sDC.entities.suspendEvents();
 
