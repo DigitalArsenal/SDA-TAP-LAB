@@ -47,7 +47,7 @@
 
   let gridReference: Entity | undefined = undefined;
   const gridPlane = {
-    name:"noclick:grid",
+    name: "noclick:grid",
     position: Cartesian3.ZERO,
     plane: {
       plane: new Plane(Cartesian3.UNIT_Z, 0),
@@ -76,7 +76,7 @@
     viewer.clock.currentTime = JulianDate.fromIso8601(activeEvent0.CREATED_AT);
     activeObject = sDC.entities.getById(activeEvent0.NORAD_CAT_ID.toString());
     // Add grid plane around the active satellite
-    gridReference  = activeObject.children.add(gridPlane);
+    gridReference = activeObject.children.add(gridPlane);
 
     sDC.entities.suspendEvents();
     // Store original properties and set the new properties for active object and nearby objects
@@ -146,6 +146,9 @@
     sDC.entities.resumeEvents();
     viewer.scene.render;
     originalEntityProperties.clear(); // Clear the map on destruction
+    setTimeout(() => {
+      viewer.camera.flyHome();
+    }, 1000);
   });
 </script>
 
