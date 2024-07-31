@@ -75,6 +75,7 @@ export default defineConfig({
     // process.env.NODE_ENV === 'production' && Obfuscator({ global: true, options: obfuscatorOptions })
   ],
   build: {
+    assetsInlineLimit: 0, // This ensures all assets are inlined
     minify: "terser",
     terserOptions: {
       // Terser options to prevent stripping of debugger
