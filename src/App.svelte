@@ -16,7 +16,7 @@
   import { isSafe } from "./stores/dev.store";
 
   if (!isSafe()) {
-    (window as any).CESIUM_BASE_URL = "./assets/";
+    (window as any).CESIUM_BASE_URL = ".assets/";
   }
 
   onMount(() => {

@@ -78,7 +78,7 @@
     //Imagery
 
     TileMapServiceImageryProvider.fromUrl(
-      `${isSafe() ? "src" : ""}/assets/worldmap/blackmarble/2016`,
+      `${isSafe() ? "src" : ""}assets/worldmap/blackmarble/2016`,
       {
         fileExtension: "jpg",
       }

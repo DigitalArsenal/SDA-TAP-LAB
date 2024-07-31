@@ -1,7 +1,7 @@
 <script lang="ts">
-  import dacredit from "@/assets/da-credit.png";
-  import sda from "@/assets/sda-credit.png";
-  import ion from "@/assets/ion-credit.png";
+  import dacredit from "@assets/da-credit.png";
+  import sda from "@assets/sda-credit.png";
+  import ion from "@assets/ion-credit.png";
 
   function openLink(event: MouseEvent) {
     const target = event.target as HTMLImageElement;
