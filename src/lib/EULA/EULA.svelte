@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import DALogo from "@assets/da-wide.png";
-  import sda from "@assets/sda-credit.png";
+  import DALogo from "@/assets/da-wide.png";
+  import sda from "@/assets/sda-credit.png";
   import { eulaVersion, showEULA } from "@/stores/eula.store";
   import { IP } from "@/stores/user.store";
   import { Icon } from "svelte-awesome";
