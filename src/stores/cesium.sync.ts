@@ -20,13 +20,13 @@ const initEvents = (viewer: Viewer) => {
 
     // Sync from Cesium to Svelte
     for (let ev in scenario) {
-        console.log(ev);
+      console.log(ev, viewer[`${ev}Changed`])
         if (viewer[`${ev}Changed`]) {
-            registeredEvents[`${ev}Changed`] = viewer[`${ev}Changed`].addEventListener((e: any) => {
+            registeredEvents[`${ev}Changed`] = viewer[`${ev}Changed`].addEventListener(debounce((e: any) => {
                 if (!isUpdatingFromStore) {
                     scenario[ev].set(e);
                 }
-            });
+            }, 50));
         }
     }
 
@@ -51,7 +51,7 @@ const initEvents = (viewer: Viewer) => {
             viewer[ev] = value;
             isUpdatingFromStore = false;
           }
-        }, 300)
+        }, 1000)
       );
     }
   }
