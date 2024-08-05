@@ -1,55 +1,22 @@
 {
-    "name": "sda-tap-lab",
-    "version": "0.8.4+1722808776070",
-    "type": "module",
-    "scripts": {
-        "deploy": "npm run build && git add -A && git commit -m 'deploy' && git push",
-        "dev": "vite",
-        "build": "rm -Rf docs/assets/* && vite build && node ./scripts/version.js && node ./node_modules/terser/dist/bundle.min.js -m -c ./docs/assets/*.js && cp -R ./src/assets/* ./docs/assets/",
-        "preview": "vite preview",
-        "check": "svelte-check --tsconfig ./tsconfig.json"
-    },
-    "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^2.4.2",
-        "@tsconfig/svelte": "^5.0.0",
-        "@types/d3": "^7.4.2",
-        "@types/downloadjs": "^1.4.5",
-        "@types/jquery": "^3.5.25",
-        "@types/node": "^20.8.9",
-        "@types/xxhashjs": "^0.2.4",
-        "autoprefixer": "^10.4.16",
-        "devtools-detect": "^4.0.1",
-        "lodash": "^4.17.21",
-        "postcss": "^8.4.31",
-        "rollup-plugin-copy": "^3.5.0",
-        "rollup-plugin-obfuscator": "^1.0.3",
-        "svelte": "^4.0.5",
-        "svelte-check": "^3.4.6",
-        "svelte-fa": "^3.0.4",
-        "svelte-preprocess": "^5.0.4",
-        "tailwindcss": "^3.3.5",
-        "terser": "^5.23.0",
-        "tslib": "^2.6.0",
-        "tw-elements": "^1.0.0",
-        "typescript": "^5.0.2",
-        "vite": "^4.4.5",
-        "vite-plugin-compression": "^0.5.1"
-    },
-    "dependencies": {
-        "@fortawesome/free-brands-svg-icons": "^6.4.2",
-        "@fortawesome/free-solid-svg-icons": "^6.4.2",
-        "ag-grid-community": "^30.2.1",
-        "buffer": "^6.0.3",
-        "coi-serviceworker": "^0.1.7",
-        "d3": "^7.8.5",
-        "downloadjs": "^1.4.7",
-        "flatbuffers": "^23.3.3",
-        "flowbite-svelte": "^0.44.20",
-        "jquery": "^3.7.1",
-        "lz-string": "^1.5.0",
-        "orbpro": "^1.120.4",
-        "pure-ipfs-only-hash": "^4.0.2",
-        "svelte-awesome": "^3.2.1",
-        "xxhashjs": "^0.2.2"
-    }
+  "name": "sda-tap-lab",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "deploy": "npm run build && git add -A && git commit -m 'updates' && git push",
+    "build": "rm -Rf docs/assets/* && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "svelte": "^4.2.18",
+    "terser": "^5.31.3",
+    "vite": "^5.3.4"
+  },
+  "dependencies": {
+    "cesium": "^1.120.0",
+    "orbpro": "^1.120.7"
+  }
 }

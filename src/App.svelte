@@ -1,101 +1,44 @@
-<script lang="ts">
+<script>
   import { onMount } from "svelte";
-  import Viewer from "./lib/Viewer/Viewer.svelte";
-  import Modal from "./lib/Modal/Modal.svelte";
-  import EULA from "./lib/EULA/EULA.svelte";
-  import { showEULA } from "@/stores/eula.store";
-  import { IP } from "@/stores/user.store";
-  import { appVersion } from "@/stores/settings.store";
-  import COIServiceWorker from "./lib/COIServiceWorker/COIServiceWorker";
-  import DataTable from "@/lib/DataTable/DataTable.svelte";
-  import { datatableShow } from "@/stores/datatable.store";
-  import CloseButton from "@/lib/MasterCloseButton/MasterCloseButton.svelte";
-  import SpaceObjectToolbar from "@/lib/SpaceObjects/Toolbar/Toolbar.svelte";
-  import { mode } from "./stores/menu.store";
-  import { title, content } from "@/stores/modal.store";
-  import { isSafe } from "./stores/dev.store";
+  import "orbpro/style/widgets.css";
+  import {
+    Viewer,
+    DynamicTimeline,
+    SpaceCatalogDataSource,
+  } from "orbpro";
 
-  if (!isSafe()) {
-    (window as any).CESIUM_BASE_URL = ".assets/";
-  }
+  onMount(async () => {
+    const viewer = new Viewer("cesiumContainer", {
+      creditContainer: document.createElement("p"),
+      timelineContainer: true,
+      timeline: false,
+    });
 
-  onMount(() => {
-    //COIServiceWorker();
-    fetch("https://celestrak.digitalarsenal.io/get-ip")
-      .then((response) => response.json())
-      .then((data) => {
-        $IP = data.ip;
-      })
-      .catch((error) => {
-        console.error("Error fetching IP", error);
-      });
+    globalThis.viewer = viewer;
+
+    const timeline = new DynamicTimeline(viewer.timeline.container, viewer);
+
+    globalThis.spaceCatalog = new SpaceCatalogDataSource({
+      name: "celestrak",
+    });
+
+    const ommBuffer = await (
+      await fetch("https://api.spaceaware.io/data/OMM?format=fbs")
+    ).arrayBuffer();
+    const satcatBuffer = await (
+      await fetch("https://api.spaceaware.io/data/CAT?format=fbs")
+    ).arrayBuffer();
+    await globalThis.spaceCatalog.loadOMM(ommBuffer, satcatBuffer);
+    await viewer.dataSources.add(globalThis.spaceCatalog);
+    viewer.clock.shouldAnimate = true;
   });
 </script>
 
-{#if $showEULA}
-  <EULA />
-{:else}
-  <div id="container" class="absolute w-full h-full select-none">
-    <div class="viewer" style={$datatableShow ? "height:70%" : "height: 100%"}>
-      <Viewer />
-    </div>
-    <div
-      class="datatable absolute w-full b-0 l-0"
-      style={$datatableShow ? "height:30%" : "display: none;"}>
-      {#if $datatableShow}
-        <DataTable />
-      {/if}
-    </div>
-  </div>
-{/if}
-{#if $title || $content}
-  <Modal />
-{/if}
-<div
-  class="fixed text-gray-300 top-0 left-32 text-gray-600 text-[.15rem] lg:text-[1rem]">
-  Build: {appVersion}
-</div>
-<CloseButton />
+<div id="cesiumContainer" />
 
-{#if $mode === "SpaceObjects"}
-  <SpaceObjectToolbar />
-{/if}
-
-<!-- svelte-ignore css-unused-selector -->
-<style global lang="postcss">
-  @tailwind utilities;
-  @tailwind components;
-  @tailwind base;
-
-  /* Viewer */
-  .viewer {
-    flex-grow: 2; /* Adjust this value as needed */
-    overflow-y: auto; /* Or as per your requirement */
-  }
-
-  :global(html, body) {
-    overscroll-behavior: none;
-    width: 100vw;
-    height: 100vh;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
-    position: fixed;
-    touch-action: none;
-  }
-
-  :global(div) {
-    box-sizing: border-box;
-    overscroll-behavior: none;
-  }
-  /* Chrome, safari */
-  *::-webkit-scrollbar {
-    width: 5px;
-  }
-  * {
-    outline: none;
-  }
-  *::-webkit-scrollbar-thumb {
-    background-color: #aaa;
+<style>
+  #cesiumContainer {
+    width: 100%;
+    height: 100%;
   }
 </style>
