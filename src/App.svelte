@@ -15,7 +15,10 @@
       creditContainer: document.createElement("p"),
       timelineContainer: true,
       timeline: false,
+      
     });
+    
+    viewer.scene.debugShowFramesPerSecond = true;
 
     const cameraPosition = viewer.camera.positionWC;
     const cartographicPosition = Cartographic.fromCartesian(cameraPosition);
