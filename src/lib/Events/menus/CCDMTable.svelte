@@ -23,6 +23,57 @@
 
   let activeObject: any;
 
+  const orbitalThresholds = {
+    inclination: 2.0, // Degrees
+    semiMajorAxis: 100.0, // Kilometers
+    eccentricity: 0.02, // Unitless,
+    raan: 5.0,
+  };
+
+  const getProximityDistance = (entity: any) => {
+    const position = entity.position.getValue(viewer.clock.currentTime);
+    const distanceFromEarthCenter = Cartesian3.magnitude(position); // Distance in kilometers from Earth's center
+    const earthRadius = 6378.1; // Earth's mean radius in kilometers
+
+    const altitude = distanceFromEarthCenter - earthRadius; // Altitude above Earth's surface in kilometers
+
+    const leoAltitude = 2000; // Low Earth Orbit maximum altitude in kilometers
+    const geoAltitude = 35786; // Geostationary Earth Orbit altitude in kilometers
+
+    const proximityFactor = 3; // Adjust this factor to control scaling
+    const scalingFactor =
+      (altitude - leoAltitude) / (geoAltitude - leoAltitude);
+
+    return Math.max(1000 * 1000, scalingFactor * proximityFactor * 1000);
+  };
+
+  const isOrbitSimilar = (activeOrbit: any, otherOrbit: any) => {
+    const activeOMM = activeOrbit.properties.OMM.getValue();
+    const otherOMM = otherOrbit.properties.OMM.getValue();
+
+    const deltaInclination = Math.abs(
+      activeOMM.INCLINATION - otherOMM.INCLINATION
+    );
+
+    const deltaSMA = Math.abs(
+      activeOMM.SEMI_MAJOR_AXIS - otherOMM.SEMI_MAJOR_AXIS
+    );
+
+    const deltaEccentricity = Math.abs(
+      activeOMM.ECCENTRICITY - otherOMM.ECCENTRICITY
+    );
+    const deltaRAAN = Math.abs(
+      activeOMM.RA_OF_ASC_NODE - otherOMM.RA_OF_ASC_NODE
+    );
+    const similar =
+      deltaInclination <= orbitalThresholds.inclination &&
+      deltaSMA <= orbitalThresholds.semiMajorAxis &&
+      deltaEccentricity <= orbitalThresholds.eccentricity &&
+      deltaRAAN <= orbitalThresholds.raan;
+
+    return similar;
+  };
+
   const toggleOrbit = (entity: any) => {
     if (!entity || !entity.showOrbit) return;
     const currentState = entity.orbitShowing;
@@ -41,14 +92,17 @@
 
   const viewer = (globalThis as any).viewer;
   let originalEntityProperties = new Map();
-  const proximityDistance = 8000 * 1000;
 
   $: activeEvent0 = $activeEvent[0];
 
+  $: {
+    console.log($activeEvent[0]);
+  }
   let gridReference: Entity | undefined = undefined;
   const gridPlane = {
     name: "noclick:grid",
     position: Cartesian3.ZERO,
+    referenceFrame: ReferenceFrame.VVLH,
     plane: {
       plane: new Plane(Cartesian3.UNIT_Z, 0),
       dimensions: new Cartesian2(5000000, 5000000),
@@ -75,10 +129,17 @@
     }
     viewer.clock.currentTime = JulianDate.fromIso8601(activeEvent0.CREATED_AT);
     activeObject = sDC.entities.getById(activeEvent0.NORAD_CAT_ID.toString());
+    activeObject.referenceFrame = ReferenceFrame.VVLH;
+
     // Add grid plane around the active satellite
     gridReference = activeObject.children.add(gridPlane);
 
     sDC.entities.suspendEvents();
+
+    const proximityDistance = getProximityDistance(activeObject);
+
+    console.log(proximityDistance);
+
     // Store original properties and set the new properties for active object and nearby objects
     for (const e of sDC?.entities.values) {
       const originalProperties = {
@@ -90,13 +151,13 @@
         orbitColor: Color.WHITE,
       };
       originalEntityProperties.set(e.id, originalProperties);
-
       if (
         e.id.toString() === activeObject.id.toString() ||
         Cartesian3.distance(
           e.position.getValue(viewer.clock.currentTime),
           activeObject.position.getValue(viewer.clock.currentTime)
-        ) <= proximityDistance
+        ) <= proximityDistance ||
+        isOrbitSimilar(activeObject, e)
       ) {
         e.show = true;
         if (e.point) {
@@ -121,12 +182,11 @@
   });
 
   onDestroy(() => {
-    //viewer.entities.remove(gridReference);
     activeObject.children.remove(gridReference);
     const sDC = viewer?.dataSources.getByName("spaceaware")[0];
     sDC.entities.suspendEvents();
 
-    sDC?.entities.values.forEach((e: Entity) => {
+    sDC?.entities.values.forEach((e: any) => {
       const originalProperties = originalEntityProperties.get(e.id);
       if (originalProperties) {
         e.show = originalProperties.show;
@@ -156,7 +216,15 @@
   <div class="p-2 rounded shadow-lg">
     <div><strong>NORAD Cat ID:</strong> {activeEvent0.NORAD_CAT_ID}</div>
     <div><strong>Alt Object ID:</strong> {activeEvent0.ALT_OBJECT_ID}</div>
-    <div><strong>Created At:</strong> {activeEvent0.CREATED_AT}</div>
+    <div
+      class="cursor-pointer"
+      on:click={() =>
+        (viewer.clock.currentTime = JulianDate.fromIso8601(
+          activeEvent0.CREATED_AT
+        ))}>
+      <strong>Created At:</strong>
+      {activeEvent0.CREATED_AT}
+    </div>
     <div><strong>Tag:</strong> {activeEvent0.TAG}</div>
     <div><strong>Result:</strong> {activeEvent0.RESULT ? "True" : "False"}</div>
     <div><strong>Priority:</strong> {activeEvent0.PRIORITY}</div>

@@ -4,10 +4,14 @@ export const messages = createWebSocketStore(nodeREDURL);
 import { HYPT } from '@/classes/standards/HYP/HYP';
 import { HYPCOLLECTIONT } from '@/classes/standards/HYP/HYPCOLLECTION';
 import type { SITT } from '@/classes/standards/LDM/SIT';
+import ccdmTest from '@/testdata/ccdm.test';
 //const lastQueryTime = localStorage.getItem("lastQueryTime");
 const startTime = /*lastQueryTime
     ? new Date(lastQueryTime).toISOString()
     :*/ new Date(0).toISOString();
+
+messages.set(ccdmTest);
+
 const reFetch = () =>
     fetch(`https://${nodeREDURL}/messagearchive`, {
         method: "GET",
@@ -20,7 +24,7 @@ const reFetch = () =>
             );
             const combinedMessages = [...storedMessages, ...result].slice(-10000);
             localStorage.setItem("messages", JSON.stringify(combinedMessages));*/
-            messages.set(result);
+            messages.set(ccdmTest.concat(result));
             //localStorage.setItem("lastQueryTime", new Date().toISOString());
         })
         .catch((error) => console.error("Error:", error));

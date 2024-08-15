@@ -40,7 +40,6 @@
   $: filteredCount = filteredMessages.length;
 
   const loadTable = (lmessages: any) => {
-    console.log(lmessages);
     $activeEvents = lmessages;
     $lastcontent = $content;
     $content = MessageWrap;
