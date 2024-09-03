@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "cesium": "^1.120.0",
-    "orbpro": "^1.120.8"
+    "orbpro": "^1.120.11"
   }
 }
