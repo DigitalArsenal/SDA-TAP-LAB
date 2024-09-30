@@ -119,6 +119,7 @@
   };
 
   const gridDestroy = () => {
+    console.log('destroy')
     if ($gridApi) {
       $gridApi.destroy();
       grid = undefined;

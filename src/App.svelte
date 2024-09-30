@@ -40,11 +40,13 @@
       <Viewer />
     </div>
     <div
-      class="datatable absolute w-full b-0 l-0"
-      style={$datatableShow ? "height:30%" : "display: none;"}>
-      {#if $datatableShow}
-        <DataTable />
-      {/if}
+      class="{$datatableShow
+        ? 'visible'
+        : 'hidden'} datatable absolute w-full b-0 l-0"
+      style="height: {$datatableShow
+        ? '30%'
+        : '0'}; overflow: hidden; transition: height 0.3s ease;">
+      <DataTable />
     </div>
   </div>
 {/if}
@@ -97,5 +99,13 @@
   }
   *::-webkit-scrollbar-thumb {
     background-color: #aaa;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .visible {
+    display: block; /* or any appropriate display value for your component */
   }
 </style>

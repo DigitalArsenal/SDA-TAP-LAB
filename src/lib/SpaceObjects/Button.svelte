@@ -1,7 +1,7 @@
 <!-- Settings.svelte -->
 <script lang="ts">
   import Icon from "svelte-awesome";
-  import { faSatellite, faDatabase} from "@fortawesome/free-solid-svg-icons";
+  import { faSatellite, faDatabase } from "@fortawesome/free-solid-svg-icons";
   import columnDefs from "./lib/columnDefs";
   import { viewer } from "@/stores/viewer.store";
   import {
@@ -23,6 +23,7 @@
   const { settings } = scenario;
 
   let lastLoaded: Date;
+  let cachedCombinedOMMCAT: any[] = []; // Variable to store the cached combined data
 
   const defaultToolbar: any = document.querySelector(".cesium-viewer-toolbar");
 
@@ -48,13 +49,52 @@
 
     $columnDefStore = columnDefs;
     if ((globalThis as any).viewer) {
-      const dataSource: SpaceCatalogDataSource | any =
-        (globalThis as any).viewer.dataSources.getByName(
-          "spaceaware"
-        )[0] as SpaceCatalogDataSource;
-      if (!lastLoaded || dataSource.lastLoaded > lastLoaded) {
-        lastLoaded = dataSource.lastLoaded;
-        data.set(dataSource.COMBINEDOMMCAT as any);
+      const dataSource: SpaceCatalogDataSource | any = (
+        globalThis as any
+      ).viewer.dataSources.getByName("spaceaware")[0] as SpaceCatalogDataSource;
+
+      if (
+        !lastLoaded ||
+        !dataSource.lastLoaded ||
+        dataSource.lastLoaded > lastLoaded
+      ) {
+        lastLoaded = new Date();
+        dataSource.lastLoaded = lastLoaded;
+
+        // Recalculate COMBINEDOMMCAT only if there's a new lastLoaded
+        let COMBINEDOMMCAT = [];
+        for (let j = 0; j < dataSource.entities.values.length; j++) {
+          const entity = dataSource.entities.values[j];
+          const properties = entity.properties;
+
+          const thisOMM = properties.OMM.getValue(); // Assuming .getValue() returns the OMM data
+          const thisCAT = properties.CAT.getValue(); // Assuming .getValue() returns the CAT data
+
+          COMBINEDOMMCAT[j] = {} as any;
+
+          // Iterate over OMM properties
+          for (const prop in thisOMM) {
+            if (thisOMM.hasOwnProperty(prop)) {
+              COMBINEDOMMCAT[j][prop] = thisOMM[prop];
+            }
+          }
+
+          // Iterate over CAT properties
+          for (const prop in thisCAT) {
+            if (thisCAT.hasOwnProperty(prop)) {
+              COMBINEDOMMCAT[j][prop] = thisCAT[prop];
+            }
+          }
+        }
+
+        // Sort COMBINEDOMMCAT by NORAD_CAT_ID, parsing it as an integer
+        COMBINEDOMMCAT.sort((a, b) => {
+          return parseInt(a.NORAD_CAT_ID) - parseInt(b.NORAD_CAT_ID);
+        });
+
+        // Store the newly calculated combined data
+        cachedCombinedOMMCAT = COMBINEDOMMCAT;
+        data.set(cachedCombinedOMMCAT as any);
       }
     }
   };
