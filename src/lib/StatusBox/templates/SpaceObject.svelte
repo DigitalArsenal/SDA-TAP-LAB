@@ -104,7 +104,7 @@
           // Convert m/s to km/h
           velocityKmh = (velocityMs * 3.6).toFixed(2);
 
-          if (CAT.OBJECT_TYPE) return;
+          if (CAT?.OBJECT_TYPE) return;
 
           // Launch and End of Life calculations
           const endOfLifeDate = new Date(launchDate);
@@ -355,7 +355,7 @@
             <div class="p-1">
               <div class="row-header">Type</div>
               <div class="text-sm row-data">
-                {CAT_OBJECT_TYPE[CAT.OBJECT_TYPE]}
+                {CAT_OBJECT_TYPE[CAT?.OBJECT_TYPE]}
               </div>
             </div>
             <div class="p-1">
